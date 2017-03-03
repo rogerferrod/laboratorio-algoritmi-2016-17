@@ -209,7 +209,7 @@ N:0000,N:0001,N:0002
 N:0001,N:0003
 ```
 
-specificano che il nodo N:0000 ha come figli i nodi `N:0001` e `N:0002`; inoltre, il nodo `N:0001` ha come figlio il nodo `N:0003`. In altri termini, esse codificano l'albero:
+specificano che il nodo `N:0000` ha come figli i nodi `N:0001` e `N:0002`; inoltre, il nodo `N:0001` ha come figlio il nodo `N:0003`. In altri termini, esse codificano l'albero:
 
 ```
 N:0000 -- N:0001 -- N:0003
