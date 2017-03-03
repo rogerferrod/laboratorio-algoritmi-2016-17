@@ -1,4 +1,3 @@
-
 # Laboratorio per il corso di Algoritmi e Strutture Dati
 
 Il presente documento riporta i testi degli esercizi da svolgere e consegnare al fine di poter
@@ -13,7 +12,7 @@ Durante la scrittura del codice è richiesto di usare in modo appropriato il
 sistema di versioning ```Git```. Questa richiesta implica quanto segue:
 
 - il progetto di laboratorio va inizializzato "clonando" il repository del
-  laboratorio come descritto nel file [Git](Git.md);
+  laboratorio come descritto nel file [Git](./Git.md);
 - come è prassi nei moderni ambienti di sviluppo, è richiesto di effettuare
   commit frequenti. L'ideale è un commit per ogni blocco di lavoro terminato
   (es. creazione e test di una nuova funzione, soluzione di un baco, creazione
