@@ -141,8 +141,7 @@ aggiornamento. Segue un elenco dei comandi principali che dovrete utilizzare:
   necessario aggiungere esplicitamente tutti i file che sono stati modificati o
   creati.
 
-- `rm`: rimuove uno o più file dalla copia locale e dal repository al prossimo commit.alla "staging area". È
-  necessario aggiungere esplicitamente tutti i file che sono stati cancellati.
+- `rm`: rimuove uno o più file dalla copia locale e dal repository al prossimo commit. È necessario aggiungere esplicitamente tutti i file che sono stati cancellati.
 
 - `commit`: salva lo stato del progetto.
 
