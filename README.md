@@ -194,7 +194,7 @@ Si implementino inoltre gli algoritmi le cui specifiche sono riportate di seguit
   - l'algoritmo deve costruire l'albero binario usando la stessa struttura dati già implementata
     per gli alberi n-ari;
   - l'algoritmo deve costruire il nuovo albero "da zero" e non deve modificare l'albero in input;
-  - **deve costruire il nuovo albero in modo bilanciato "al volo"**, aggiungendo all'albero inizialmente vuoto i nodi in un ordine opportuno: non si devono quindi implementare
+  - l'algoritmo **deve costruire il nuovo albero in modo bilanciato "al volo"**, aggiungendo all'albero inizialmente vuoto i nodi in un ordine opportuno: non si devono quindi implementare
     algoritmi di bilanciamento di alberi.
 
 **Suggerimento**: Negli alberi n-ari (con n qualunque) non è possibile che un nodo abbia figli, ma manchi del figlio sinistro -- possibilità che, invece, dobbiamo ammettere nel caso di alberi binari. Per ovviare a questo problema si suggerisce di definire un particolare valore fittizio (che qui chiamiamo *epsilon*) per i nodi dell'albero che rappresenti "l'assenza di nodo": in questo modo, la mancanza di un figlio per un nodo *n* può essere rappresentata inserendo nella struttura dati come figlio di *n* un nodo il cui valore è epsilon.
@@ -202,7 +202,7 @@ Si implementino inoltre gli algoritmi le cui specifiche sono riportate di seguit
 
 La struttura dati e gli algoritmi implementati dovranno essere utilizzati con i dati contenuti nei file `multywaytree_1.csv` e `multywaytree_2.csv`.
 
-I file `multywaytree_1.csv` e `multywaytree_2.csv` che potete recuperare seguendo il path /usr/NFS/Linux/labalgoritmi/datasets/ (in laboratorio von Neumann, selezionare il disco Y) contengono ciascuno la serializzazione un albero n-ario. Il formato è un CSV standard: i campi sono separati da virgole; i record (le righe) sono separati da `\n`. In ogni record, il primo campo rappresenta il nodo di cui si parla e i campi che seguono rappresentano i figli del nodo in questione (il primo campo della prima riga rappresenta la radice dell'albero), es le due righe seguenti:
+I file `multywaytree_1.csv` e `multywaytree_2.csv` che potete recuperare seguendo il path /usr/NFS/Linux/labalgoritmi/datasets/ (in laboratorio von Neumann, selezionare il disco Y) contengono ciascuno la serializzazione di un albero n-ario. Il formato è un CSV standard: i campi sono separati da virgole; i record (le righe) sono separati da `\n`. In ogni record, il primo campo rappresenta il nodo di cui si parla e i campi che seguono rappresentano i figli del nodo in questione (il primo campo della prima riga rappresenta la radice dell'albero), es le due righe seguenti:
 
 ```
 N:0000,N:0001,N:0002
