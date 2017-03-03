@@ -187,7 +187,7 @@ Si implementino inoltre gli algoritmi le cui specifiche sono riportate di seguit
 - algoritmo che restituisce in output il massimo grado dei nodi dell'albero (il grado di un nodo
   è il numero dei suoi figli)
 - algoritmo che verifica se l'albero è binario
-- algoritmo che restituische la dimensione dell'albero (cioè il numero di nodi)
+- algoritmo che restituisce la dimensione dell'albero (cioè il numero di nodi)
 - algoritmo che restituisce la profondità dell'albero (cioè la lunghezza del più lungo ramo dalla radice a una foglia)
 
 - algoritmo che che costruisce un albero binario di ricerca bilanciato avente per nodi gli stessi valori dell'albero in input. Precisazioni:
