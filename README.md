@@ -12,7 +12,7 @@ Durante la scrittura del codice è richiesto di usare in modo appropriato il
 sistema di versioning ```Git```. Questa richiesta implica quanto segue:
 
 - il progetto di laboratorio va inizializzato "clonando" il repository del
-  laboratorio come descritto nel file [Git](./Git.md);
+  laboratorio come descritto nel file [Git](Git.md);
 - come è prassi nei moderni ambienti di sviluppo, è richiesto di effettuare
   commit frequenti. L'ideale è un commit per ogni blocco di lavoro terminato
   (es. creazione e test di una nuova funzione, soluzione di un baco, creazione
@@ -21,7 +21,7 @@ sistema di versioning ```Git```. Questa richiesta implica quanto segue:
   hanno visto come principale sviluppatore;
 - al termine del lavoro si dovrà consegnare l'intero repository.
 
-Il file `Git.md` contiene un esempio di come usare Git per lo sviluppo degli
+Il file [Git.md](Git.md) contiene un esempio di come usare Git per lo sviluppo degli
 esercizi proposti per questo laboratorio.
 
 **Nota importante**: su git dovrà essere caricato solamente il codice sorgente, in particolare nessun file dati dovrà essere oggetto di commit!
