@@ -278,7 +278,7 @@ Ogni record contiene i seguenti dati:
 
 *Note:*
 
-- potete intrepretare le informazioni presenti nelle righe del file come
+- potete interpretare le informazioni presenti nelle righe del file come
   archi **non diretti** (i.e., probabilmente vorrete inserire nel vostro grafo
   sia l'arco di andata che quello di ritorno a fronte di ogni riga letta).
 - il file è stato creato a partire da un dataset poco accurato. I dati
