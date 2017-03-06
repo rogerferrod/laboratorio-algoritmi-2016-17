@@ -197,8 +197,8 @@ Si implementino inoltre gli algoritmi le cui specifiche sono riportate di seguit
   - l'algoritmo **deve costruire il nuovo albero in modo bilanciato "al volo"**, aggiungendo all'albero inizialmente vuoto i nodi in un ordine opportuno: non si devono quindi implementare
     algoritmi di bilanciamento di alberi.
 
-**Suggerimento**: Negli alberi n-ari (con n qualunque) non è possibile che un nodo abbia figli, ma manchi del figlio sinistro -- possibilità che, invece, dobbiamo ammettere nel caso di alberi binari. Per ovviare a questo problema si suggerisce di definire un particolare valore fittizio (che qui chiamiamo *epsilon*) per i nodi dell'albero che rappresenti "l'assenza di nodo": in questo modo, la mancanza di un figlio per un nodo *n* può essere rappresentata inserendo nella struttura dati come figlio di *n* un nodo il cui valore è epsilon.
-
+**Suggerimento**: siccome l'implementazione richiesta per gli alberi n-ari (con n qualunque) è pensata per gli alberi non posizionali (cioè per i quali non è specificata la posizione dei figli di un nodo), mentre negli alberi binari di ricerca tale posizione è specificata (per ogni figlio di un nodo, è sempre noto se esso è il figlio sinistro o il figlio destro ) e, inoltre, in essi è possibile che un nodo abbia il solo figlio destro, si suggerisce il seguente semplice accorgimento per poter usare la struttura implementata anche per rappresentare alberi binari di ricerca:
+definire un particolare valore fittizio (che qui chiamiamo *epsilon*) per i nodi dell'albero che rappresenti "l'assenza di nodo": in questo modo, la mancanza di un figlio per un nodo *n* può essere rappresentata inserendo nella struttura dati come figlio di *n* un nodo il cui valore è epsilon.
 
 La struttura dati e gli algoritmi implementati dovranno essere utilizzati con i dati contenuti nei file `multywaytree_1.csv` e `multywaytree_2.csv`.
 
@@ -278,7 +278,7 @@ Ogni record contiene i seguenti dati:
 
 *Note:*
 
-- potete interpretare le informazioni presenti nelle righe del file come
+- dovrete interpretare le informazioni presenti nelle righe del file come
   archi **non diretti** (i.e., probabilmente vorrete inserire nel vostro grafo
   sia l'arco di andata che quello di ritorno a fronte di ogni riga letta).
 - il file è stato creato a partire da un dataset poco accurato. I dati
