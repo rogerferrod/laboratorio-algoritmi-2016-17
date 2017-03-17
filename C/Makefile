@@ -1,6 +1,6 @@
 
 # lista dei target da eseguire sempre
-all: tests exec
+all: tests #exec
 
 # compila (grazie alla dipendenza) e esegue i test
 tests: bin/ordered_array_tests
@@ -13,6 +13,8 @@ exec: bin/ordered_array
 # Flags per il compilatore -- su gcc -Weverything non esiste
 #    sostituire con -Wall -Wpedantic
 CFLAGS = -g -Weverything -Wno-padded -Werror
+CFLAGS = -g -Wall -Wpedantic -Wno-padded -Werror
+CFLAGS = -g
 
 # Lista degli header files
 INCLUDES = src/*.h
