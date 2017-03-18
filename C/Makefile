@@ -13,8 +13,8 @@ exec: bin/ordered_array
 # Flags per il compilatore -- su gcc -Weverything non esiste
 #    sostituire con -Wall -Wpedantic
 CFLAGS = -g -Weverything -Wno-padded -Werror
-CFLAGS = -g -Wall -Wpedantic -Wno-padded -Werror
-CFLAGS = -g
+CFLAGS = -g -Wall -Wpedantic -Wextra -Wno-padded
+#CFLAGS = -g
 
 # Lista degli header files
 INCLUDES = src/*.h

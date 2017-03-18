@@ -5,7 +5,7 @@ typedef struct _OrderedArray {
 	void** array;
 	size_t size;
 	size_t capacity;
-};
+} OrderedArray;
 
 OrderedArray* OrderedArray_new(size_t capacity) {
 	OrderedArray* result = (OrderedArray*) malloc(sizeof(OrderedArray));
@@ -23,7 +23,7 @@ void OrderedArray_free(OrderedArray* array) {
 }
 
 size_t OrderedArray_size(OrderedArray* array) {
-	return 0;
+	return array->size;
 }
 
 size_t OrderedArray_capacity(OrderedArray* array) {
