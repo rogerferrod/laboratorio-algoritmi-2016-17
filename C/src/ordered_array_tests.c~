@@ -2,6 +2,8 @@
 #include "unity.h"
 #include "unity_internals.h"
 
+// Defintion of the opaque type
+typedef struct _OrderedArray OrderedArray;
 
 static void test_ordered_array_new_not_null() {
   OrderedArray* array = OrderedArray_new(10);
@@ -25,7 +27,7 @@ static void test_ordered_array_new_size_zero() {
 }
 
 
-/* void test_ordered_array_free() {
+// void test_ordered_array_free() {
 //
 // }
 
@@ -44,7 +46,7 @@ static void test_ordered_array_new_size_zero() {
 // static void test_ordered_array_insert() {
 //
 // }
-*/
+
 
 int main() {
   UNITY_BEGIN();
