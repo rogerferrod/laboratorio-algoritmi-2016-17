@@ -11,12 +11,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-/*struct _myArray {
+struct _myArray {
   void** array;
   size_t size;
   size_t capacity;
   ArrayCompare compare;
-  };*/
+};
 
 array_o* array_new(size_t capacity, ArrayCompare compare) {
   array_o* new_array = (array_o*) malloc(sizeof(array_o));
@@ -65,4 +65,17 @@ void array_insert(array_o* array, void* element, AlgSort sort) {
   array->array[i] = element;
   array->size += 1;
   return;
+}
+
+void array_set_elem(array_o* array, void* element, size_t position){
+  if(position >= array->capacity ) {
+    fprintf(stderr, "Array index (%ld) out of bounds (0:%ld)\n", position, array->size);
+    exit(EXIT_FAILURE); /* o return NULL? */
+  }
+  array->array[position] = element;
+  return;
+}
+
+ArrayCompare array_get_compare(array_o* array){
+  return array->compare;
 }
