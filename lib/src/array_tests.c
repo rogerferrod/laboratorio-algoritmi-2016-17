@@ -100,13 +100,13 @@ static void test_ordered_array_realloc() {
 static void test_ordered_array_at() {
   array_o* array = build_fixture();
   TEST_ASSERT_EQUAL_INT(1, *(int*)array_at(array, 0) );
-  TEST_ASSERT_EQUAL_INT(4, *(int*)array_at(array, 1) );
-  TEST_ASSERT_EQUAL_INT(7, *(int*)array_at(array, 2) );
-  TEST_ASSERT_EQUAL_INT(10, *(int*)array_at(array, 3) );
+  TEST_ASSERT_EQUAL_INT(10, *(int*)array_at(array, 1) );
+  TEST_ASSERT_EQUAL_INT(4, *(int*)array_at(array, 2) );
+  TEST_ASSERT_EQUAL_INT(7, *(int*)array_at(array, 3) );
   free_fixture(array);
 }
 
-
+/*
 static void test_ordered_array_insert_at_beginning() {
   array_o* array = build_fixture();
 
@@ -125,12 +125,31 @@ static void test_ordered_array_insert_at_middle() {
 
   free_fixture(array);
 }
+*/
 static void test_ordered_array_insert_at_end() {
   array_o* array = build_fixture();
 
   array_insert(array, new_int(20));
   TEST_ASSERT_EQUAL_INT(5, array_size(array));
   TEST_ASSERT_EQUAL_INT(20, *(int*)array_at(array, 4));
+
+  free_fixture(array);
+}
+static void test_ordered_array_delete(){
+  array_o* array = build_fixture();
+  
+  array_delete(array,0);
+  TEST_ASSERT_EQUAL_INT(10, *(int*)array_at(array, 0));
+  TEST_ASSERT_EQUAL_INT(3, array_size(array));
+
+  free_fixture(array);
+}
+static void test_ordered_array_swap(){
+  array_o* array = build_fixture();
+
+  array_swap(array,0,1);
+  TEST_ASSERT_EQUAL_INT(10, *(int*)array_at(array, 0));
+  TEST_ASSERT_EQUAL_INT(1, *(int*)array_at(array, 1));
 
   free_fixture(array);
 }
@@ -145,12 +164,22 @@ int main() {
   RUN_TEST(test_ordered_array_empty);
   RUN_TEST(test_ordered_array_realloc);
   RUN_TEST(test_ordered_array_at);
-  RUN_TEST(test_ordered_array_insert_at_beginning);
-  RUN_TEST(test_ordered_array_insert_at_middle);
+  /*RUN_TEST(test_ordered_array_insert_at_beginning);*/
+  /*RUN_TEST(test_ordered_array_insert_at_middle);*/
   RUN_TEST(test_ordered_array_insert_at_end);
+  RUN_TEST(test_ordered_array_delete);
+  RUN_TEST(test_ordered_array_swap);
   UNITY_END();
 
-  /* int a1,a2,a3,a4,a5;
+  /*
+
+  array_o* array = build_fixture();
+  TEST_ASSERT_EQUAL_INT(1, *(int*)array_at(array, 20) );
+  free_fixture(array);
+  printf("TEST Passato");
+
+
+   int a1,a2,a3,a4,a5;
 
   array_o *test_array;
   test_array =  array_new(5);
