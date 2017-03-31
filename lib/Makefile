@@ -45,8 +45,8 @@ bin/array_tests: build/array_tests.o build/array.o build/unity.o $(COMMON_DEPS)
 bin/sort: build/sort.o build/array.o $(COMMON_DEPS)
 	$(CC) -o bin/sort build/sort.o build/array.o
 
-bin/sort_tests: build/sort_tests.o build/sort.o build/array.o $(COMMON_DEPS)
-	$(CC) -o bin/sort_tests build/sort_tests.o build/sort.o build/array.o
+bin/sort_tests: build/sort_tests.o build/sort.o build/array.o build/unity.o $(COMMON_DEPS)
+	$(CC) -o bin/sort_tests build/sort_tests.o build/sort.o build/array.o build/unity.o
 
 clean:
 	rm -f build/* bin/*

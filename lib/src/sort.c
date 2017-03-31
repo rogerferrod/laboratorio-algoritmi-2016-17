@@ -12,12 +12,18 @@
 #include <stdio.h>
 
 
-size_t insertion_sort(array_o* array, ArrayCompare compare) {
-size_t i;
-/*
- for(i = array_size(array); i > 0 && compare(array_at(array, i-1), element) > 0; --i ) {
-    array_set_elem(array, array_at(array, i-1), i); 
-  }*/
-return 0;
+void insertion_sort(array_o* array, ArrayCompare compare) {
+  size_t i;
+
+  for(i = 0; i < array_size(array); ++i ) {
+    size_t j;
+    j = i;
+    while(j > 0 && compare(array_at(array, j-1), array_at(array, j)) == 1){
+      array_swap(array, j-1, j);
+      j--;
+    }
+  }
+  return;
 }
+
 

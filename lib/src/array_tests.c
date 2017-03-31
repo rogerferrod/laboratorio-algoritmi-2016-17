@@ -1,5 +1,4 @@
 #include "array.h"
-#include "sort.h"
 #include "unity.h"
 #include "unity_internals.h"
 #include <stdlib.h>
@@ -169,7 +168,7 @@ int main() {
   RUN_TEST(test_ordered_array_insert_at_end);
   RUN_TEST(test_ordered_array_delete);
   RUN_TEST(test_ordered_array_swap);
-  UNITY_END();
+  return UNITY_END();
 
   /*
 
