@@ -53,14 +53,16 @@ void* array_at(array_o* array, size_t position) {
   return array->array[position];
 }
 
-void array_insert(array_o* array, void* element, AlgSort sort) {
+void array_insert(array_o* array, void* element) {
   if(array->size >= array->capacity){
     array->capacity *= 2;
     array->array = realloc(array->array, array->capacity*sizeof(void*));
   }
 
   size_t i;
-  i = sort(array, element);
+  for( i = array_size(array); i > 0 && array->compare(array->array[i-1], element) > 0; --i ) {
+    array->array[i] = array->array[i-1];
+  }
 
   array->array[i] = element;
   array->size += 1;
@@ -74,8 +76,4 @@ void array_set_elem(array_o* array, void* element, size_t position){
   }
   array->array[position] = element;
   return;
-}
-
-ArrayCompare array_get_compare(array_o* array){
-  return array->compare;
 }

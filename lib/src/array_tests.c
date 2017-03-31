@@ -28,10 +28,10 @@ static int* new_int(int value) {
 static array_o* build_fixture() {
   array_o* array = array_new(5, compare_int_ptr);
 
-  array_insert(array, new_int(1), insertion_sort);
-  array_insert(array, new_int(10), insertion_sort);
-  array_insert(array, new_int(4), insertion_sort);
-  array_insert(array, new_int(7), insertion_sort);
+  array_insert(array, new_int(1));
+  array_insert(array, new_int(10));
+  array_insert(array, new_int(4));
+  array_insert(array, new_int(7));
 
   return array;
 }
@@ -89,8 +89,8 @@ static void test_ordered_array_empty() {
 static void test_ordered_array_realloc() {
   array_o* array = build_fixture();
   size_t old_capacity = array_capacity(array);
-  array_insert(array, new_int(10), insertion_sort);
-  array_insert(array, new_int(3), insertion_sort);
+  array_insert(array, new_int(10));
+  array_insert(array, new_int(3));
   TEST_ASSERT_EQUAL_INT(1, array_capacity(array) > old_capacity);
   TEST_ASSERT_EQUAL_INT(1, array_capacity(array) >= array_size(array));
 
@@ -99,10 +99,10 @@ static void test_ordered_array_realloc() {
 
 static void test_ordered_array_at() {
   array_o* array = build_fixture();
-  TEST_ASSERT_EQUAL_INT(1,  *(int*)array_at(array, 0) );
-  TEST_ASSERT_EQUAL_INT(4,  *(int*)array_at(array, 1) );
-  TEST_ASSERT_EQUAL_INT(7,  *(int*)array_at(array, 2) );
-  TEST_ASSERT_EQUAL_INT(10,  *(int*)array_at(array, 3) );
+  TEST_ASSERT_EQUAL_INT(1, *(int*)array_at(array, 0) );
+  TEST_ASSERT_EQUAL_INT(4, *(int*)array_at(array, 1) );
+  TEST_ASSERT_EQUAL_INT(7, *(int*)array_at(array, 2) );
+  TEST_ASSERT_EQUAL_INT(10, *(int*)array_at(array, 3) );
   free_fixture(array);
 }
 
@@ -110,7 +110,7 @@ static void test_ordered_array_at() {
 static void test_ordered_array_insert_at_beginning() {
   array_o* array = build_fixture();
 
-  array_insert(array, new_int(0), insertion_sort);
+  array_insert(array, new_int(0));
   TEST_ASSERT_EQUAL_INT(5, array_size(array));
   TEST_ASSERT_EQUAL_INT(0, *(int*)array_at(array, 0));
 
@@ -119,7 +119,7 @@ static void test_ordered_array_insert_at_beginning() {
 static void test_ordered_array_insert_at_middle() {
   array_o* array = build_fixture();
 
-  array_insert(array, new_int(8), insertion_sort);
+  array_insert(array, new_int(8));
   TEST_ASSERT_EQUAL_INT(5, array_size(array));
   TEST_ASSERT_EQUAL_INT(8, *(int*)array_at(array, 3));
 
@@ -128,7 +128,7 @@ static void test_ordered_array_insert_at_middle() {
 static void test_ordered_array_insert_at_end() {
   array_o* array = build_fixture();
 
-  array_insert(array, new_int(20), insertion_sort);
+  array_insert(array, new_int(20));
   TEST_ASSERT_EQUAL_INT(5, array_size(array));
   TEST_ASSERT_EQUAL_INT(20, *(int*)array_at(array, 4));
 

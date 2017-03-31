@@ -14,8 +14,6 @@
 
 #pragma once
 
-
-#include "sort.h"
 #include <stddef.h>
 
 
@@ -43,8 +41,6 @@ extern int array_empty(array_o* array);
 
 extern void* array_at(array_o* array, size_t position);
 
-extern void array_insert(array_o* array, void* element, AlgSort sort);
+extern void array_insert(array_o* array, void* element);
 
 extern void array_set_elem(array_o* array, void* element, size_t position);
-
-extern ArrayCompare array_get_compare(array_o* array);
