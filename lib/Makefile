@@ -5,11 +5,12 @@ CC = gcc
 all: tests
 
 # compila (grazie alla dipendenza) e esegue i test
-tests: bin/array_tests
+tests: bin/array_tests bin/sort_tests
 	bin/array_tests
+	bin/sort_tests
 
 #  compila (grazie alla dipendenza) e esegue ordered_array
-exec: bin/array
+exec: bin/array bin/sort
 	bin/array ../ordered_array_sample_file.csv
 
 # Flags per il compilatore -- su gcc -Weverything non esiste
@@ -40,6 +41,12 @@ bin/array: build/array.o build/array_main.o $(COMMON_DEPS)
 
 bin/array_tests: build/array_tests.o build/array.o build/unity.o $(COMMON_DEPS)
 	$(CC) -o bin/array_tests  build/array_tests.o build/array.o build/unity.o
+
+bin/sort: build/sort.o build/array.o $(COMMON_DEPS)
+	$(CC) -o bin/sort build/sort.o build/array.o
+
+bin/sort_tests: build/sort_tests.o build/sort.o build/array.o $(COMMON_DEPS)
+	$(CC) -o bin/sort_tests build/sort_tests.o build/sort.o build/array.o
 
 clean:
 	rm -f build/* bin/*
