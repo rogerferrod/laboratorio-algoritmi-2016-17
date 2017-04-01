@@ -1,6 +1,6 @@
 /*
  *  File: array.h
- *  Author: 
+ *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna
  *
  *  Date: 
  *
@@ -8,46 +8,60 @@
 
 
 /*
- * Implements an ordered array. The elements
- * in the array are kept in order by the library
+ * Implements an abstracted array. The elements in 
+ * the array are comparable through the compare function
+ *
  */
 
 #pragma once
 
 #include <stddef.h>
+
+/* Reallocation factors */
 #define INCREMENT_FACTOR 2
 #define DECREMENT_FACTOR 2
 
-/* Defintion of the opaque type */
+
+
+/* Defintion of the array's opaque type */
 typedef struct _myArray array_o;
 
-/* Definition of compare function */
+/* Definition of the array's compare function */
 typedef int (*ArrayCompare)(void*, void*);
 
 
-/* Returns a newly alloced array.
- * The returned array should be dealloced by
- * array_free.
- * capacity: the initial size of the array
- */
+
+/* Return a newly allocated array */
 extern array_o* array_new(size_t capacity, ArrayCompare compare);
 
+/* Deallocate an array */
 extern void array_free(array_o* array);
 
+/* Return the size of an array */
 extern size_t array_size(array_o* array);
 
+/* Return the capacity of an array */
 extern size_t array_capacity(array_o* array);
 
+/* Check if it is necessary reallocate memory */
 extern void array_check_realloc(array_o* array);
 
+/* Return 1 if the array is empty, 0 otherwise */
 extern int array_empty(array_o* array);
 
+/* Return a pointer to the element in the specified position */
 extern void* array_at(array_o* array, size_t position);
 
+/* Adds an element at the bottom of the array  */
 extern void array_insert(array_o* array, void* element);
 
+/* Delete the element in the specified position 
+ * Returns 0 on success, -1 otherwise
+ */
 extern int array_delete(array_o* array, size_t position);
 
+/* ...  */
 extern void array_set_elem(array_o* array, void* element, size_t position);
 
+/* Swap two element in the specified positions  */
 extern void array_swap(array_o* array, size_t position_a, size_t position_b);
