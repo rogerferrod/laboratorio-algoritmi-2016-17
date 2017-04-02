@@ -43,4 +43,16 @@ void selection_sort(array_o* array, ArrayCompare compare) {
   return;
 }
 
+void quick_sort(array_o* array,size_t bottom,size_t top) {
+  size_t p;  
+
+  if(top > 1){
+    p = array_partition(array);
+    if(p > 2)
+      quick_sort(array, bottom, p - 1);
+    if(p < top - 1)
+      quick_sort(array, p + 1, top);
+  }
+}
+
 
