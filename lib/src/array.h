@@ -65,6 +65,3 @@ extern void array_set_elem(array_o* array, void* element, size_t position);
 
 /* Swap two element in the specified positions  */
 extern void array_swap(array_o* array, size_t position_a, size_t position_b);
-
-/* Partition needed for the quick sort */
-extern size_t array_partition(array_o* array);

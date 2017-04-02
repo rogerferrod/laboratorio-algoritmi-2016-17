@@ -7,7 +7,7 @@
  */
  
  
- /*
+/*
  * Implements an abstracted array
  *
  */
@@ -123,25 +123,3 @@ void array_swap(array_o* array, size_t position_a, size_t position_b){
   array->array[position_b] = temp;
   return;
 }
-
-size_t array_partition(array_o* array){
-  void* perno;
-  size_t i,j;
-  perno = array->array[0];
-  i = 1;
-  j = array->size;
-  while (i <= j) {
-    if (array_at(array, i) <= perno){
-      i++;
-    }else if (array_at(array, j) > perno){
-      j--;
-    }else {
-      array_swap(array, i, j);
-      i++;
-      j--;
-    }
-  }
-  array_swap(array, 0, j);
-  return j;
-}
-
