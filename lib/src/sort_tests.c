@@ -69,6 +69,23 @@ static void test_sort_SelectionSort(){
 
   free_fixture(array);
 }
+
+static void test_sort_QuickSort(){
+  size_t n;
+
+  array_o* array = build_fixture();
+  n = array_size(array);
+
+  quick_sort(array, 0, n);
+  TEST_ASSERT_EQUAL_INT(1, *(int*)array_at(array, 0));
+  TEST_ASSERT_EQUAL_INT(4, *(int*)array_at(array, 1));
+  TEST_ASSERT_EQUAL_INT(7, *(int*)array_at(array, 2));
+  TEST_ASSERT_EQUAL_INT(10, *(int*)array_at(array, 3));
+
+
+  free_fixture(array);
+}
+
 int main() {
   UNITY_BEGIN();
   RUN_TEST(test_sort_InsertionSort);
