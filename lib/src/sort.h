@@ -19,4 +19,6 @@ extern void insertion_sort(array_o* array, ArrayCompare compare);
 
 extern void selection_sort(array_o* array, ArrayCompare compare);
 
+extern void quick_sort(array_o* array,size_t a,size_t b);
+
 /* + i vari algoritmi di ordinamento */
