@@ -2,11 +2,17 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <unistd.h>
 #include "../../lib/src/array.h"
 
 #define ARRAY_CAPACITY 20000000
 #define BUFFER_LENGHT  100
 
+#define TIMER_START(timer)  (timer = clock());
+#define TIMER_STOP(timer)   (printf("Processor time used: %f s\n", \
+				    ((double) ((clock_t)clock() - timer)) / CLOCKS_PER_SEC));
+  
 typedef struct {
   int id;
   char *field1;
@@ -21,26 +27,20 @@ static void array_print(array_o *array){
   elem = (record*)malloc(sizeof(record));
   for(i = 0; i < array_size(array); i++){
     elem = (record*)array_at(array, i);
-    printf("array[%d] = {%d,%s,%d,%f}\n", i, elem->id, elem->field1, elem->field2, elem->field3);
+    printf("array[%d] = {%d,%s,%d,%f}\n", (int)i, elem->id, elem->field1, elem->field2, elem->field3);
   }
   return;
 }
 
-int main(int argc, char* argv[]) {
-  if (argc < 2) {
-    fprintf(stderr, "No such argument\n");
-    errno = EINVAL;
-    exit(EXIT_FAILURE);
-  }
-
+static array_o* array_load(char *path){
   FILE* file;
-  file = fopen(argv[1], "r");
+  file = fopen(path, "r");
   if (!file) {
     fprintf(stderr, "No such file or directory\n");
     errno = ENOENT;
-    exit(EXIT_FAILURE);
+    exit(EXIT_FAILURE); /* meglio NULL? */
   }
-
+ 
   array_o* array = array_new(ARRAY_CAPACITY);
   size_t buff_size = BUFFER_LENGHT;
   char *buffer;
@@ -65,13 +65,36 @@ int main(int argc, char* argv[]) {
     row->field3 = field3;
     
     array_insert(array, row);
-
   }
   /*teoricamente dovrebbe aver fatto la free dei raw */
-  
-  array_print(array);
 
   free(buffer);			 
   fclose(file);
+  return array;
+}
+
+int main(int argc, char* argv[]) {
+  array_o* array;
+  clock_t timer;
+
+  if (argc < 2) {
+    fprintf(stderr, "No such argument\n");
+    errno = EINVAL;
+    exit(EXIT_FAILURE);
+  }
+
+  
+  TIMER_START(timer);
+  array = array_load(argv[1]);
+  TIMER_STOP(timer);
+
+  sleep(1);
+  
+  TIMER_START(timer);
+  array_print(array);
+  TIMER_STOP(timer);
+  
   array_free(array);
+
+  return 0;
 }
