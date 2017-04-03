@@ -71,13 +71,9 @@ static void test_sort_SelectionSort(){
 }
 
 static void test_sort_QuickSort(){
-  size_t n;
-
   array_o* array = build_fixture();
-  n = array_size(array);
-  n = n-1; /* posizione ultimo elemento = size-1 */
 
-  quick_sort(array, 0, n, compare_int_ptr);
+  quick_sort(array, compare_int_ptr);
   TEST_ASSERT_EQUAL_INT(1, *(int*)array_at(array, 0));
   TEST_ASSERT_EQUAL_INT(4, *(int*)array_at(array, 1));
   TEST_ASSERT_EQUAL_INT(7, *(int*)array_at(array, 2));

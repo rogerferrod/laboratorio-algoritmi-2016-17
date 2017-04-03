@@ -16,6 +16,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+/* Partition needed for the quick sort */
+static size_t array_partition(array_o* array, size_t top, size_t bottom, ArrayCompare compare);
+
+static void q_sort(array_o* array, size_t top, size_t bottom, ArrayCompare compare);
 
 void insertion_sort(array_o* array, ArrayCompare compare) {
   size_t i;
@@ -48,15 +52,20 @@ void selection_sort(array_o* array, ArrayCompare compare) {
   return;
 }
 
-void quick_sort(array_o* array, size_t top, size_t bottom, ArrayCompare compare) {
+void quick_sort(array_o* array, ArrayCompare compare) {
+  q_sort(array, 0, array_size(array)-1, compare);
+  return;
+}
+
+void q_sort(array_o* array, size_t top, size_t bottom, ArrayCompare compare) {
   size_t p;  
 
   if(bottom > 0){ /* se c'è almeno un elemento */ 
     p = array_partition(array, top, bottom, compare);
     if(p > 1) /* se prima del perno ci sono almeno due elementi */
-      quick_sort(array, top, p-1, compare);
+      q_sort(array, top, p-1, compare);
     if(p < bottom - 1) /* se dopo il perno ci sono almeno due elementi */
-      quick_sort(array, p + 1, bottom, compare);
+      q_sort(array, p + 1, bottom, compare);
   }
   return;
 }
