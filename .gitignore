@@ -160,5 +160,5 @@ bin/
 build/
 cmake-build-debug/
 CMakeLists.txt
-
-
+*.csv
+esercizi/data/

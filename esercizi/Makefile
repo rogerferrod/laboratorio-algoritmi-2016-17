@@ -1,16 +1,16 @@
-#default
 CC = gcc
 
 # lista dei target da eseguire sempre
-all: tests
+all: compile
 
-# compila (grazie alla dipendenza)
-build: bin/array_tests bin/sort_tests
+#compile lib and es1
+compile:
+	$(MAKE) -C ../lib build
+	$(MAKE) bin/esercizio1
 
-# compila (grazie alla dipendenza) e esegue i test
-tests: build
-	bin/array_tests
-	bin/sort_tests
+#  compila (grazie alla dipendenza) e esegue ordered_array
+exec: compile
+	bin/esercizio1 data/ordered_array_sample_file.csv
 
 # Flags per il compilatore -- su gcc -Weverything non esiste
 #    sostituire con -Wall -Wpedantic
@@ -22,6 +22,7 @@ INCLUDES = src/*.h
 # tutti i target vanno ricompilati se cambiano gli header o
 # questo Makefile
 COMMON_DEPS = $(INCLUDES) Makefile
+COMMON_DEPS = Makefile
 
 # regola per compilare un .c in un .o
 # viene applicata ogni volta che una dipendenza richiede di compilare un file in
@@ -34,17 +35,8 @@ COMMON_DEPS = $(INCLUDES) Makefile
 build/%.o: src/%.c $(COMMON_DEPS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-bin/array: build/array.o build/array_main.o $(COMMON_DEPS)
-	$(CC) -o bin/array build/array.o build/array_main.o
-
-bin/array_tests: build/array_tests.o build/array.o build/unity.o $(COMMON_DEPS)
-	$(CC) -o bin/array_tests  build/array_tests.o build/array.o build/unity.o
-
-bin/sort: build/sort.o build/array.o $(COMMON_DEPS)
-	$(CC) -o bin/sort build/sort.o build/array.o
-
-bin/sort_tests: build/sort_tests.o build/sort.o build/array.o build/unity.o $(COMMON_DEPS)
-	$(CC) -o bin/sort_tests build/sort_tests.o build/sort.o build/array.o build/unity.o
+bin/esercizio1: build/esercizio1.o $(COMMON_DEPS)
+	$(CC) -o bin/esercizio1  build/esercizio1.o ../lib/build/array.o
 
 clean:
 	rm -f build/* bin/*
