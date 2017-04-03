@@ -26,7 +26,7 @@ static int* new_int(int value) {
 }
 
 static array_o* build_fixture() {
-  array_o* array = array_new(5, compare_int_ptr);
+  array_o* array = array_new(5);
 
   array_insert(array, new_int(1));
   array_insert(array, new_int(10));

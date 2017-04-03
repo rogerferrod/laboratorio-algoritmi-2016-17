@@ -32,7 +32,7 @@ typedef int (*ArrayCompare)(void*, void*);
 
 
 /* Return a newly allocated array */
-extern array_o* array_new(size_t capacity, ArrayCompare compare);
+extern array_o* array_new(size_t capacity);
 
 /* Deallocate an array */
 extern void array_free(array_o* array);

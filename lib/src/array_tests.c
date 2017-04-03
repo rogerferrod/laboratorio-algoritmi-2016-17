@@ -25,7 +25,7 @@ static int* new_int(int value) {
 }
 
 static array_o* build_fixture() {
-  array_o* array = array_new(5, compare_int_ptr);
+  array_o* array = array_new(5);
 
   array_insert(array, new_int(1));
   array_insert(array, new_int(10));
@@ -44,21 +44,21 @@ static void free_fixture(array_o* array) {
 }
 
 static void test_ordered_array_new_not_null() {
-  array_o* array = array_new(10, compare_int_ptr);
+  array_o* array = array_new(10);
   TEST_ASSERT_NOT_NULL(array);
 
   array_free(array);
 }
 
 static void test_ordered_array_new_capacity_is_correct() {
-  array_o* array = array_new(10, compare_int_ptr);
+  array_o* array = array_new(10);
   TEST_ASSERT_EQUAL_INT(10, array_capacity(array));
 
   array_free(array);
 }
 
 static void test_ordered_array_new_size_zero() {
-  array_o* array = array_new(10, compare_int_ptr);
+  array_o* array = array_new(10);
   TEST_ASSERT_EQUAL_INT(0, array_size(array));
 
   array_free(array);
@@ -66,7 +66,7 @@ static void test_ordered_array_new_size_zero() {
 
 
 static void test_ordered_array_free() {
-  array_o* array = array_new(10, compare_int_ptr);
+  array_o* array = array_new(10);
   array_free(array);
 
   TEST_ASSERT_EQUAL_INT(1, 1);
@@ -80,7 +80,7 @@ static void test_ordered_array_size() {
 
 
 static void test_ordered_array_empty() {
-  array_o* array = array_new(10, compare_int_ptr);
+  array_o* array = array_new(10);
   TEST_ASSERT_EQUAL_INT(1, array_empty(array));
   array_free(array);
 }

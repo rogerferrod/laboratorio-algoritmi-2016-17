@@ -23,17 +23,15 @@ struct _myArray {
   void** array;             /* generic array */
   size_t size;              /* size of the array */
   size_t capacity;          /* capacity of the array */
-  ArrayCompare compare;     /* pointer to the compare function */
 };
 
 
-array_o* array_new(size_t capacity, ArrayCompare compare) {
+array_o* array_new(size_t capacity) {
   array_o* new_array = (array_o*) malloc(sizeof(array_o));
   if (new_array != NULL){
     new_array->array = (void**) malloc(sizeof(void*)*capacity);
     new_array->size = 0;
     new_array->capacity = capacity;
-    new_array->compare = compare;
   }
   return new_array;
 }
