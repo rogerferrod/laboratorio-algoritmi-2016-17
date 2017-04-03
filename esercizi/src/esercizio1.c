@@ -4,26 +4,25 @@
 #include <string.h>
 #include "../../lib/src/array.h"
 
+#define ARRAY_CAPACITY 20
+#define BUFFER_LENGHT  100
+
 typedef struct {
-    int* id;
-    char* field1;
-    int* field2;
-    float* field3;
+  char *string;
+  int field1;
 } record;
 
-static int* new_int(int value) {
-  int* elem = (int*) malloc(sizeof(int));
-  *elem = value;
-  return elem;
-}
 
-/*
-static float* new_float(float value) {
-  float* elem = (float*) malloc(sizeof(float));
-  *elem = value;
-  return elem;
+static void array_print(array_o *array){
+  size_t i;
+  record *elem;
+  elem = (record*)malloc(sizeof(record));
+  for(i = 0; i < array_size(array); i++){
+    elem = (record*)array_at(array, i);
+    printf("array[%d] = {%s,%d}\n", i, elem->string, elem->field1);
+  }
+  return;
 }
-*/
 
 int main(int argc, char* argv[]) {
   if (argc < 2) {
@@ -40,33 +39,32 @@ int main(int argc, char* argv[]) {
     exit(EXIT_FAILURE);
   }
 
-/*
-  int id, field2;
-  char field1[50];
-  float field3;
-*/
-  char* field1;
-  field1 = (char*)malloc(sizeof(char)*50);
-  int field2;
 
-//  array_o* array = array_new(20000000);
-  array_o* array = array_new(20);
-  record* row = (record*)malloc(sizeof(record));
+  array_o* array = array_new(ARRAY_CAPACITY);
+  size_t buff_size = BUFFER_LENGHT;
+  char *buffer;
+  buffer = (char*)malloc(buff_size*(sizeof(char)));
 
-//  while (fscanf(file, "%d,%s,%d,%f,", &id, field1, &field2, &field3)!=EOF){
-  while (fscanf(file, "%s,%d", field1, &field2)!=EOF){
-/*
-    row->id = new_int(id);
-    row->field1 = strdup(field1);
-    row->field2 = new_int(field2);
-    row->field3 = new_float(field3);
-*/
-    row->field1 = strdup(field1);
-    row->field2 = new_int(field2);
+  while(fgets(buffer,buff_size,file) != NULL){
+    record* row = (record*)malloc(sizeof(record));
+    char *string = strtok(buffer,",");
+    char *integer = strtok(NULL,",");
+    
+    char *field0 = malloc((strlen(string)+1)*sizeof(char));  /* +1 di \0 */  
+    strcpy(field0,string);    
+    int field1 = atoi(integer);  
+
+    row->string = field0;
+    row->field1 = field1; /* no malloc? implicita */
+    
     array_insert(array, row);
-  }
-  fclose(file);
 
+  }
+  /*teoricamente dovrebbe aver fatto la free di string e integer */
+  
+  array_print(array);
+
+  free(buffer);			 
+  fclose(file);
   array_free(array);
-  free(row);
 }
