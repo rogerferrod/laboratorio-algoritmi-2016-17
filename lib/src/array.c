@@ -66,11 +66,15 @@ void* array_at(array_o* array, size_t position) {
 void array_check_realloc(array_o* array){
   if(array->size >= array->capacity){
     array->capacity *= INCREMENT_FACTOR;
+    fprintf(stdout, "realloc_inc\n");
     array->array = realloc(array->array, array->capacity*sizeof(void*));
-  } else if (array->size <=  (array->capacity)/4){
+  }
+  /* else if (array->size <=  (array->capacity)/4){
     array->capacity /= DECREMENT_FACTOR;
+    fprintf(stdout, "realloc_dec\n");
     array->array = realloc(array->array, array->capacity*sizeof(void*)); 
   }
+  */
 }
 
 void array_insert(array_o* array, void* element) {
