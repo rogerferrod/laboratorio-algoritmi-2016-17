@@ -10,7 +10,7 @@ compile:
 
 #  compila (grazie alla dipendenza) e esegue ordered_array
 exec: compile
-	bin/esercizio1 data/records.csv
+	bin/esercizio1 data/records.csv 1000
 
 # Flags per il compilatore -- su gcc -Weverything non esiste
 #    sostituire con -Wall -Wpedantic
