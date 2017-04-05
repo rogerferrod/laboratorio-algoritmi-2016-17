@@ -36,7 +36,7 @@ build/%.o: src/%.c $(COMMON_DEPS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 bin/esercizio1: build/esercizio1.o $(COMMON_DEPS)
-	$(CC) -o bin/esercizio1  build/esercizio1.o ../lib/build/array.o
+	$(CC) -o bin/esercizio1  build/esercizio1.o ../lib/build/array.o ../lib/build/sort.o
 
 clean:
 	rm -f build/* bin/*

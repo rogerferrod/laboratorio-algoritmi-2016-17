@@ -24,11 +24,13 @@ static void q_sort(array_o* array, size_t top, size_t bottom, ArrayCompare compa
 void insertion_sort(array_o* array, ArrayCompare compare) {
   size_t i;
   size_t j;
+  size_t size;
+  size = array_size(array);
 
-  for(i = 0; i < array_size(array); ++i ) {
+  for(i = 0; i < size; ++i ) {
     
     j = i;
-    while(j > 0 && compare(array_at(array, j-1), array_at(array, j)) == 1){
+    while(j > 0 && compare(array_at(array, j-1), array_at(array, j)) > 0){
       array_swap(array, j-1, j);
       j--;
     }
@@ -43,7 +45,7 @@ void selection_sort(array_o* array, ArrayCompare compare) {
   for(i = 0; i < n -1; ++i){
     k = i;
     for(j = i + 1; j < n; ++j){
-      if (compare(array_at(array, k), array_at(array, j)) == 1){
+      if (compare(array_at(array, k), array_at(array, j)) > 0){
         k = j;
       }
     }
@@ -74,7 +76,7 @@ size_t array_partition(array_o* array, size_t top, size_t bottom, ArrayCompare c
   void* pivot;
   size_t i,j;
 
-  pivot = array_at(array, 0);  /* sarebbe meglio si trovasse a metà */
+  pivot = array_at(array, ((int)array_size(array))/2);  /* sarebbe meglio si trovasse a metà */
   i = 1;
   j = bottom;
 

@@ -5,6 +5,7 @@
 #include <time.h>
 #include <unistd.h>
 #include "../../lib/src/array.h"
+#include "../../lib/src/sort.h"
 
 #define ARRAY_CAPACITY 20000000
 #define BUFFER_LENGHT  100
@@ -20,6 +21,21 @@ typedef struct {
   float field3;
 } record;
 
+int compare_str(char* a, char* b) {
+  return strcmp(a, b);
+/*  int r;
+  r = strcmp(a, b);
+  if (r > 0) return 1;
+  else if (r < 0) return -1;
+  else return 0;
+*/
+}
+int compare_record_field1(void* a, void* b) {
+  record* first = (record*)a;
+  record* last = (record*)b;
+  return strcmp(first->field1, last->field1);
+  //return compare_str(first->field1, last->field1);
+}
 
 static void array_print(array_o *array){
   size_t i;
@@ -46,7 +62,8 @@ static array_o* array_load(char *path){
   char *buffer;
   buffer = (char*)malloc(buff_size*(sizeof(char)));
 
-  while(fgets(buffer,buff_size,file) != NULL){
+  int count = 0;
+  while(fgets(buffer,buff_size,file) != NULL && count < 100000){
     record* row = (record*)malloc(sizeof(record));
     char *raw_id = strtok(buffer,",");
     char *raw_field1 = strtok(NULL,",");
@@ -65,6 +82,7 @@ static array_o* array_load(char *path){
     row->field3 = field3;
     
     array_insert(array, row);
+    count++;
   }
   /*teoricamente dovrebbe aver fatto la free dei raw */
 
@@ -74,6 +92,18 @@ static array_o* array_load(char *path){
 }
 
 int main(int argc, char* argv[]) {
+  /*
+  char* s1 = "zprova";
+  char* s2 = "prova";
+  fprintf(stdout, "%d\n", compare_str(s1, s2));
+
+  record* r1 = malloc(sizeof(record));
+  record* r2 = malloc(sizeof(record));
+  r1->field1 = s1;
+  r2->field1 = s2;
+  fprintf(stdout, "%d\n", compare_record_field1(r1, r2));
+  return 0;
+  */
   array_o* array;
   clock_t timer;
 
@@ -91,8 +121,12 @@ int main(int argc, char* argv[]) {
   sleep(1);
   
   TIMER_START(timer);
-  array_print(array);
+//  quick_sort(array, compare_record_field1);
+  insertion_sort(array, compare_record_field1);
   TIMER_STOP(timer);
+  
+  sleep(2);
+  array_print(array);
   
   array_free(array);
 
