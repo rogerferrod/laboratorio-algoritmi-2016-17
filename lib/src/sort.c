@@ -83,24 +83,25 @@ void quick_sort(array_o* array, ArrayCompare compare) {
 //}
 
 void q_sort(array_o* array, size_t begin, size_t end, ArrayCompare compare) {
-    size_t pivot, l, r; 
-    if (end > begin) {
-       pivot = array_at(array, begin);
-       l = begin + 1;
-       r = end+1;
-       while(l < r)
-          if (compare(array_at(array, l), pivot) < 0)
-             l++;
-          else {
-             r--;
-             array_swap(array, l, r); 
-          }
-       l--;
-       array_swap(array, begin, l);
-       q_sort(array, begin, l, compare);
-       q_sort(array, r, end, compare);
+  size_t l, r; 
+  void* pivot;
+  if (end > begin) {
+    pivot = array_at(array, begin);
+    l = begin + 1;
+    r = end+1;
+    while(l < r)
+      if (compare(array_at(array, l), pivot) < 0)
+        l++;
+      else {
+        r--;
+        array_swap(array, l, r); 
+      }
+      l--;
+      array_swap(array, begin, l);
+      q_sort(array, begin, l, compare);
+      q_sort(array, r, end, compare);
     }
- }
+}
 
 size_t array_partition(array_o* array, size_t begin, size_t end, ArrayCompare compare){
 

@@ -63,7 +63,7 @@ static array_o* array_load(char *path){
   buffer = (char*)malloc(buff_size*(sizeof(char)));
 
   int count = 0;
-  while(fgets(buffer,buff_size,file) != NULL && count < 2000000){
+  while(fgets(buffer,buff_size,file) != NULL && count < 200000){
     record* row = (record*)malloc(sizeof(record));
     char *raw_id = strtok(buffer,",");
     char *raw_field1 = strtok(NULL,",");
@@ -118,7 +118,7 @@ int main(int argc, char* argv[]) {
   TIMER_START(timer);
   array = array_load(argv[1]);
   TIMER_STOP(timer);
-  fprintf(stdout, "array_size: %d\n", array_size(array));
+  fprintf(stdout, "array_size: %u\n", (unsigned int)array_size(array));
 /*
   sleep(1);
   
@@ -126,6 +126,7 @@ int main(int argc, char* argv[]) {
   TIMER_START(timer);
   insertion_sort(array, compare_record_field1);
   TIMER_STOP(timer);
+*/
   
   sleep(1);
   
@@ -133,14 +134,15 @@ int main(int argc, char* argv[]) {
   TIMER_START(timer);
   selection_sort(array, compare_record_field1);
   TIMER_STOP(timer);
-*/
+
+/*
   sleep(1);
   
   fprintf(stdout, "quick_sort\n");
   TIMER_START(timer);
   quick_sort(array, compare_record_field1);
   TIMER_STOP(timer);
-  
+*/  
   //sleep(2);
   //array_print(array);
   
