@@ -188,7 +188,7 @@ int main() {
   elem = (int*)malloc(sizeof(int));
   *elem = 5;
   array_insert(test_array, elem);
-  printf("insered %d\n", *elem);
+  printf("inserted %d\n", *elem);
 
   a1 = 6;
   a2 = 7;

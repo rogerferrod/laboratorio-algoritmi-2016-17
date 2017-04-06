@@ -8,7 +8,7 @@
 #include "../../lib/src/sort.h"
 
 #define ARRAY_CAPACITY 20000000
-#define BUFFER_LENGHT  100
+#define BUFFER_LENGTH  100
 
 #define TIMER_START(timer)  (timer = clock());
 #define TIMER_STOP(timer)   (printf("Processor time used: %f s\n", \
@@ -96,7 +96,7 @@ static array_o *array_load(char *path, int record_read) {
 
 int main(int argc, char *argv[]) {
   /*
-  char* s1 = "zprova";
+  char* s1 = "zuzzurellone";
   char* s2 = "prova";
   fprintf(stdout, "%d\n", compare_str(s1, s2));
 

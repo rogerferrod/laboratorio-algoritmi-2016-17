@@ -23,7 +23,7 @@
 
 
 
-/* Defintion of the array's opaque type */
+/* Definition of the array's opaque type */
 typedef struct _myArray array_o;
 
 /* Definition of the array's compare function */
