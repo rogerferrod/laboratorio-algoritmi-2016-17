@@ -59,7 +59,7 @@ static array_o *array_load(char *path, int record_read) {
   }
 
   array_o *array = array_new(ARRAY_CAPACITY);
-  size_t buff_size = BUFFER_LENGHT;
+  size_t buff_size = BUFFER_LENGTH;
   char *buffer;
   buffer = (char *) malloc(buff_size * (sizeof(char)));
 
