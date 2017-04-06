@@ -14,7 +14,7 @@ exec: compile
 
 # Flags per il compilatore -- su gcc -Weverything non esiste
 #    sostituire con -Wall -Wpedantic
-CFLAGS = -g -Wall -pedantic -Wno-padded -std=c99
+CFLAGS = -g -Wall -pedantic -Wno-padded -std=c99 -O3 -march=native
 
 # Lista degli header files
 INCLUDES = src/*.h
