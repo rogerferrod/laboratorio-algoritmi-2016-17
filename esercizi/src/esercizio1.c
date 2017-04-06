@@ -116,7 +116,7 @@ int main(int argc, char *argv[]) {
     exit(EXIT_FAILURE);
   }
 
-  int record_read = 1000;
+  int record_read = 0;
   if (argc >= 3) {
     record_read = atoi(argv[2]);
   }
