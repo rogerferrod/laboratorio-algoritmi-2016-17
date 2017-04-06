@@ -10,6 +10,10 @@
 #define ARRAY_CAPACITY 20000000
 #define BUFFER_LENGTH  100
 
+#define I_SORT 1
+#define S_SORT 2
+#define Q_SORT 3
+
 #define TIMER_START(timer)  (timer = clock());
 #define TIMER_STOP(timer)   (printf("Processor time used: %f s\n", \
             ((double) ((clock_t)clock() - timer)) / CLOCKS_PER_SEC));
@@ -21,31 +25,39 @@ typedef struct {
     float field3;
 } record;
 
-int compare_str(char *a, char *b) {
-  return strcmp(a, b);
-/*  int r;
-  r = strcmp(a, b);
-  if (r > 0) return 1;
-  else if (r < 0) return -1;
-  else return 0;
-*/
-}
 
 int compare_record_field1(void *a, void *b) {
   record *first = (record *) a;
   record *last = (record *) b;
   return strcmp(first->field1, last->field1);
-  //return compare_str(first->field1, last->field1);
 }
 
-static void array_print(array_o *array) {
+int compare_record_field2(void *a, void *b) {
+  record *first = (record *) a;
+  record *last = (record *) b;
+  return first->field2 - last->field2;
+}
+
+int compare_record_field3(void *a, void *b) {  /* ATTENZIONE: uguale a field2 ? */
+  record *first = (record *) a;
+  record *last = (record *) b;
+  return (first->field3 - last->field3);
+}
+
+static void array_print(array_o *array, float rate) {
   size_t i;
   record *elem;
+  int delta;
+  delta = (int)(rate * (float)array_size(array));
+
   elem = (record *) malloc(sizeof(record));
-  for (i = 0; i < array_size(array); i++) {
+  for (i = 0; i < array_size(array); i+=delta) {
     elem = (record *) array_at(array, i);
-    printf("array[%d] = {%d,%s,%d,%f}\n", (int) i, elem->id, elem->field1, elem->field2, elem->field3);
+    printf("array[%d] = {%d,%s,%d,%f}\n", (int)i, elem->id, elem->field1, elem->field2, elem->field3);
   }
+  i = array_size(array)-1;
+  elem = (record *) array_at(array, i);
+  printf("array[%d] = {%d,%s,%d,%f}\n", (int)i, elem->id, elem->field1, elem->field2, elem->field3);
   return;
 }
 
@@ -98,17 +110,21 @@ int main(int argc, char *argv[]) {
   /*
   char* s1 = "zuzzurellone";
   char* s2 = "prova";
-  fprintf(stdout, "%d\n", compare_str(s1, s2));
-
+  printf("%d\n",strcmp(s1, s2));
   record* r1 = malloc(sizeof(record));
   record* r2 = malloc(sizeof(record));
   r1->field1 = s1;
   r2->field1 = s2;
-  fprintf(stdout, "%d\n", compare_record_field1(r1, r2));
-  return 0;
+  r1->field2 = 5;
+  r2->field2 = 3;
+  printf("%d\n", compare_record_field1(r1, r2));
+  printf("%d\n", compare_record_field2(r1, r2));
   */
+
   array_o *array;
   clock_t timer;
+  int record_read;
+  int algorithm;
 
   if (argc < 2) {
     fprintf(stderr, "No such argument\n");
@@ -116,9 +132,16 @@ int main(int argc, char *argv[]) {
     exit(EXIT_FAILURE);
   }
 
-  int record_read = 0;
+  record_read = 0;
   if (argc >= 3) {
     record_read = atoi(argv[2]);
+  }
+  /* da mettere insieme i parametri */
+  algorithm = Q_SORT;
+  if (argc >= 4) {
+    if(strcmp(argv[3], "isort") == 0){algorithm = I_SORT;}
+    else if(strcmp(argv[3], "ssort") == 0){algorithm = S_SORT;}
+    else if(strcmp(argv[3], "qsort") == 0){algorithm = Q_SORT;}
   }
 
   fprintf(stdout, "array_load\n");
@@ -126,32 +149,34 @@ int main(int argc, char *argv[]) {
   array = array_load(argv[1], record_read);
   TIMER_STOP(timer);
   fprintf(stdout, "array_size: %u\n", (unsigned int) array_size(array));
-/*
+
   sleep(1);
   
-  fprintf(stdout, "insertion_sort\n");
-  TIMER_START(timer);
-  insertion_sort(array, compare_record_field1);
-  TIMER_STOP(timer);
-*/
-
-  sleep(1);
-
-  fprintf(stdout, "selection_sort\n");
-  TIMER_START(timer);
-  selection_sort(array, compare_record_field1);
-  TIMER_STOP(timer);
-
-/*
-  sleep(1);
+  switch(algorithm){
+  case I_SORT:
+    fprintf(stdout, "insertion_sort\n");
+    TIMER_START(timer);
+    insertion_sort(array, compare_record_field1);
+    TIMER_STOP(timer);
+    break;
+  case S_SORT:
+    fprintf(stdout, "selection_sort\n");
+    TIMER_START(timer);
+    selection_sort(array, compare_record_field1);
+    TIMER_STOP(timer);
+    break;
+  case Q_SORT:
+    fprintf(stdout, "quick_sort\n");
+    TIMER_START(timer);
+    quick_sort(array, compare_record_field1);
+    TIMER_STOP(timer);
+    break;
+  default:
+    fprintf(stderr, "error\n");
+  }
   
-  fprintf(stdout, "quick_sort\n");
-  TIMER_START(timer);
-  quick_sort(array, compare_record_field1);
-  TIMER_STOP(timer);
-*/
-  //sleep(2);
-  //array_print(array);
+  sleep(2);
+  array_print(array, 0.125);
 
   array_free(array);
 
