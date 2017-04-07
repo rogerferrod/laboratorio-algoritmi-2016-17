@@ -50,7 +50,7 @@ static void array_print(array_o *array, float rate) {
   int delta;
   delta = (int)(rate * (float)array_size(array));
 
-  elem = (record *) malloc(sizeof(record));
+  //elem = (record *) malloc(sizeof(record));
   for (i = 0; i < array_size(array); i+=delta) {
     elem = (record *) array_at(array, i);
     printf("array[%d] = {%d,%s,%d,%f}\n", (int)i, elem->id, elem->field1, elem->field2, elem->field3);
@@ -59,6 +59,19 @@ static void array_print(array_o *array, float rate) {
   elem = (record *) array_at(array, i);
   printf("array[%d] = {%d,%s,%d,%f}\n", (int)i, elem->id, elem->field1, elem->field2, elem->field3);
   return;
+}
+
+static void memory_free(array_o *array){
+  record *elem;
+  size_t i;
+
+  for (i = 0; i < array_size(array); ++i) {
+    elem = (record *) array_at(array, i);
+    free(elem->field1);
+    free(elem);    
+  }
+  
+  array_free(array);
 }
 
 static array_o *array_load(char *path, int record_read) {
@@ -177,8 +190,8 @@ int main(int argc, char *argv[]) {
   
   sleep(2);
   array_print(array, 0.125);
-
-  array_free(array);
+  
+  memory_free(array);
 
   return 0;
 }

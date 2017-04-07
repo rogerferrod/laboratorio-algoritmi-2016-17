@@ -10,7 +10,7 @@ compile:
 
 #  compila (grazie alla dipendenza) e esegue ordered_array
 COUNT = 1000
-ALG = isort
+ALG = qsort
 exec: compile
 	bin/esercizio1 data/records.csv ${COUNT} ${ALG}
 
