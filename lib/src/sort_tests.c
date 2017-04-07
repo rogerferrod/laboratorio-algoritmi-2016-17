@@ -71,35 +71,64 @@ static void test_sort_SelectionSort(){
 }
 
 static void test_sort_QuickSort(){
-  array_o* array = build_fixture();
+  array_o* array = array_new(10);
+
+  array_insert(array, new_int(8));
+  array_insert(array, new_int(10));
+  array_insert(array, new_int(2));
+  array_insert(array, new_int(9));
+  array_insert(array, new_int(3));
+  array_insert(array, new_int(1));
+  array_insert(array, new_int(5));
 
   quick_sort(array, compare_int_ptr);
   TEST_ASSERT_EQUAL_INT(1, *(int*)array_at(array, 0));
-  TEST_ASSERT_EQUAL_INT(4, *(int*)array_at(array, 1));
-  TEST_ASSERT_EQUAL_INT(7, *(int*)array_at(array, 2));
-  TEST_ASSERT_EQUAL_INT(10, *(int*)array_at(array, 3));
+  TEST_ASSERT_EQUAL_INT(2, *(int*)array_at(array, 1));
+  TEST_ASSERT_EQUAL_INT(3, *(int*)array_at(array, 2));
+  TEST_ASSERT_EQUAL_INT(5, *(int*)array_at(array, 3));
+  TEST_ASSERT_EQUAL_INT(8, *(int*)array_at(array, 4));
+  TEST_ASSERT_EQUAL_INT(9, *(int*)array_at(array, 5));
+  TEST_ASSERT_EQUAL_INT(10, *(int*)array_at(array, 6));
 
-  free_fixture(array);
+  array_free(array);
 }
 
 static void test_sort_partition(){
-  array_o* array = build_fixture();
+  array_o* array = array_new(10);
 
-//  array_partition(array, );
-  TEST_ASSERT_EQUAL_INT(1, *(int*)array_at(array, 0));
+  /* 1 10 4 7 8 2 9 3*/
+  array_insert(array, new_int(8));
+  array_insert(array, new_int(10));
+  array_insert(array, new_int(2));
+  array_insert(array, new_int(9));
+  array_insert(array, new_int(3));
+  array_insert(array, new_int(1));
+  array_insert(array, new_int(5));
+
+  array_partition(array, 0, array_size(array)-1, compare_int_ptr);
+  /* TEST_ASSERT_EQUAL_INT(1, *(int*)array_at(array, 0));
   TEST_ASSERT_EQUAL_INT(4, *(int*)array_at(array, 1));
   TEST_ASSERT_EQUAL_INT(7, *(int*)array_at(array, 2));
-  TEST_ASSERT_EQUAL_INT(10, *(int*)array_at(array, 3));
+  TEST_ASSERT_EQUAL_INT(10, *(int*)array_at(array, 3));*/
 
-  free_fixture(array);
+  for(int i = 0; i < array_size(array); ++i){
+    int *elem;
+    elem = (int*)array_at(array,i);
+    printf("%d ", *elem);
+  }
+  printf("\n");
+  
+  array_free(array);
 }
 
 int main() {
+  test_sort_partition();
   UNITY_BEGIN();
   RUN_TEST(test_sort_InsertionSort);
   RUN_TEST(test_sort_SelectionSort);
   RUN_TEST(test_sort_QuickSort);
   //RUN_TEST(test_sort_partition);
-  return UNITY_END();
+  UNITY_END();
   
+  return 0;
 }

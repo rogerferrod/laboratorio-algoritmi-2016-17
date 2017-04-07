@@ -15,9 +15,11 @@
 #include "sort.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 
 /* Partition needed for the quick sort */
-static size_t array_partition(array_o* array, size_t top, size_t bottom, ArrayCompare compare);
+/* da rimettere static */
+ size_t array_partition(array_o* array, size_t top, size_t bottom, ArrayCompare compare);
 
 static void q_sort(array_o* array, size_t top, size_t bottom, ArrayCompare compare);
 
@@ -59,87 +61,60 @@ void quick_sort(array_o* array, ArrayCompare compare) {
   return;
 }
 
-//void q_sort(array_o* array, size_t top, size_t bottom, ArrayCompare compare) {
-  //  size_t p;  
+void q_sort(array_o* array, size_t begin, size_t bottom, ArrayCompare compare) {
+  size_t p;  
+  printf("begin %d, end %d\n", begin, bottom);
+  
+  if(bottom > begin){ /* se c'è almeno un elemento */
+   p = array_partition(array, begin, bottom, compare);
+   if(p > 1){  /* se prima del perno ci sono almeno due elementi */
+     q_sort(array, begin, p-1, compare); 
+   }
+   if((bottom-p)> 1){ /* se dopo il perno ci sono almeno due elementi */
+     q_sort(array, p+1, bottom, compare);
+   }
+  }
 
-  //  if(bottom > 0){ /* se c'è almeno un elemento */ 
-  //    p = array_partition(array, top, bottom, compare);
-  //    if(p > 1) {/* se prima del perno ci sono almeno due elementi */
-  //      q_sort(array, top, p-1, compare);
-  //    }
-  //    if(p < bottom - 1) {/* se dopo il perno ci sono almeno due elementi */
-  //      q_sort(array, p + 1, bottom, compare);
-  //    }
-  //  }
-  //  return;
-
-  //if (top > bottom) return;
-  //size_t p;
-  //p = array_partition(array, top, bottom, compare);
-  //q_sort(array, top, p-1, compare);
-  //q_sort(array, p+1, bottom, compare);
-  //return;
-
-//}
-
-void q_sort(array_o* array, size_t begin, size_t end, ArrayCompare compare) {
-  size_t l, r; 
-  void* pivot;
-  if (end > begin) {
-    pivot = array_at(array, begin);
-    l = begin + 1;
-    r = end+1;
-    while(l < r)
-      if (compare(array_at(array, l), pivot) < 0)
-        l++;
-      else {
-        r--;
-        array_swap(array, l, r); 
-      }
-      l--;
-      array_swap(array, begin, l);
-      q_sort(array, begin, l, compare);
-      q_sort(array, r, end, compare);
-    }
+  return;
 }
 
 size_t array_partition(array_o* array, size_t begin, size_t end, ArrayCompare compare){
 
-  //  void* pivot;
-  //  size_t i,j;
-
-  //  pivot = array_at(array, begin);  /* sarebbe meglio si trovasse a metà */
-  //  i = begin+1;
-  //  j = end;
-
-  //  while (i < j) { /* minore stretto */
-  //    if (compare(array_at(array, i), pivot) <= 0){ /* array[i] <= pivot */
-  //      i++;
-  //    } else if (compare(array_at(array, j), pivot) > 0){ /* array[j] > pivot */
-  //      j--;
-  //    } else {
-  //      array_swap(array, i, j);
-  //      i++;
-  //      j--;
-  //    }
-  //  }
-  //  array_swap(array, 0, j);
-  //  return j;
-
-  size_t i, j;
-  i = begin;
-  j = end+1;
-
-  while(1) {
-    while(compare(array_at(array, ++i), array_at(array, begin)) < 0) {
-      if (i == end) break;
-    }
-    while(compare(array_at(array, begin), array_at(array, --j)) < 0) {
-      if (j == begin) break;
-    }
-    if (i>=j) break;
-    array_swap(array, i, j);
+ for(int i = begin; i <= end; ++i){
+    int *elem;
+    elem = (int*)array_at(array,i);
+    printf("%d ", *elem);
   }
-  array_swap(array, begin, j);
-  return j;
+   printf("\n");
+
+
+  void* pivot;
+  int i,j;
+  pivot = array_at(array, ((end-begin)/2)+begin);  /* sarebbe meglio si trovasse a metà */
+  i = (int)begin;
+  j = (int)end;
+
+   while (i <= j) {
+     while(compare(array_at(array, i), pivot) < 0){ /* array[i] < pivot */
+        i++;
+     }
+     while(compare(array_at(array, j), pivot) > 0){ /* array[j] > pivot */
+        j--;
+     } 
+     if(i <= j){
+        array_swap(array, i, j);
+        i++;
+        j--;
+     }
+    }
+
+   for(int i = begin; i <= end; ++i){
+    int *elem;
+    elem = (int*)array_at(array,i);
+    printf("%d ", *elem);
+  }
+   printf("[p %d]\n", i-begin);
+
+    return i;
 }
+
