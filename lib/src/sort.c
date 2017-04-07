@@ -57,21 +57,16 @@ void selection_sort(array_o* array, ArrayCompare compare) {
 }
 
 void quick_sort(array_o* array, ArrayCompare compare) {
+  srand(time(NULL));
   q_sort(array, 0, array_size(array)-1, compare);
   return;
 }
 
 void q_sort(array_o* array, int  begin, int  end, ArrayCompare compare) {
-
-  /* for(int i = begin; i <= end; ++i){
-    int *elem;
-    elem = (int*)array_at(array,i);
-    printf("%d ", *elem);
-  }printf("\n");
-  */
   void* pivot;
   int i,j;
-  pivot = array_at(array, ((end-begin)/2)+begin);  /* sarebbe meglio si trovasse a metà */
+  //pivot = array_at(array, ((end-begin)/2)+begin);  /* sarebbe meglio fosse random */
+  pivot = array_at(array, rand()%(end-begin+1)+begin); /* il +1 serve a generale anche lo 0 */
   i = (int)begin;
   j = (int)end;
 
@@ -88,13 +83,6 @@ void q_sort(array_o* array, int  begin, int  end, ArrayCompare compare) {
         j--;
      }
    }
-
-   /* for(int i = begin; i <= end; ++i){
-    int *elem;
-    elem = (int*)array_at(array,i);
-    printf("%d ", *elem);
-  }
-  printf("[p %d]\n", i-begin);*/
 
    if(begin < j){
      q_sort(array, begin, j, compare);
