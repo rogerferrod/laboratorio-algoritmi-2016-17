@@ -63,12 +63,12 @@ void quick_sort(array_o* array, ArrayCompare compare) {
 
 void q_sort(array_o* array, int  begin, int  end, ArrayCompare compare) {
 
-  for(int i = begin; i <= end; ++i){
+  /* for(int i = begin; i <= end; ++i){
     int *elem;
     elem = (int*)array_at(array,i);
     printf("%d ", *elem);
   }printf("\n");
-
+  */
   void* pivot;
   int i,j;
   pivot = array_at(array, ((end-begin)/2)+begin);  /* sarebbe meglio si trovasse a metà */
