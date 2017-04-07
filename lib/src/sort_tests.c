@@ -90,7 +90,16 @@ static void test_sort_QuickSort(){
   TEST_ASSERT_EQUAL_INT(9, *(int*)array_at(array, 5));
   TEST_ASSERT_EQUAL_INT(10, *(int*)array_at(array, 6));
 
+  printf("ordinato\n");
+  for(int i = 0; i < array_size(array); ++i){
+    int *elem;
+    elem = (int*)array_at(array,i);
+    printf("%d ", *elem);
+  }printf("\n");
+
   array_free(array);
+
+  
 }
 
 static void test_sort_partition(){

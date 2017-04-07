@@ -21,7 +21,7 @@
 /* da rimettere static */
  size_t array_partition(array_o* array, size_t top, size_t bottom, ArrayCompare compare);
 
-static void q_sort(array_o* array, size_t top, size_t bottom, ArrayCompare compare);
+static void q_sort(array_o* array, int top, int end, ArrayCompare compare);
 
 void insertion_sort(array_o* array, ArrayCompare compare) {
   size_t i;
@@ -61,32 +61,13 @@ void quick_sort(array_o* array, ArrayCompare compare) {
   return;
 }
 
-void q_sort(array_o* array, size_t begin, size_t bottom, ArrayCompare compare) {
-  size_t p;  
-  printf("begin %d, end %d\n", begin, bottom);
-  
-  if(bottom > begin){ /* se c'è almeno un elemento */
-   p = array_partition(array, begin, bottom, compare);
-   if(p > 1){  /* se prima del perno ci sono almeno due elementi */
-     q_sort(array, begin, p-1, compare); 
-   }
-   if((bottom-p)> 1){ /* se dopo il perno ci sono almeno due elementi */
-     q_sort(array, p+1, bottom, compare);
-   }
-  }
+void q_sort(array_o* array, int  begin, int  end, ArrayCompare compare) {
 
-  return;
-}
-
-size_t array_partition(array_o* array, size_t begin, size_t end, ArrayCompare compare){
-
- for(int i = begin; i <= end; ++i){
+  for(int i = begin; i <= end; ++i){
     int *elem;
     elem = (int*)array_at(array,i);
     printf("%d ", *elem);
-  }
-   printf("\n");
-
+  }printf("\n");
 
   void* pivot;
   int i,j;
@@ -106,6 +87,53 @@ size_t array_partition(array_o* array, size_t begin, size_t end, ArrayCompare co
         i++;
         j--;
      }
+   }
+
+   /* for(int i = begin; i <= end; ++i){
+    int *elem;
+    elem = (int*)array_at(array,i);
+    printf("%d ", *elem);
+  }
+  printf("[p %d]\n", i-begin);*/
+
+   if(begin < j){
+     q_sort(array, begin, j, compare);
+   }
+   if(i < end){
+     q_sort(array, i, end, compare);
+   }
+
+  return;
+}
+
+size_t array_partition(array_o* array, size_t begin, size_t end, ArrayCompare compare){
+
+  /* for(int i = begin; i <= end; ++i){
+    int *elem;
+    elem = (int*)array_at(array,i);
+    printf("%d ", *elem);
+  }
+   printf("\n");
+
+
+  void* pivot;
+  int i,j;
+  pivot = array_at(array, ((end-begin)/2)+begin);  
+  i = (int)begin;
+  j = (int)end;
+
+   while (i <= j) {
+     while(compare(array_at(array, i), pivot) < 0){
+        i++;
+     }
+     while(compare(array_at(array, j), pivot) > 0){ 
+        j--;
+     } 
+     if(i <= j){
+        array_swap(array, i, j);
+        i++;
+        j--;
+     }
     }
 
    for(int i = begin; i <= end; ++i){
@@ -115,6 +143,7 @@ size_t array_partition(array_o* array, size_t begin, size_t end, ArrayCompare co
   }
    printf("[p %d]\n", i-begin);
 
-    return i;
+    return i;*/
+      return 0;
 }
 
