@@ -9,8 +9,10 @@ compile:
 	$(MAKE) bin/esercizio1
 
 #  compila (grazie alla dipendenza) e esegue ordered_array
+COUNT = 1000
+ALG = qsort
 exec: compile
-	bin/esercizio1 data/records.csv
+	bin/esercizio1 data/records.csv ${COUNT} ${ALG}
 
 # Flags per il compilatore -- su gcc -Weverything non esiste
 #    sostituire con -Wall -Wpedantic

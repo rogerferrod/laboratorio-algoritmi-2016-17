@@ -142,26 +142,4 @@ size_t array_partition(array_o* array, size_t begin, size_t end, ArrayCompare co
   }
   array_swap(array, begin, j);
   return j;
-/*
-
-
-  private static int partition(Comparable[] a, int lo, int hi) { 
-   size_t i = lo
-   size_t j = hi+1; 
-   while (true) { 
-
-      while (less(a[++i], a[lo])) 
-         if (i == hi) break; 
-    
-      while (less(a[lo], a[--j])) 
-         if (j == lo) break; 
-    
-      if (i >= j) break; 
-      exch(a, i, j); 
-   } 
-   
-   exch(a, lo, j); 
-   return j; 
-  } 
-*/
 }
