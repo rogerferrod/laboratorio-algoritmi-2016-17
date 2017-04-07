@@ -45,12 +45,19 @@ int compare_record_field3(void *a, void *b) {  /* ATTENZIONE: uguale a field2 ? 
 }
 
 static void array_print(array_o *array, float rate) {
+  if (rate == 0)
+    return;
+
   size_t i;
   record *elem;
   int delta;
-  delta = (int)(rate * (float)array_size(array));
 
-  //elem = (record *) malloc(sizeof(record));
+  if ((int)(array_size(array) * rate) == 0) {
+    delta=1;
+  } else {
+    delta = (int) (rate * (float) array_size(array));
+  }
+
   for (i = 0; i < array_size(array); i+=delta) {
     elem = (record *) array_at(array, i);
     printf("array[%d] = {%d,%s,%d,%f}\n", (int)i, elem->id, elem->field1, elem->field2, elem->field3);
