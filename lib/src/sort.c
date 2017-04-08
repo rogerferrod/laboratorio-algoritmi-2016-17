@@ -23,7 +23,7 @@ enum pivot_types{random,median,first,last};
 
 /* Partition needed for the quick sort */
 /* da rimettere static */
-//size_t array_partition(array_o* array, size_t top, size_t bottom, ArrayCompare compare);
+int array_partition(array_o* array, int begin, int end, ArrayCompare compare);
 
 static void q_sort(array_o* array, int top, int end, ArrayCompare compare);
 
@@ -122,44 +122,7 @@ void q_sort(array_o* array, int  begin, int  end, ArrayCompare compare) {
   return;
 }
 
-//size_t array_partition(array_o* array, size_t begin, size_t end, ArrayCompare compare){
-
-  /* for(int i = begin; i <= end; ++i){
-    int *elem;
-    elem = (int*)array_at(array,i);
-    printf("%d ", *elem);
-  }
-   printf("\n");
-
-
-  void* pivot;
-  int i,j;
-  pivot = array_at(array, ((end-begin)/2)+begin);  
-  i = (int)begin;
-  j = (int)end;
-
-   while (i <= j) {
-     while(compare(array_at(array, i), pivot) < 0){
-        i++;
-     }
-     while(compare(array_at(array, j), pivot) > 0){ 
-        j--;
-     } 
-     if(i <= j){
-        array_swap(array, i, j);
-        i++;
-        j--;
-     }
-    }
-
-   for(int i = begin; i <= end; ++i){
-    int *elem;
-    elem = (int*)array_at(array,i);
-    printf("%d ", *elem);
-  }
-   printf("[p %d]\n", i-begin);
-
-    return i;*/
-//      return 0;
-//}
+int array_partition(array_o* array, int begin, int end, ArrayCompare compare){
+  return 0;
+}
 
