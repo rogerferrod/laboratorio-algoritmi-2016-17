@@ -1,5 +1,5 @@
 /*
- *  File: array.c
+ *  File: sort.c
  *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna 
  *
  *  Date: 
@@ -17,9 +17,13 @@
 #include <stdio.h>
 #include <time.h>
 
+enum pivot_types{random,median,first,last};
+
+#define PIVOT_TYPE random
+
 /* Partition needed for the quick sort */
 /* da rimettere static */
- size_t array_partition(array_o* array, size_t top, size_t bottom, ArrayCompare compare);
+//size_t array_partition(array_o* array, size_t top, size_t bottom, ArrayCompare compare);
 
 static void q_sort(array_o* array, int top, int end, ArrayCompare compare);
 
@@ -30,7 +34,6 @@ void insertion_sort(array_o* array, ArrayCompare compare) {
   size = array_size(array);
 
   for(i = 0; i < size; ++i ) {
-    
     j = i;
     while(j > 0 && compare(array_at(array, j-1), array_at(array, j)) > 0){
       array_swap(array, j-1, j);
@@ -42,9 +45,13 @@ void insertion_sort(array_o* array, ArrayCompare compare) {
 
 void selection_sort(array_o* array, ArrayCompare compare) {
   size_t i,j,k,n;
-  n = array_size(array);  
+  n = array_size(array);
 
-  for(i = 0; i < n -1; ++i){
+  if(n == 0){
+    return;
+  }
+
+  for(i = 0; i < n-1; ++i){
     k = i;
     for(j = i + 1; j < n; ++j){
       if (compare(array_at(array, k), array_at(array, j)) > 0){
@@ -57,6 +64,10 @@ void selection_sort(array_o* array, ArrayCompare compare) {
 }
 
 void quick_sort(array_o* array, ArrayCompare compare) {
+  if(array_size(array) == 0){
+    return;
+  }
+  
   srand(time(NULL));
   q_sort(array, 0, array_size(array)-1, compare);
   return;
@@ -65,10 +76,27 @@ void quick_sort(array_o* array, ArrayCompare compare) {
 void q_sort(array_o* array, int  begin, int  end, ArrayCompare compare) {
   void* pivot;
   int i,j;
-  //pivot = array_at(array, ((end-begin)/2)+begin);  /* sarebbe meglio fosse random */
-  pivot = array_at(array, rand()%(end-begin+1)+begin); /* il +1 serve a generale anche lo 0 */
-  i = (int)begin;
-  j = (int)end;
+  int pivot_index;
+
+  switch(PIVOT_TYPE){
+  case random:
+    pivot_index = rand()%(end-begin+1)+begin;
+    break;
+  case median:
+    pivot_index = ((end-begin)/2)+begin;
+    break;
+  case first:
+    pivot_index = begin;
+    break;
+  case last:
+    pivot_index = end;
+    break;
+  default: pivot_index = begin;
+  }
+
+  pivot = array_at(array, pivot_index);
+  i = begin;
+  j = end;
 
    while (i <= j) {
      while(compare(array_at(array, i), pivot) < 0){ /* array[i] < pivot */
@@ -94,7 +122,7 @@ void q_sort(array_o* array, int  begin, int  end, ArrayCompare compare) {
   return;
 }
 
-size_t array_partition(array_o* array, size_t begin, size_t end, ArrayCompare compare){
+//size_t array_partition(array_o* array, size_t begin, size_t end, ArrayCompare compare){
 
   /* for(int i = begin; i <= end; ++i){
     int *elem;
@@ -132,6 +160,6 @@ size_t array_partition(array_o* array, size_t begin, size_t end, ArrayCompare co
    printf("[p %d]\n", i-begin);
 
     return i;*/
-      return 0;
-}
+//      return 0;
+//}
 
