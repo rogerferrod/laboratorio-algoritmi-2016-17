@@ -7,8 +7,9 @@
 #include "../../lib/src/array.h"
 #include "../../lib/src/sort.h"
 
-#define ARRAY_CAPACITY 20000000
+#define MAX_ARRAY_SIZE 20000000
 #define BUFFER_LENGTH  100
+#define PRINT_RATE     0.125
 
 #define I_SORT 1
 #define S_SORT 2
@@ -45,13 +46,14 @@ int compare_record_field3(void *a, void *b) {  /* ATTENZIONE: uguale a field2 ? 
 }
 
 static void array_print(array_o *array, float rate) {
-  if (rate == 0)
-    return;
-
   size_t i;
   record *elem;
   int delta;
 
+  if (rate == 0){
+    return;
+  }
+  
   if ((int)(array_size(array) * rate) == 0) {
     delta=1;
   } else {
@@ -90,10 +92,10 @@ static array_o *array_load(char *path, int record_read) {
     exit(EXIT_FAILURE); /* meglio NULL? */
   }
 
-  array_o *array = array_new(ARRAY_CAPACITY);
+  array_o *array = array_new(MAX_ARRAY_SIZE);
   size_t buff_size = BUFFER_LENGTH;
   char *buffer;
-  buffer = (char *) malloc(buff_size * (sizeof(char)));
+  buffer = (char *) malloc(buff_size * (sizeof(char)));  /* controllare riuscita */
 
   int count = 0;
   while (fgets(buffer, buff_size, file) != NULL && count < record_read) {
@@ -104,60 +106,44 @@ static array_o *array_load(char *path, int record_read) {
     char *raw_field3 = strtok(NULL, ",");
 
     int id = atoi(raw_id);
-    char *field1 = malloc((strlen(raw_field1) + 1) * sizeof(char));  /* +1 di \0 */
+    char *field1 = malloc((strlen(raw_field1) + 1)*sizeof(char));  /* +1 di \0 */ /*controllare riuscita */
     strcpy(field1, raw_field1);
     int field2 = atoi(raw_field2);
     float field3 = atof(raw_field3);
 
-    row->id = id; /* malloc implicita? */
+    row->id = id;
     row->field1 = field1;
     row->field2 = field2;
     row->field3 = field3;
 
     array_insert(array, row);
 
-    if (record_read != 0)
+    if (record_read != 0) /*ATTENZIONE: out of bound con 0 */
       count++;
-  }
-  /*teoricamente dovrebbe aver fatto la free dei raw */
-
+  } /* potrebbe arrivare qui se la fgets fallisce (controllare errno?)*/
+  
   free(buffer);
   fclose(file);
   return array;
 }
 
 int main(int argc, char *argv[]) {
-  /*
-  char* s1 = "zuzzurellone";
-  char* s2 = "prova";
-  printf("%d\n",strcmp(s1, s2));
-  record* r1 = malloc(sizeof(record));
-  record* r2 = malloc(sizeof(record));
-  r1->field1 = s1;
-  r2->field1 = s2;
-  r1->field2 = 5;
-  r2->field2 = 3;
-  printf("%d\n", compare_record_field1(r1, r2));
-  printf("%d\n", compare_record_field2(r1, r2));
-  */
-
   array_o *array;
   clock_t timer;
   int record_read;
   int algorithm;
 
+  /* default settings */
+  record_read = 0; /* ATTENZIONE */
+  algorithm = Q_SORT;
+    
   if (argc < 2) {
     fprintf(stderr, "No such argument\n");
     errno = EINVAL;
     exit(EXIT_FAILURE);
   }
-
-  record_read = 0;
-  if (argc >= 3) {
-    record_read = atoi(argv[2]);
-  }
-  /* da mettere insieme i parametri */
-  algorithm = Q_SORT;
+  
+  if (argc >= 3){record_read = atoi(argv[2]);}  
   if (argc >= 4) {
     if(strcmp(argv[3], "isort") == 0){algorithm = I_SORT;}
     else if(strcmp(argv[3], "ssort") == 0){algorithm = S_SORT;}
@@ -166,7 +152,7 @@ int main(int argc, char *argv[]) {
 
   fprintf(stdout, "array_load\n");
   TIMER_START(timer);
-  array = array_load(argv[1], record_read);
+  array = array_load(argv[1], record_read); /* ATTENZIONE: potrebbe resistuire array vuoto */
   TIMER_STOP(timer);
   fprintf(stdout, "array_size: %u\n", (unsigned int) array_size(array));
 
@@ -195,8 +181,8 @@ int main(int argc, char *argv[]) {
     fprintf(stderr, "error\n");
   }
   
-  sleep(2);
-  array_print(array, 0.125);
+  sleep(1);
+  array_print(array, PRINT_RATE);
   
   memory_free(array);
 
