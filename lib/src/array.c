@@ -29,8 +29,18 @@ array_o* array_new(size_t capacity) {
   array_o* new_array = (array_o*) malloc(sizeof(array_o));
   if (new_array != NULL){
     new_array->array = (void**) malloc(sizeof(void*)*capacity);
-    new_array->size = 0;
-    new_array->capacity = capacity;
+    if (new_array->array != NULL) {
+      new_array->size = 0;
+      new_array->capacity = capacity;
+    } else {
+      fprintf(stderr, "Not enough space for malloc");
+      errno = ENOMEM;
+      exit(EXIT_FAILURE);
+    }
+  } else {
+    fprintf(stderr, "Not enough space for malloc");
+    errno = ENOMEM;
+    exit(EXIT_FAILURE);
   }
   return new_array;
 }
@@ -67,6 +77,11 @@ void array_check_realloc(array_o* array){
     array->capacity *= INCREMENT_FACTOR;
     fprintf(stdout, "realloc_inc\n");
     array->array = realloc(array->array, array->capacity*sizeof(void*));
+    if (array->array == NULL) {
+      fprintf(stderr, "Not enough space for realloc");
+      errno = ENOMEM;
+      exit(EXIT_FAILURE);
+    }
   }
   /* else if (array->size <=  (array->capacity)/4){
     array->capacity /= DECREMENT_FACTOR;
