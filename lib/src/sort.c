@@ -22,8 +22,7 @@ enum pivot_types{random,median,first,last};
 #define PIVOT_TYPE random
 
 /* Partition needed for the quick sort */
-/* da rimettere static */
-int array_partition(array_o* array, int begin, int end, ArrayCompare compare);
+static void q_partition(array_o* array, int begin, int end, int *p, int *q, ArrayCompare compare);
 
 static void q_sort(array_o* array, int top, int end, ArrayCompare compare);
 
@@ -74,6 +73,21 @@ void quick_sort(array_o* array, ArrayCompare compare) {
 }
 
 void q_sort(array_o* array, int  begin, int  end, ArrayCompare compare) {
+  int i,j;
+
+  q_partition(array, begin, end, &i, &j, compare);
+  
+  if(begin < j){
+    q_sort(array, begin, j, compare);
+   }
+  if(i < end){
+    q_sort(array, i, end, compare);
+  }
+
+  return;
+}
+
+void q_partition(array_o* array, int begin, int end, int *p, int *q, ArrayCompare compare) {
   void* pivot;
   int i,j;
   int pivot_index;
@@ -98,31 +112,24 @@ void q_sort(array_o* array, int  begin, int  end, ArrayCompare compare) {
   i = begin;
   j = end;
 
-   while (i <= j) {
-     while(compare(array_at(array, i), pivot) < 0){ /* array[i] < pivot */
-        i++;
-     }
-     while(compare(array_at(array, j), pivot) > 0){ /* array[j] > pivot */
-        j--;
-     } 
-     if(i <= j){
-        array_swap(array, i, j);
-        i++;
-        j--;
-     }
-   }
+  while (i <= j) {
+    while(compare(array_at(array, i), pivot) < 0){ /* array[i] < pivot */
+      i++;
+    }
+    while(compare(array_at(array, j), pivot) > 0){ /* array[j] > pivot */
+      j--;
+    } 
+    if(i <= j){
+      array_swap(array, i, j);
+      i++;
+      j--;
+    }
+  }
 
-   if(begin < j){
-     q_sort(array, begin, j, compare);
-   }
-   if(i < end){
-     q_sort(array, i, end, compare);
-   }
-
+  /* output */
+  *p = i;
+  *q = j;
+  
   return;
-}
-
-int array_partition(array_o* array, int begin, int end, ArrayCompare compare){
-  return 0;
 }
 
