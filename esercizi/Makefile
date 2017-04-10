@@ -3,8 +3,10 @@ CC = gcc
 # lista dei target da eseguire sempre
 all: compile
 
-#compile lib and es1
-compile:
+compile: compile_es1
+
+#compile es1 and his libs
+compile_es1:
 	$(MAKE) -C ../lib build
 	$(MAKE) bin/esercizio1
 
@@ -13,7 +15,10 @@ COUNT = 1000
 ALG = qsort
 FIELD = field1
 ORDER = ascending
+
 exec: compile
+
+exec_es1: compile_es1
 	bin/esercizio1 data/records.csv ${COUNT} ${ALG} ${FIELD} ${ORDER}
 
 # Flags per il compilatore -- su gcc -Weverything non esiste

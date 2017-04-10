@@ -2,14 +2,20 @@
 CC = gcc
 
 # lista dei target da eseguire sempre
-all: tests
+all: build
 
 # compila (grazie alla dipendenza)
-build: bin/array_tests bin/sort_tests
+build: build_array build_sort
+
+build_array: bin/array_tests
+build_sort: bin/sort_tests
 
 # compila (grazie alla dipendenza) e esegue i test
-tests: build
+tests: tests_array tests_sort
+
+tests_array: build_array
 	bin/array_tests
+tests_sort: build_sort
 	bin/sort_tests
 
 # Flags per il compilatore -- su gcc -Weverything non esiste
