@@ -222,8 +222,6 @@ int main(int argc, char *argv[]) {
         TIMER_STOP(timer);
         break;
     }
-  default:
-    fprintf(stderr, "error\n");
   }
   
   sleep(1);
