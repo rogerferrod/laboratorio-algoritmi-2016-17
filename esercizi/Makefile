@@ -16,7 +16,7 @@ ALG = qsort
 FIELD = field1
 ORDER = ascending
 
-exec: compile
+exec: exec_es1
 
 exec_es1: compile_es1
 	bin/esercizio1 data/records.csv ${COUNT} ${ALG} ${FIELD} ${ORDER}
