@@ -13,9 +13,6 @@
 #include "array.h"
 #include <stddef.h>
 
-#define ASCENDING  0
-#define DESCENDING 1
-
 
 /* mai usato? */
 typedef int (*AlgSort)(array_o* array, ArrayCompare compare);

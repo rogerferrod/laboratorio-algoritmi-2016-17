@@ -12,8 +12,9 @@ compile:
 COUNT = 1000
 ALG = qsort
 FIELD = field1
+ORDER = ascending
 exec: compile
-	bin/esercizio1 data/records.csv ${COUNT} ${ALG} ${FIELD}
+	bin/esercizio1 data/records.csv ${COUNT} ${ALG} ${FIELD} ${ORDER}
 
 # Flags per il compilatore -- su gcc -Weverything non esiste
 #    sostituire con -Wall -Wpedantic

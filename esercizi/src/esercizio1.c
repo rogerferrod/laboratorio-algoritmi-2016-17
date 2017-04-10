@@ -15,6 +15,9 @@
 #define FIELD2 5
 #define FIELD3 6
 
+#define ASCENDING  7
+#define DESCENDING 8
+
 #define I_SORT 1
 #define S_SORT 2
 #define Q_SORT 3
@@ -31,22 +34,40 @@ typedef struct {
 } record;
 
 
-int compare_record_field1(void *a, void *b) {
+int compare_ascending_field1(void *a, void *b) {
   record *first = (record *) a;
   record *last = (record *) b;
   return strcmp(first->field1, last->field1);
 }
 
-int compare_record_field2(void *a, void *b) {
+int compare_descending_field1(void *a, void *b) {
+  record *first = (record *) a;
+  record *last = (record *) b;
+  return (-1)*strcmp(first->field1, last->field1);
+}
+
+int compare_ascending_field2(void *a, void *b) {
   record *first = (record *) a;
   record *last = (record *) b;
   return first->field2 - last->field2;
 }
 
-int compare_record_field3(void *a, void *b) {  /* ATTENZIONE: uguale a field2 ? */
+int compare_descending_field2(void *a, void *b) {
+  record *first = (record *) a;
+  record *last = (record *) b;
+  return last->field2 - first->field2;
+}
+
+int compare_ascending_field3(void *a, void *b) {  /* ATTENZIONE: uguale a field2 ? */
   record *first = (record *) a;
   record *last = (record *) b;
   return (first->field3 - last->field3);
+}
+
+int compare_descending_field3(void *a, void *b) {  /* ATTENZIONE: uguale a field2 ? */
+  record *first = (record *) a;
+  record *last = (record *) b;
+  return (last->field3 - first->field3);
 }
 
 static void array_print(array_o *array, float rate) {
@@ -137,12 +158,16 @@ int main(int argc, char *argv[]) {
   int record_read;
   int algorithm;
   int field;
+  int order;
+
+  ArrayCompare compare_pnt;
 
   /* default settings */
   record_read = 0; /* ATTENZIONE */
   algorithm = Q_SORT;
   field = FIELD1;
-    
+  order = ASCENDING;
+      
   if (argc < 2) {
     fprintf(stderr, "No such argument\n");
     errno = EINVAL;
@@ -155,11 +180,16 @@ int main(int argc, char *argv[]) {
     else if(strcmp(argv[3], "ssort") == 0){algorithm = S_SORT;}
     else if(strcmp(argv[3], "qsort") == 0){algorithm = Q_SORT;}
   }
-   if (argc >= 5) {
+  if (argc >= 5) {
     if(strcmp(argv[4], "field1") == 0){field = FIELD1;}
     else if(strcmp(argv[4], "field2") == 0){field = FIELD2;}
     else if(strcmp(argv[4], "field3") == 0){field = FIELD3;}
   }
+  if (argc >= 6) {
+    if(strcmp(argv[5], "ascending") == 0){order = ASCENDING;}
+    else if(strcmp(argv[5], "descending") == 0){order = DESCENDING;}
+  }
+
 
   fprintf(stdout, "array_load\n");
   TIMER_START(timer);
@@ -168,71 +198,41 @@ int main(int argc, char *argv[]) {
   fprintf(stdout, "array_size: %u\n", (unsigned int) array_size(array));
 
   sleep(1);
+
+  switch(field){
+    case FIELD1:
+      fprintf(stdout, "field1 - ");
+      compare_pnt = (order == ASCENDING)? compare_ascending_field1 : compare_descending_field1;
+      break;
+    case FIELD2:
+      fprintf(stdout, "field2 - ");
+      compare_pnt = (order == ASCENDING)? compare_ascending_field2 : compare_descending_field2;
+      break;
+    case FIELD3:
+      fprintf(stdout, "field3 - ");
+      compare_pnt = (order == ASCENDING)? compare_ascending_field3 : compare_descending_field3;
+      break;
+  }
   
-    switch(algorithm){
-  case I_SORT:
-    switch(field){
-      case FIELD1:
-        fprintf(stdout, "insertion_sort field1\n");
-        TIMER_START(timer);
-        insertion_sort(array, compare_record_field1);
-        TIMER_STOP(timer);
-        break;
-      case FIELD2:
-        fprintf(stdout, "insertion_sort field2\n");
-        TIMER_START(timer);
-        insertion_sort(array, compare_record_field2);
-        TIMER_STOP(timer);
-        break;
-      case FIELD3:
-        fprintf(stdout, "insertion_sort field3\n");
-        TIMER_START(timer);
-        insertion_sort(array, compare_record_field3);
-        TIMER_STOP(timer);
-        break;
-    }
-  case S_SORT:
-    switch(field){
-      case FIELD1:
-        fprintf(stdout, "selection_sort field1\n");
-        TIMER_START(timer);
-        selection_sort(array, compare_record_field1);
-        TIMER_STOP(timer);
-        break;
-      case FIELD2:
-        fprintf(stdout, "selection_sort field2\n");
-        TIMER_START(timer);
-        selection_sort(array, compare_record_field2);
-        TIMER_STOP(timer);
-        break;
-      case FIELD3:
-        fprintf(stdout, "selection_sort field3\n");
-        TIMER_START(timer);
-        selection_sort(array, compare_record_field3);
-        TIMER_STOP(timer);
-        break;
-    }
-  case Q_SORT:
-   switch(field){
-      case FIELD1:
-        fprintf(stdout, "quick_sort field 1\n");
-        TIMER_START(timer);
-        quick_sort(array, compare_record_field1);
-        TIMER_STOP(timer);
-        break;
-      case FIELD2:
-        fprintf(stdout, "quick_sort field 2\n");
-        TIMER_START(timer);
-        quick_sort(array, compare_record_field2);
-        TIMER_STOP(timer);
-        break;
-      case FIELD3:
-        fprintf(stdout, "quick_sort field 3\n");
-        TIMER_START(timer);
-        quick_sort(array, compare_record_field3);
-        TIMER_STOP(timer);
-        break;
-    }
+  switch(algorithm){
+    case I_SORT:
+      fprintf(stdout, " insertion_sort\n");
+      TIMER_START(timer);
+      insertion_sort(array, compare_pnt);
+      TIMER_STOP(timer);
+      break;
+    case S_SORT:
+      fprintf(stdout, " selection_sort\n");
+      TIMER_START(timer);
+      selection_sort(array, compare_pnt);
+      TIMER_STOP(timer);
+      break;
+    case Q_SORT:
+      fprintf(stdout, " quicksort\n");
+      TIMER_START(timer);
+      quick_sort(array, compare_pnt);
+      TIMER_STOP(timer);
+      break;
   }
   
   sleep(1);
