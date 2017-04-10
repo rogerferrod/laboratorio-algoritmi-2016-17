@@ -11,8 +11,9 @@ compile:
 #  compila (grazie alla dipendenza) e esegue ordered_array
 COUNT = 1000
 ALG = qsort
+FIELD = field1
 exec: compile
-	bin/esercizio1 data/records.csv ${COUNT} ${ALG}
+	bin/esercizio1 data/records.csv ${COUNT} ${ALG} ${FIELD}
 
 # Flags per il compilatore -- su gcc -Weverything non esiste
 #    sostituire con -Wall -Wpedantic
