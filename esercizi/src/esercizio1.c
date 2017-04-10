@@ -11,6 +11,10 @@
 #define BUFFER_LENGTH  100
 #define PRINT_RATE     0.125
 
+#define FIELD1 4
+#define FIELD2 5
+#define FIELD3 6
+
 #define I_SORT 1
 #define S_SORT 2
 #define Q_SORT 3
@@ -132,10 +136,12 @@ int main(int argc, char *argv[]) {
   clock_t timer;
   int record_read;
   int algorithm;
+  int field;
 
   /* default settings */
   record_read = 0; /* ATTENZIONE */
   algorithm = Q_SORT;
+  field = FIELD1;
     
   if (argc < 2) {
     fprintf(stderr, "No such argument\n");
@@ -148,6 +154,11 @@ int main(int argc, char *argv[]) {
     if(strcmp(argv[3], "isort") == 0){algorithm = I_SORT;}
     else if(strcmp(argv[3], "ssort") == 0){algorithm = S_SORT;}
     else if(strcmp(argv[3], "qsort") == 0){algorithm = Q_SORT;}
+  }
+   if (argc >= 5) {
+    if(strcmp(argv[4], "field1") == 0){field = FIELD1;}
+    else if(strcmp(argv[4], "field2") == 0){field = FIELD2;}
+    else if(strcmp(argv[4], "field3") == 0){field = FIELD3;}
   }
 
   fprintf(stdout, "array_load\n");
