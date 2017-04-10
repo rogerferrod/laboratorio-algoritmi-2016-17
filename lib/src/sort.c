@@ -17,14 +17,29 @@
 #include <stdio.h>
 #include <time.h>
 
-enum pivot_types{random,median,first,last};
 
+/* Pivot choice method, can be random, median, first, last */
 #define PIVOT_TYPE random
+
+#if PIVOT_TYPE == random
+  #define PIVOT_INDEX(first,last) (rand()%(last-first+1)+first)
+#elif PIVOT_TYPE == median
+  #define PIVOT_INDEX(first,last) (((last-first)/2)+first)
+#elif PIVOT_TYPE == first
+  #define PIVOT_INDEX(first,last) (first)
+#elif PIVOT_TYPE == last
+  #define PIVOT_INDEX(first,last) (last)
+#else 
+  #define PIVOT_INDEX(first,last) (rand()%(last-first+1)+first)
+#endif
+
 
 /* Partition needed for the quick sort */
 static void q_partition(array_o* array, int begin, int end, int *p, int *q, ArrayCompare compare);
 
+/* Recursive quicksort function */
 static void q_sort(array_o* array, int top, int end, ArrayCompare compare);
+
 
 void insertion_sort(array_o* array, ArrayCompare compare) {
   size_t i;
@@ -92,21 +107,7 @@ void q_partition(array_o* array, int begin, int end, int *p, int *q, ArrayCompar
   int i,j;
   int pivot_index;
 
-  switch(PIVOT_TYPE){
-  case random:
-    pivot_index = rand()%(end-begin+1)+begin;
-    break;
-  case median:
-    pivot_index = ((end-begin)/2)+begin;
-    break;
-  case first:
-    pivot_index = begin;
-    break;
-  case last:
-    pivot_index = end;
-    break;
-  default: pivot_index = begin;
-  }
+  pivot_index = PIVOT_INDEX(begin,end);
 
   pivot = array_at(array, pivot_index);
   i = begin;
@@ -132,4 +133,5 @@ void q_partition(array_o* array, int begin, int end, int *p, int *q, ArrayCompar
   
   return;
 }
+
 
