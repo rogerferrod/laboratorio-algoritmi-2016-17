@@ -158,25 +158,70 @@ int main(int argc, char *argv[]) {
 
   sleep(1);
   
-  switch(algorithm){
+    switch(algorithm){
   case I_SORT:
-    fprintf(stdout, "insertion_sort\n");
-    TIMER_START(timer);
-    insertion_sort(array, compare_record_field1);
-    TIMER_STOP(timer);
-    break;
+    switch(field){
+      case FIELD1:
+        fprintf(stdout, "insertion_sort field1\n");
+        TIMER_START(timer);
+        insertion_sort(array, compare_record_field1);
+        TIMER_STOP(timer);
+        break;
+      case FIELD2:
+        fprintf(stdout, "insertion_sort field2\n");
+        TIMER_START(timer);
+        insertion_sort(array, compare_record_field2);
+        TIMER_STOP(timer);
+        break;
+      case FIELD3:
+        fprintf(stdout, "insertion_sort field3\n");
+        TIMER_START(timer);
+        insertion_sort(array, compare_record_field3);
+        TIMER_STOP(timer);
+        break;
+    }
   case S_SORT:
-    fprintf(stdout, "selection_sort\n");
-    TIMER_START(timer);
-    selection_sort(array, compare_record_field1);
-    TIMER_STOP(timer);
-    break;
+    switch(field){
+      case FIELD1:
+        fprintf(stdout, "selection_sort field1\n");
+        TIMER_START(timer);
+        selection_sort(array, compare_record_field1);
+        TIMER_STOP(timer);
+        break;
+      case FIELD2:
+        fprintf(stdout, "selection_sort field2\n");
+        TIMER_START(timer);
+        selection_sort(array, compare_record_field2);
+        TIMER_STOP(timer);
+        break;
+      case FIELD3:
+        fprintf(stdout, "selection_sort field3\n");
+        TIMER_START(timer);
+        selection_sort(array, compare_record_field3);
+        TIMER_STOP(timer);
+        break;
+    }
   case Q_SORT:
-    fprintf(stdout, "quick_sort\n");
-    TIMER_START(timer);
-    quick_sort(array, compare_record_field1);
-    TIMER_STOP(timer);
-    break;
+   switch(field){
+      case FIELD1:
+        fprintf(stdout, "quick_sort field 1\n");
+        TIMER_START(timer);
+        quick_sort(array, compare_record_field1);
+        TIMER_STOP(timer);
+        break;
+      case FIELD2:
+        fprintf(stdout, "quick_sort field 2\n");
+        TIMER_START(timer);
+        quick_sort(array, compare_record_field2);
+        TIMER_STOP(timer);
+        break;
+      case FIELD3:
+        fprintf(stdout, "quick_sort field 3\n");
+        TIMER_START(timer);
+        quick_sort(array, compare_record_field3);
+        TIMER_STOP(timer);
+        break;
+    }
   default:
     fprintf(stderr, "error\n");
   }
