@@ -32,17 +32,13 @@ array_o* array_new(size_t capacity) {
     if (new_array->array != NULL) {
       new_array->size = 0;
       new_array->capacity = capacity;
-    } else {
-      fprintf(stderr, "Not enough space for malloc");
-      errno = ENOMEM;
-      exit(EXIT_FAILURE);
+      return new_array;
     }
-  } else {
-    fprintf(stderr, "Not enough space for malloc");
-    errno = ENOMEM;
-    exit(EXIT_FAILURE);
   }
-  return new_array;
+
+  fprintf(stderr, "Not enough space for malloc\n");
+  errno = ENOMEM;
+  exit(EXIT_FAILURE);
 }
 
 void array_free(array_o* array) {

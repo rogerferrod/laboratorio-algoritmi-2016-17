@@ -97,7 +97,7 @@ static array_o *array_load(char *path, int record_read) {
   char *buffer;
   buffer = (char *) malloc(buff_size * (sizeof(char)));
   if  (buffer == NULL) {
-    fprintf(stderr, "Not enough space for malloc - buffer");
+    fprintf(stderr, "Not enough space for new buffer\n");
     errno = ENOMEM;
     exit(EXIT_FAILURE);
   }
@@ -106,7 +106,7 @@ static array_o *array_load(char *path, int record_read) {
   while (fgets(buffer, buff_size, file) != NULL && count < record_read) {
     record *row = (record *) malloc(sizeof(record));
     if (row == NULL) {
-      fprintf(stderr, "Not enough space for malloc - row");
+      fprintf(stderr, "Not enough space for new record\n");
       errno = ENOMEM;
       exit(EXIT_FAILURE);
     }
@@ -118,7 +118,7 @@ static array_o *array_load(char *path, int record_read) {
     int id = atoi(raw_id);
     char *field1 = malloc((strlen(raw_field1) + 1)*sizeof(char));  /* +1 di \0 */ /*controllare riuscita */
     if (field1 == NULL) {
-      fprintf(stderr, "Not enough space for malloc - field1");
+      fprintf(stderr, "Not enough space for new field1\n");
       errno = ENOMEM;
       exit(EXIT_FAILURE);
     }
