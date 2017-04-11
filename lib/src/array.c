@@ -12,10 +12,14 @@
  *
  */
 
-#include "array.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
+#include "array.h"
+
+/* Reallocation factors */
+#define INCREMENT_FACTOR 2
+#define DECREMENT_FACTOR 2
 
 /* Implementation of the opaque type */
 struct _myArray {
@@ -62,32 +66,26 @@ void* array_at(array_o* array, size_t position) {
   return array->array[position];
 }
 
-void array_check_realloc(array_o* array){
+void array_insert(array_o* array, void* element) {
   if(array->size >= array->capacity){
     array->capacity *= INCREMENT_FACTOR;
-    fprintf(stdout, "realloc_inc\n");
     array->array = realloc(array->array, array->capacity*sizeof(void*));
+    if(array->array == NULL){
+      fprintf(stderr, "Not enough memory for realloc\n");
+      errno = ENOMEM;
+      exit(EXIT_FAILURE);
+    }
   }
-  /* else if (array->size <=  (array->capacity)/4){
-    array->capacity /= DECREMENT_FACTOR;
-    fprintf(stdout, "realloc_dec\n");
-    array->array = realloc(array->array, array->capacity*sizeof(void*)); 
-  }
-  */
-}
-
-void array_insert(array_o* array, void* element) {
-  array_check_realloc(array);
   array->array[array->size] = element;
   array->size ++;
   return;
 }
 
-int array_delete(array_o* array, size_t position) {
+void array_delete(array_o* array, size_t position) {
   if(position >= array->size ) {
     fprintf(stderr, "Array index (%ld) out of bounds (0:%ld)\n", position, array->size);
     errno = ENOMEM;
-    return -1;
+    exit(EXIT_FAILURE);
   }
 
   size_t i;
@@ -96,19 +94,16 @@ int array_delete(array_o* array, size_t position) {
   }
   array->size--;
 
-  array_check_realloc(array);
-  return 0;
-}
-
-/*  forse non serve più */
-void array_set_elem(array_o* array, void* element, size_t position){
-  if(position >= array->capacity ) {
-    fprintf(stderr, "Array index (%ld) out of bounds (0:%ld)\n", position, array->size);
-    errno = ENOMEM;
-    exit(EXIT_FAILURE);
+  if (array->size <=  (array->capacity)/4){
+    array->capacity /= DECREMENT_FACTOR;
+    array->array = realloc(array->array, array->capacity*sizeof(void*));
+    if(array->array == NULL){
+      fprintf(stderr, "Not enough memory for realloc\n");
+      errno = ENOMEM;
+      exit(EXIT_FAILURE);
+    }
   }
-  
-  array->array[position] = element;
+
   return;
 }
 

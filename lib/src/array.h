@@ -17,11 +17,6 @@
 
 #include <stddef.h>
 
-/* Reallocation factors */
-#define INCREMENT_FACTOR 2
-#define DECREMENT_FACTOR 2
-
-
 
 /* Definition of the array's opaque type */
 typedef struct _myArray array_o;
@@ -55,13 +50,8 @@ extern void* array_at(array_o* array, size_t position);
 /* Adds an element at the bottom of the array  */
 extern void array_insert(array_o* array, void* element);
 
-/* Delete the element in the specified position 
- * Returns 0 on success, -1 otherwise
- */
-extern int array_delete(array_o* array, size_t position);
-
-/* ...  */
-extern void array_set_elem(array_o* array, void* element, size_t position);
+/* Delete the element in the specified position  */
+extern void array_delete(array_o* array, size_t position);
 
 /* Swap two element in the specified positions  */
 extern void array_swap(array_o* array, size_t position_a, size_t position_b);
