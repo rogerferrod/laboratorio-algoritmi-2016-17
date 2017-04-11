@@ -28,4 +28,4 @@ etc etc .....
 
 * **Riccardo Ferrero Regis** - *matricola* 
 * **Roger Ferrod** - *813766* 
-* **Luca Chironna** - *matricola* 
+* **Luca Chironna** - *811890* 
