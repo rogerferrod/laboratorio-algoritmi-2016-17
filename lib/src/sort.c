@@ -2,7 +2,7 @@
  *  File: sort.c
  *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna 
  *
- *  Date: 
+ *  Date: 11-04-2017
  *
  */
 
@@ -11,11 +11,11 @@
  *
  */
 
-#include "array.h"
-#include "sort.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include "array.h"
+#include "sort.h"
 
 
 /* Pivot choice method, can be random, median, first, last */

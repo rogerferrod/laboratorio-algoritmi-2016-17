@@ -1,3 +1,12 @@
+/*
+ *  File: array_tests.c
+ *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna 
+ *
+ *  Date: 11-04-2017
+ *
+ */
+
+
 #include <stdlib.h>
 #include "unity.h"
 #include "unity_internals.h"
@@ -8,7 +17,6 @@ int compare_int_ptr(void* elem1, void* elem2) {
   int int2 = *(int*) elem2;
   return int1 - int2;
 }
-
 
 static int* new_int(int value) {
   int* elem = (int*) malloc(sizeof(int));
@@ -56,7 +64,6 @@ static void test_ordered_array_new_size_zero() {
   array_free(array);
 }
 
-
 static void test_ordered_array_free() {
   array_o* array = array_new(10);
   array_free(array);
@@ -69,7 +76,6 @@ static void test_ordered_array_size() {
   TEST_ASSERT_EQUAL_INT(4, array_size(array));
   free_fixture(array);
 }
-
 
 static void test_ordered_array_empty() {
   array_o* array = array_new(10);
@@ -106,6 +112,7 @@ static void test_ordered_array_insert_at_end() {
 
   free_fixture(array);
 }
+
 static void test_ordered_array_delete(){
   array_o* array = build_fixture();
   
@@ -115,6 +122,7 @@ static void test_ordered_array_delete(){
 
   free_fixture(array);
 }
+
 static void test_ordered_array_swap(){
   array_o* array = build_fixture();
 
