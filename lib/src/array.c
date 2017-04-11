@@ -12,10 +12,13 @@
  *
  */
 
-#include "array.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
+#include "array.h"
+
+#define INCREMENT_FACTOR 2
+#define DECREMENT_FACTOR 2
 
 /* Implementation of the opaque type */
 struct _myArray {
