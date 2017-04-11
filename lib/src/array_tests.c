@@ -12,11 +12,6 @@
 #include "unity_internals.h"
 #include "array.h"
 
-int compare_int_ptr(void* elem1, void* elem2) {
-  int int1 = *(int*) elem1;
-  int int2 = *(int*) elem2;
-  return int1 - int2;
-}
 
 static int* new_int(int value) {
   int* elem = (int*) malloc(sizeof(int));

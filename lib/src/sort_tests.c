@@ -1,22 +1,24 @@
-#include "array.h"
-#include "sort.h"
+/*
+ *  File: sort_tests.c
+ *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna 
+ *
+ *  Date: 11-04-2017
+ *
+ */
+
+
+#include <stdlib.h>
 #include "unity.h"
 #include "unity_internals.h"
-#include <stdlib.h>
+#include "array.h"
+#include "sort.h"
 
-int compare_int_ptr(void* elem1, void* elem2) {
+
+static int compare_int_ptr(void* elem1, void* elem2) {
   int int1 = *(int*) elem1;
   int int2 = *(int*) elem2;
-  if(int1 == int2) {
-    return 0;
-  }
-
-  if(int1 < int2) {
-    return -1;
-  }
-  return 1;
+  return int1 - int2;
 }
-
 
 static int* new_int(int value) {
   int* elem = (int*) malloc(sizeof(int));
@@ -96,45 +98,14 @@ static void test_sort_QuickSort(){
   TEST_ASSERT_EQUAL_INT(9, *(int*)array_at(array, 7));
   TEST_ASSERT_EQUAL_INT(10, *(int*)array_at(array, 8));
   
-  /*printf("ordinato\n");
-  for(int i = 0; i < array_size(array); ++i){
-    int *elem;
-    elem = (int*)array_at(array,i);
-    printf("%d ", *elem);
-    }printf("\n");
-  */
-  
   free_fixture(array);  
 }
-
-/*static void test_sort_partition(){
-  array_o* array = array_new(10);
-
-  array_insert(array, new_int(8));
-  array_insert(array, new_int(10));
-  array_insert(array, new_int(2));
-  array_insert(array, new_int(9));
-  array_insert(array, new_int(3));
-  array_insert(array, new_int(1));
-  array_insert(array, new_int(5));
-
-  array_partition(array, 0, array_size(array)-1, compare_int_ptr);
-  
-  for(int i = 0; i < array_size(array); ++i){
-    int *elem;
-    elem = (int*)array_at(array,i);
-    printf("%d ", *elem);
-  }
-  printf("\n");
-  
-  array_free(array);
-  }*/
 
 static void test_empty_sort_InsertionSort(){
   array_o* array = array_new(0);
   
   insertion_sort(array,compare_int_ptr);
-  TEST_ASSERT_EQUAL_INT(1, 1);
+  TEST_ASSERT_EQUAL_INT_MESSAGE(1, 1, "Sort on empty array failed");
   array_free(array);
 }
 
@@ -142,7 +113,7 @@ static void test_empty_sort_SelectionSort(){
   array_o* array = array_new(0);
   
   selection_sort(array,compare_int_ptr);
-  TEST_ASSERT_EQUAL_INT(1, 1);
+  TEST_ASSERT_EQUAL_INT_MESSAGE(1, 1, "Sort on empty array failed");
   array_free(array);
 }
 
@@ -150,7 +121,7 @@ static void test_empty_sort_QuickSort(){
   array_o* array = array_new(0);
   
   quick_sort(array,compare_int_ptr);
-  TEST_ASSERT_EQUAL_INT(1, 1);
+  TEST_ASSERT_EQUAL_INT_MESSAGE(1, 1, "Sort on empty array failed");
   array_free(array);
 }
 
@@ -160,7 +131,6 @@ int main() {
   RUN_TEST(test_sort_InsertionSort);
   RUN_TEST(test_sort_SelectionSort);
   RUN_TEST(test_sort_QuickSort);
-  //RUN_TEST(test_sort_partition);
   RUN_TEST(test_empty_sort_InsertionSort);
   RUN_TEST(test_empty_sort_SelectionSort);
   RUN_TEST(test_empty_sort_QuickSort);
