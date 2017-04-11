@@ -120,11 +120,21 @@ static array_o *array_load(char *path, int record_read) {
   array_o *array = array_new(MAX_ARRAY_SIZE);
   size_t buff_size = BUFFER_LENGTH;
   char *buffer;
-  buffer = (char *) malloc(buff_size * (sizeof(char)));  /* controllare riuscita */
+  buffer = (char *) malloc(buff_size * (sizeof(char)));
+  if  (buffer == NULL) {
+    fprintf(stderr, "Not enough space for new buffer\n");
+    errno = ENOMEM;
+    exit(EXIT_FAILURE);
+  }
 
   int count = 0;
   while (fgets(buffer, buff_size, file) != NULL && count < record_read) {
     record *row = (record *) malloc(sizeof(record));
+    if (row == NULL) {
+      fprintf(stderr, "Not enough space for new record\n");
+      errno = ENOMEM;
+      exit(EXIT_FAILURE);
+    }
     char *raw_id = strtok(buffer, ",");
     char *raw_field1 = strtok(NULL, ",");
     char *raw_field2 = strtok(NULL, ",");
@@ -132,6 +142,11 @@ static array_o *array_load(char *path, int record_read) {
 
     int id = atoi(raw_id);
     char *field1 = malloc((strlen(raw_field1) + 1)*sizeof(char));  /* +1 di \0 */ /*controllare riuscita */
+    if (field1 == NULL) {
+      fprintf(stderr, "Not enough space for new field1\n");
+      errno = ENOMEM;
+      exit(EXIT_FAILURE);
+    }
     strcpy(field1, raw_field1);
     int field2 = atoi(raw_field2);
     float field3 = atof(raw_field3);

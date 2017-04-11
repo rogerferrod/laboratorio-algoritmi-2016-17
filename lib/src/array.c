@@ -12,14 +12,10 @@
  *
  */
 
+#include "array.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
-#include "array.h"
-
-/* Reallocation factors */
-#define INCREMENT_FACTOR 2
-#define DECREMENT_FACTOR 2
 
 /* Implementation of the opaque type */
 struct _myArray {
@@ -33,10 +29,16 @@ array_o* array_new(size_t capacity) {
   array_o* new_array = (array_o*) malloc(sizeof(array_o));
   if (new_array != NULL){
     new_array->array = (void**) malloc(sizeof(void*)*capacity);
-    new_array->size = 0;
-    new_array->capacity = capacity;
+    if (new_array->array != NULL) {
+      new_array->size = 0;
+      new_array->capacity = capacity;
+      return new_array;
+    }
   }
-  return new_array;
+
+  fprintf(stderr, "Not enough space for malloc\n");
+  errno = ENOMEM;
+  exit(EXIT_FAILURE);
 }
 
 void array_free(array_o* array) {
