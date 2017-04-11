@@ -2,7 +2,7 @@
  *  File: array.h
  *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna
  *
- *  Date: 
+ *  Date: 11-04-2017
  *
  */
 
