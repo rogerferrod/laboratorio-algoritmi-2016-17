@@ -175,7 +175,7 @@ static array_o *array_load(char *path, int max_record_read) {
     exit(EXIT_FAILURE);
   }
 
-  array_o *array = array_new(MAX_ARRAY_SIZE);
+  array_o *array = array_new(max_record_read);
   size_t buff_size = BUFFER_LENGTH;
   char *buffer;
   int count;
