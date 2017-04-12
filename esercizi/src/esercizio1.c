@@ -1,3 +1,17 @@
+/*
+ *  File: esercizio1.c
+ *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna
+ *
+ *  Date: 12-04-2017
+ *
+ */
+
+
+/*
+ * Exercise 1 application
+ *
+ */
+
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
@@ -148,7 +162,11 @@ static record *record_load(char *buffer){
   return row;
 }
 
-static array_o *array_load(char *path, int record_read) {
+static array_o *array_load(char *path, int max_record_read) {
+  if (max_record_read == -1) {
+    max_record_read = MAX_ARRAY_SIZE;
+  }
+
   FILE *file;
   file = fopen(path, "r");
   if (!file) {
@@ -170,14 +188,12 @@ static array_o *array_load(char *path, int record_read) {
   }
 
   count = 0;
-  while (fgets(buffer, buff_size, file) != NULL && count < record_read) {
+  while (count < max_record_read && fgets(buffer, buff_size, file) != NULL) {
     record *row;
     row = record_load(buffer);
     array_insert(array, row);
 
-    if (record_read != 0){ /*ATTENZIONE: out of bound con 0 */
-      count++;
-    }
+    count++;
   }
   
   free(buffer);
@@ -232,7 +248,7 @@ static void array_sort(array_o *array, int algorithm, int field, int order){
 
 int main(int argc, char *argv[]) {
   array_o *array;
-  int record_read;
+  int max_record_read;
   int algorithm;
   int field;
   int order;
@@ -240,7 +256,7 @@ int main(int argc, char *argv[]) {
 
 
   /* Default settings */
-  record_read = 0; /* ATTENZIONE */
+  max_record_read = -1;
   algorithm = Q_SORT;
   field = FIELD1;
   order = ASCENDING;
@@ -252,7 +268,7 @@ int main(int argc, char *argv[]) {
     exit(EXIT_FAILURE);
   }
 
-  if (argc >= 3){record_read = atoi(argv[2]);}  
+  if (argc >= 3){max_record_read = atoi(argv[2]);}
   if (argc >= 4) {
     if(strcmp(argv[3], "isort") == 0){algorithm = I_SORT;}
     else if(strcmp(argv[3], "ssort") == 0){algorithm = S_SORT;}
@@ -271,7 +287,7 @@ int main(int argc, char *argv[]) {
   /* Load array */
   fprintf(stdout, "array_load\n");
   TIMER_START(timer);
-  array = array_load(argv[1], record_read);
+  array = array_load(argv[1], max_record_read);
   TIMER_STOP(timer);
   fprintf(stdout, "array_size: %u\n", (unsigned int) array_size(array));
 

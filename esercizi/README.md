@@ -7,8 +7,11 @@ One Paragraph of project description goes here
 ```
 esercizio1 path count alg field order
 ```
-path: percorso file da leggere
-etc etc
+path: percorso file da leggere\
+count: numero di righe da leggere\
+alg: algoritmo da usare (qsort, ssort, isort)\
+field: campo secondo cui ordinare (field1, field2, field3)\
+order: ordine di ordinamento (ascending, descending)
 
 ### Makefile
 
