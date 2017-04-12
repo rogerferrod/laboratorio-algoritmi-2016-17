@@ -9,6 +9,10 @@ build: build_array build_sort
 
 build_array: bin/array_tests
 build_sort: bin/sort_tests
+build_tree: src/edu/unito/tree/Tree.java
+	javac -d bin/ -cp .:resources/hamcrest-core-1.3.jar:resources/junit-4.12.jar src/edu/unito/tree/Tree.java
+build_treeTest: build_tree src/edu/unito/tree/TreeTests.java
+	javac -d bin/ -cp .:resources/hamcrest-core-1.3.jar:resources/junit-4.12.jar -sourcepath src/ src/edu/unito/tree/TreeTests.java
 
 # compila (grazie alla dipendenza) e esegue i test
 tests: tests_array tests_sort
@@ -17,6 +21,8 @@ tests_array: build_array
 	bin/array_tests
 tests_sort: build_sort
 	bin/sort_tests
+tests_tree: build_treeTest
+	java -cp .:resources/hamcrest-core-1.3.jar:resources/junit-4.12.jar:bin/ org.junit.runner.JUnitCore edu.unito.tree.TreeTests
 
 # Flags per il compilatore -- su gcc -Weverything non esiste
 #    sostituire con -Wall -Wpedantic
@@ -53,4 +59,4 @@ bin/sort_tests: build/sort_tests.o build/sort.o build/array.o build/unity.o $(CO
 	$(CC) -o bin/sort_tests build/sort_tests.o build/sort.o build/array.o build/unity.o
 
 clean:
-	rm -f build/* bin/*
+	rm -fr build/* bin/*

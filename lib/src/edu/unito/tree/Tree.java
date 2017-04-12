@@ -55,16 +55,16 @@ public class Tree {
     }
     return count;
   }
-  public ArrayList<Tree> children() {
+  public ArrayList<String> children() {
     return children(this);
   }
-  public ArrayList<Tree> children(Tree tree) {
-    ArrayList<Tree> list = new ArrayList<>();
+  public ArrayList<String> children(Tree tree) {
+    ArrayList<String> list = new ArrayList<>();
     if (tree.child != null) {
-      list.add(tree.child);
+      list.add(tree.child.label);
       tree = tree.child;
       while (tree.sibling != null) {
-        list.add(tree.sibling);
+        list.add(tree.sibling.label);
         tree = tree.sibling;
       }
     }
