@@ -1,37 +1,34 @@
 CC = gcc
-
-# lista dei target da eseguire sempre
-all: compile
-
-compile: compile_es1
-
-#compile es1 and his libs
-compile_es1:
-	$(MAKE) -C ../lib build
-	$(MAKE) bin/esercizio1
-
-#  compila (grazie alla dipendenza) e esegue ordered_array
+# Parametri per l'esercizio 1
 COUNT = 1000
 ALG = qsort
 FIELD = field1
 ORDER = ascending
+# Flags per il compilatore
+CFLAGS = -g -Wall -pedantic -Wno-padded -std=c99 -O3 -march=native
+# Lista degli header files
+INCLUDES = src/*.h
 
+# Tutti i target vanno ricompilati se cambiano gli header o questo Makefile
+COMMON_DEPS = $(INCLUDES) Makefile
+COMMON_DEPS = Makefile
+
+# Lista dei target da eseguire sempre
+all: compile
+
+compile: compile_es1
+
+#compile es1 and its libs
+compile_es1:
+	$(MAKE) -C ../lib build_es1
+	$(MAKE) bin/esercizio1
+
+#  compila e esegue l'esercizio1
 exec: exec_es1
 
 exec_es1: compile_es1
 	bin/esercizio1 data/records.csv ${COUNT} ${ALG} ${FIELD} ${ORDER}
 
-# Flags per il compilatore -- su gcc -Weverything non esiste
-#    sostituire con -Wall -Wpedantic
-CFLAGS = -g -Wall -pedantic -Wno-padded -std=c99 -O3 -march=native
-
-# Lista degli header files
-INCLUDES = src/*.h
-
-# tutti i target vanno ricompilati se cambiano gli header o
-# questo Makefile
-COMMON_DEPS = $(INCLUDES) Makefile
-COMMON_DEPS = Makefile
 
 # regola per compilare un .c in un .o
 # viene applicata ogni volta che una dipendenza richiede di compilare un file in
