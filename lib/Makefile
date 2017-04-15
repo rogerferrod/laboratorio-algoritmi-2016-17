@@ -19,7 +19,7 @@ build_es2: build_tree build_treeTest
 build_array: bin/array_tests
 build_sort: bin/sort_tests
 build_tree: src/edu/unito/tree/Tree.java
-	javac -d bin/ -cp .:resources/hamcrest-core-1.3.jar:resources/junit-4.12.jar src/edu/unito/tree/Tree.java
+	javac -Xlint:all -Xdiags:verbose -d bin/ -cp .:resources/hamcrest-core-1.3.jar:resources/junit-4.12.jar src/edu/unito/tree/Tree.java
 build_treeTest: build_tree src/edu/unito/tree/TreeTests.java
 	javac -d bin/ -cp .:resources/hamcrest-core-1.3.jar:resources/junit-4.12.jar -sourcepath src/ src/edu/unito/tree/TreeTests.java
 

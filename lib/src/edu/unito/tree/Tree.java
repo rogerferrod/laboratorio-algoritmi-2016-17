@@ -1,11 +1,12 @@
 package edu.unito.tree;
 
 import java.util.ArrayList;
-public class Tree {
-  String label;
-  Tree parent;
-  Tree child;
-  Tree sibling;
+
+public class Tree<T> {
+  private T label;
+  private Tree<T> parent;
+  private Tree<T> child;
+  private Tree<T> sibling;
 
   public Tree() {
     this.label = null;
@@ -13,16 +14,21 @@ public class Tree {
     this.child = null;
     this.sibling= null;
   }
-  public Tree(String label) {
+  public Tree(T label) {
     this();
     this.label = label;
   }
-  public Tree addTree(Tree tree, int i) {
+
+  public Tree<T> addTree(Tree<T> tree) {
+    return addTree(tree, numSibling(tree));
+  }
+  public Tree<T> addTree(Tree<T> tree, int i) {
     if (this.child == null) {
       if (i != 0) throw new IndexOutOfBoundsException("Child index is too big for the list of sons");
       this.child = tree;
+      tree.parent = this;
     } else {
-      Tree t = this.child;
+      Tree<T> t = this.child;
       int count = 1;
       while (t.sibling != null && count < i) {
         t = t.sibling;
@@ -31,16 +37,20 @@ public class Tree {
       if (count < i) throw new IndexOutOfBoundsException("Child index is too big for the list of sons");
       tree.sibling = t.sibling;
       t.sibling = tree;
+      tree.parent = this;
     }
     return this;
   }
-  public Tree addTree(Tree tree) {
-    return addTree(tree, numSibling(tree));
+
+  public int numSibling() {
+    return numSibling(this);
   }
-  public int numSibling(Tree tree) {
+  public int numSibling(Tree<T> tree) {
+    if (tree.parent == null) return 0;
     int count = 0;
-    if (tree.child != null) {
-      tree = tree.child;
+    if (tree.parent.child != null) {
+      tree = tree.parent.child;
+      count++;
       while (tree.sibling != null) {
         tree = tree.sibling;
         count++;
@@ -48,27 +58,32 @@ public class Tree {
     }
     return count;
   }
-  public int numChild(Tree tree) {
-    int count = 0;
-    if (tree.child != null) {
-      count = 1 + numSibling(tree.child);
-    }
-    return count;
+
+  public int numChild() {
+    return numChild(this);
   }
-  public ArrayList<String> children() {
+  public int numChild(Tree<T> tree) {
+    if (tree.child == null) {
+      return 0;
+    } else {
+      return numSibling(tree.child);
+    }
+  }
+
+  public ArrayList<T> children() {
     return children(this);
   }
-  public ArrayList<String> children(Tree tree) {
-    ArrayList<String> list = new ArrayList<>();
-    if (tree.child != null) {
+  public ArrayList<T> children(Tree<T> tree) {
+    ArrayList<T> list = new ArrayList<>();
+    if (tree != null && tree.child != null) {
       list.add(tree.child.label);
       tree = tree.child;
-      while (tree.sibling != null) {
-        list.add(tree.sibling.label);
-        tree = tree.sibling;
+      while (tree.child != null) {
+        list.add(tree.child.label);
+        tree = tree.child;
       }
     }
-
     return list;
   }
+
 }
