@@ -1,6 +1,9 @@
 package edu.unito.tree;
 
 import org.junit.*;
+
+import java.util.ArrayList;
+
 import static org.junit.Assert.*;
 public class TreeTests {
   private Tree<String> tree;
@@ -49,6 +52,27 @@ public class TreeTests {
     assertEquals(0, f1.numChild());
     assertEquals(0, f2.numChild());
     assertEquals(0, f3.numChild());
+  }
+
+  @Test
+  public void testChildrenEmpty() {
+    System.out.println("testChildrenEmpty");
+    Tree<String> f1 = new Tree<>("figlio1");
+    Tree<String> f2 = new Tree<>("figlio2");
+    Tree<String> f3 = new Tree<>("figlio3");
+    Tree<String> f4 = new Tree<>("figlio4");
+
+    tree.addTree(f1);
+    tree.addTree(f2);
+    tree.addTree(f3);
+    tree.addTree(f4);
+
+    ArrayList<String> list = new ArrayList<>();
+    list.add("figlio1");
+    list.add("figlio2");
+    list.add("figlio3");
+    list.add("figlio4");
+    assertEquals(list, tree.children());
   }
 
 }

@@ -20,7 +20,7 @@ public class Tree<T> {
   }
 
   public Tree<T> addTree(Tree<T> tree) {
-    return addTree(tree, numSibling(tree));
+    return addTree(tree, numChild(this));
   }
   public Tree<T> addTree(Tree<T> tree, int i) {
     if (this.child == null) {
@@ -78,12 +78,36 @@ public class Tree<T> {
     if (tree != null && tree.child != null) {
       list.add(tree.child.label);
       tree = tree.child;
-      while (tree.child != null) {
-        list.add(tree.child.label);
-        tree = tree.child;
+      while (tree.sibling != null) {
+        list.add(tree.sibling.label);
+        tree = tree.sibling;
       }
     }
     return list;
   }
 
+  @Override
+  public String toString() {
+    String s = "L: "+label.toString()+" - ";
+    s += "P: ";
+    if (parent == null) {
+      s += "null";
+    } else {
+      s += parent.label.toString();
+    }
+    s += " - C: ";
+    if (child == null) {
+      s += "null";
+    } else {
+      s += child.label.toString();
+    }
+    s += " - S: ";
+    if (sibling == null) {
+      s += "null";
+    } else {
+      s += sibling.label.toString();
+    }
+
+    return s;
+  }
 }
