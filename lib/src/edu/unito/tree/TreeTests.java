@@ -56,7 +56,6 @@ public class TreeTests {
 
   @Test
   public void testChildrenEmpty() {
-    System.out.println("testChildrenEmpty");
     Tree<String> f1 = new Tree<>("figlio1");
     Tree<String> f2 = new Tree<>("figlio2");
     Tree<String> f3 = new Tree<>("figlio3");
