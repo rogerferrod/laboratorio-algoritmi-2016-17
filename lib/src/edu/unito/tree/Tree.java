@@ -92,6 +92,26 @@ public class Tree<T> {
   public ArrayList<T> children() {
     return children(this);
   }
+  
+  public int Depth(Tree<T> tree){
+    
+    int rightDepth = 0;
+    int leftDepth = 0;
+
+    if (this.child == null )
+      return 0;
+    else {
+      leftDepth = Depth(this.child) + 1;
+
+      if (this.child.sibling == null)
+        return 0;
+      else
+        rightDepth = Depth(this.child.sibling) + 1;
+
+      return leftDepth > rightDepth ? leftDepth : rightDepth ;  
+
+    }
+  }
 
   /*@Override
   public String toString() {
