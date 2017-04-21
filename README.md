@@ -229,6 +229,8 @@ suggerite nel documento [Unit Testing](UnitTesting.md).
 ## Esercizio 3
 Si implementino la versione iterativa e la versione ricorsiva di un
 algoritmo che accetta in input un vettore e controlla se esso rappresenta un Max Heap.
+Il tipo degli elementi del vettore non è noto a priori e il criterio di ordinamento
+deve poter essere specificato dall'utente.
 
 ### Unit Testing
 
