@@ -1,8 +1,9 @@
 package edu.unito.tree;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
-public class Tree<T> {
+public class Tree<T> {// implements Iterable<T> {
   private T label;
   private Tree<T> parent;
   private Tree<T> child;
@@ -76,21 +77,57 @@ public class Tree<T> {
     return addTree(tree, numChild(this));
   }
 
-  public ArrayList<T> children(Tree<T> tree) {
-    ArrayList<T> list = new ArrayList<>();
+  public ArrayList<Tree<T>> children(Tree<T> tree) {
+    ArrayList<Tree<T>> list = new ArrayList<>();
     if (tree != null && tree.child != null) {
-      list.add(tree.child.label);
+      list.add(tree.child);
       tree = tree.child;
       while (tree.sibling != null) {
-        list.add(tree.sibling.label);
+        list.add(tree.sibling);
         tree = tree.sibling;
       }
     }
     return list;
   }
 
-  public ArrayList<T> children() {
+  public ArrayList<Tree<T>> children() {
     return children(this);
+  }
+
+  public boolean hasChild(Tree<T> tree) {
+    return tree.child != null;
+  }
+
+  public boolean hasChild() {
+    return hasChild(this);
+  }
+
+  public boolean hasNextSibling(Tree<T> tree) {
+    return tree.sibling != null;
+  }
+
+  public boolean hasNextSibling() {
+    return hasNextSibling(this);
+  }
+
+  public T getLabel() {
+    return label;
+  }
+
+  public Tree<T> getParent() {
+    return parent;
+  }
+
+  public Tree<T> getChild() {
+    return child;
+  }
+
+  public Tree<T> getChild(int i) {
+    return children().get(i);
+  }
+
+  public Tree<T> getSibling() {
+    return sibling;
   }
 
   /*@Override
@@ -118,6 +155,20 @@ public class Tree<T> {
     return s;
   }*/
 
+  public int degree() {
+    return degree(this);
+  }
+
+  public int degree(Tree<T> tree) {
+    ArrayList<Tree<T>> list = children(tree);
+    int max = list.size();
+    for (Tree<T> t: list) {
+      int m = degree(t);
+      if (m > max) max = m;
+    }
+    return max;
+  }
+
   @Override
   public String toString() {
     String s = "";
@@ -131,4 +182,13 @@ public class Tree<T> {
     s += ")";
     return s;
   }
+/*
+  @Override
+  public Iterator<T> iterator() {
+    return iterator(this);
+  }
+  public Iterator<T> iterator(Tree<T> tree) {
+    return new TreeIterator<T>(tree);
+  }
+*/
 }

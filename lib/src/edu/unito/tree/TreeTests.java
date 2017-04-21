@@ -12,6 +12,34 @@ public class TreeTests {
     tree = new Tree<>("root");
   }
 
+  public void buildFixture() {
+    Tree<String> B = new Tree<>("B");
+    Tree<String> C = new Tree<>("C");
+    Tree<String> D = new Tree<>("D");
+    Tree<String> E = new Tree<>("E");
+    Tree<String> F = new Tree<>("F");
+    Tree<String> G = new Tree<>("G");
+    Tree<String> H = new Tree<>("H");
+    Tree<String> I = new Tree<>("I");
+    Tree<String> J = new Tree<>("J");
+    Tree<String> K = new Tree<>("K");
+    Tree<String> L = new Tree<>("L");
+    Tree<String> M = new Tree<>("M");
+
+    tree.addTree(B);
+    tree.addTree(C);
+    B.addTree(D);
+    B.addTree(E);
+    B.addTree(F);
+    E.addTree(H);
+    E.addTree(I);
+    C.addTree(G);
+    G.addTree(J);
+    G.addTree(K);
+    G.addTree(L);
+    G.addTree(M);
+  }
+
   @Test
   public void testAddTree() {
     Tree<String> B = new Tree<>("B");
@@ -99,31 +127,32 @@ public class TreeTests {
     tree.addTree(c3);
     tree.addTree(c4);
 
-    ArrayList<String> list = new ArrayList<>();
-    list.add("figlio1");
-    list.add("figlio2");
-    list.add("figlio3");
-    list.add("figlio4");
+    ArrayList<Tree<String>> list = new ArrayList<>();
+    list.add(c1);
+    list.add(c2);
+    list.add(c3);
+    list.add(c4);
 
     assertEquals(list, tree.children());
   }
 
   @Test
+  public void testDegree(){
+    buildFixture();
+    assertEquals(4, tree.degree());
+    assertEquals(3, tree.degree(tree.getChild()));
+  }
+  @Test
+  public void testDegreeEmpty(){
+    //buildFixture();
+    assertEquals(0, tree.degree());
+  }
+
+  @Test
   public void print(){
-    Tree<String> B = new Tree<>("B");
-    Tree<String> C = new Tree<>("C");
-    Tree<String> D = new Tree<>("D");
-    Tree<String> E = new Tree<>("E");
-    Tree<String> F = new Tree<>("F");
-
-    C.addTree(E);
-    C.addTree(F);
-    B.addTree(C);
-    B.addTree(D);
-    tree.addTree(B);
-
-    assertEquals("(root(B(C(E,(F)),(D))))", tree.toString());
-    //System.out.println(tree.toString());
+    buildFixture();
+    assertEquals("(root(B(D,(E(H,(I)),(F))),(C(G(J,(K,(L,(M))))))))", tree.toString());
+    System.out.println(tree.toString());
   }
 
 }
