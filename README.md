@@ -227,12 +227,8 @@ suggerite nel documento [Unit Testing](UnitTesting.md).
 
 
 ## Esercizio 3
-Si implementi la struttura dati Heap.
-
-La struttura dati deve gestire tipi generici e consentire un numero qualunque e non noto a priori di elementi.
-
-Si implementino inoltre la versione iterativa e la versione ricorsiva di un
-algoritmo che accetta in input un Heap e controlla se esso è un Max Heap.
+Si implementino la versione iterativa e la versione ricorsiva di un
+algoritmo che accetta in input un vettore e controlla se esso rappresenta un Max Heap.
 
 ### Unit Testing
 
