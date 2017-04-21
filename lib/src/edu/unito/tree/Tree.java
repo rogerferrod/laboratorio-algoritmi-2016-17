@@ -51,7 +51,9 @@ public class Tree<T> {
   }
 
   public Tree<T> addTree(Tree<T> tree, int i) {
-    if (this.child == null) {
+    if (tree == this) {
+      throw new IllegalArgumentException("Can't add this as child of this");
+    } else if (this.child == null) {
       if (i != 0) throw new IndexOutOfBoundsException("Child index is too big for the list of sons");
       this.child = tree;
       tree.parent = this;

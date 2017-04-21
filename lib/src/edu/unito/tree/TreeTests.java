@@ -32,8 +32,13 @@ public class TreeTests {
     //System.out.println(tree.toString());
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void testAddTreeCyclic() {
+    tree.addTree(tree);
+  }
+
   @Test(expected = IndexOutOfBoundsException.class)
-  public void testAddTreeFail() {
+  public void testAddTreeWrongPosition() {
     tree.addTree(new Tree<>("A"), 1);
   }
 
@@ -99,6 +104,7 @@ public class TreeTests {
     list.add("figlio2");
     list.add("figlio3");
     list.add("figlio4");
+
     assertEquals(list, tree.children());
   }
 
@@ -115,7 +121,9 @@ public class TreeTests {
     B.addTree(C);
     B.addTree(D);
     tree.addTree(B);
-    System.out.println(tree.toString());
+
+    assertEquals("(root(B(C(E,(F)),(D))))", tree.toString());
+    //System.out.println(tree.toString());
   }
 
 }
