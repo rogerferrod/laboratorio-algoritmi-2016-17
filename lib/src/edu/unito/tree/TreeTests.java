@@ -2,7 +2,6 @@ package edu.unito.tree;
 import org.junit.*;
 import java.util.ArrayList;
 
-import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 public class TreeTests {
   private Tree<String> tree;
@@ -149,10 +148,35 @@ public class TreeTests {
   }
 
   @Test
+  public void testDepth(){
+    Tree<String> B = new Tree<>("B");
+    Tree<String> C = new Tree<>("C");
+    Tree<String> D = new Tree<>("D");
+    Tree<String> E = new Tree<>("E");
+    Tree<String> F = new Tree<>("F");
+    Tree<String> G = new Tree<>("F");
+    Tree<String> H = new Tree<>("F");
+    Tree<String> I = new Tree<>("F");
+
+    H.addTree(I);
+    D.addTree(G);
+    E.addTree(H);
+    B.addTree(D);
+    B.addTree(E);
+    C.addTree(F);
+    tree.addTree(C);
+    tree.addTree(B);
+
+    assertEquals(4, tree.height());
+    assertEquals(2, tree.height(E));
+    assertEquals(0, tree.height(G));
+  }
+
+  @Test
   public void print(){
     buildFixture();
     assertEquals("(root(B(D,(E(H,(I)),(F))),(C(G(J,(K,(L,(M))))))))", tree.toString());
-    System.out.println(tree.toString());
+    //System.out.println(tree.toString());
   }
 
 }

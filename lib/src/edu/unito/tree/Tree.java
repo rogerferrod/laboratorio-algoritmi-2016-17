@@ -94,6 +94,23 @@ public class Tree<T> {// implements Iterable<T> {
     return children(this);
   }
 
+  public int height(){
+    return height(this);
+  }
+  public int height(Tree<T> tree){
+    if (tree.child == null) return 0;
+
+    tree = tree.child;
+    int max = height(tree);
+    while (tree.sibling != null) {
+      int n = height(tree.sibling);
+      if (n > max) max = n;
+      tree = tree.sibling;
+    }
+
+    return max +1;
+  }
+
   public boolean hasChild(Tree<T> tree) {
     return tree.child != null;
   }
