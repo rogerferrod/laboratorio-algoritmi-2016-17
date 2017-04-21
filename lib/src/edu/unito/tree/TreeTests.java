@@ -125,5 +125,29 @@ public class TreeTests {
     assertEquals("(root(B(C(E,(F)),(D))))", tree.toString());
     //System.out.println(tree.toString());
   }
+  
+  @Test
+  public void testDepth(){
+    Tree<String> B = new Tree<>("B");
+    Tree<String> C = new Tree<>("C");
+    Tree<String> D = new Tree<>("D");
+    Tree<String> E = new Tree<>("E");
+    Tree<String> F = new Tree<>("F");
+    Tree<String> G = new Tree<>("F");
+    Tree<String> H = new Tree<>("F");
+    Tree<String> I = new Tree<>("F");
+    
+    H.addTree(I);
+    D.addTree(G);
+    E.addTree(H);
+    B.addTree(D);
+    B.addTree(E);
+    C.addTree(F);
+    root.addTree(C);
+    root.addTree(B);
+
+    assertEquals(4, root.depth());
+  
+  }
 
 }
