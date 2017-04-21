@@ -139,7 +139,7 @@ public class TreeTests {
   public void testDegree(){
     buildFixture();
     assertEquals(4, tree.degree());
-    assertEquals(3, tree.degree(tree.getChild()));
+    assertEquals(3, tree.getChild().degree());
   }
   @Test
   public void testDegreeEmpty(){
@@ -148,7 +148,7 @@ public class TreeTests {
   }
 
   @Test
-  public void testDepth(){
+  public void testHeight(){
     Tree<String> B = new Tree<>("B");
     Tree<String> C = new Tree<>("C");
     Tree<String> D = new Tree<>("D");
@@ -168,8 +168,22 @@ public class TreeTests {
     tree.addTree(B);
 
     assertEquals(4, tree.height());
-    assertEquals(2, tree.height(E));
-    assertEquals(0, tree.height(G));
+    assertEquals(2, E.height());
+    assertEquals(0, G.height());
+  }
+
+  @Test
+  public void testSize() {
+    buildFixture();
+    assertEquals(13, tree.size());
+    assertEquals(6, tree.getChild().size());
+  }
+
+  @Test
+  public void testIsBinary() {
+    buildFixture();
+    assertEquals(false, tree.isBinary());
+    assertEquals(true, tree.getChild().getChild(1).isBinary());
   }
 
   @Test

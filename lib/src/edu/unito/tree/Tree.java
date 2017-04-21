@@ -21,7 +21,7 @@ public class Tree<T> {// implements Iterable<T> {
     this.label = label;
   }
 
-  public int numSibling(Tree<T> tree) {
+  private int numSibling(Tree<T> tree) {
     if (tree.parent == null) return 0;
     int count = 0;
     if (tree.parent.child != null) {
@@ -39,7 +39,7 @@ public class Tree<T> {// implements Iterable<T> {
     return numSibling(this);
   }
 
-  public int numChild(Tree<T> tree) {
+  private int numChild(Tree<T> tree) {
     if (tree.child == null) {
       return 0;
     } else {
@@ -77,7 +77,7 @@ public class Tree<T> {// implements Iterable<T> {
     return addTree(tree, numChild(this));
   }
 
-  public ArrayList<Tree<T>> children(Tree<T> tree) {
+  private ArrayList<Tree<T>> children(Tree<T> tree) {
     ArrayList<Tree<T>> list = new ArrayList<>();
     if (tree != null && tree.child != null) {
       list.add(tree.child);
@@ -97,7 +97,8 @@ public class Tree<T> {// implements Iterable<T> {
   public int height(){
     return height(this);
   }
-  public int height(Tree<T> tree){
+
+  private int height(Tree<T> tree){
     if (tree.child == null) return 0;
 
     tree = tree.child;
@@ -111,7 +112,7 @@ public class Tree<T> {// implements Iterable<T> {
     return max +1;
   }
 
-  public boolean hasChild(Tree<T> tree) {
+  private boolean hasChild(Tree<T> tree) {
     return tree.child != null;
   }
 
@@ -119,7 +120,7 @@ public class Tree<T> {// implements Iterable<T> {
     return hasChild(this);
   }
 
-  public boolean hasNextSibling(Tree<T> tree) {
+  private boolean hasNextSibling(Tree<T> tree) {
     return tree.sibling != null;
   }
 
@@ -147,7 +148,7 @@ public class Tree<T> {// implements Iterable<T> {
     return sibling;
   }
 
-  /*@Override
+/*  @Override
   public String toString() {
     String s = "L: "+label.toString()+" - ";
     s += "P: ";
@@ -170,13 +171,14 @@ public class Tree<T> {// implements Iterable<T> {
     }
 
     return s;
-  }*/
+  }
+*/
 
   public int degree() {
     return degree(this);
   }
 
-  public int degree(Tree<T> tree) {
+  private int degree(Tree<T> tree) {
     ArrayList<Tree<T>> list = children(tree);
     int max = list.size();
     for (Tree<T> t: list) {
@@ -184,6 +186,41 @@ public class Tree<T> {// implements Iterable<T> {
       if (m > max) max = m;
     }
     return max;
+  }
+
+  public int size() {
+    return size(this);
+  }
+
+  private int size(Tree<T> tree) {
+    if (tree.child == null) return 1;
+
+    int iChild = 1;
+    tree = tree.child;
+    do {
+      iChild += size(tree);
+      tree = tree.sibling;
+    } while (tree != null);
+
+    return iChild;
+  }
+
+  public boolean isBinary() {
+    return isBinary(this);
+  }
+
+  private boolean isBinary(Tree<T> tree) {
+    if (numChild(tree) > 2) return false;
+    if (tree.child == null) return true;
+
+    boolean bChild = true;
+    tree = tree.child;
+    do {
+      bChild = isBinary(tree);
+      tree = tree.sibling;
+    } while (tree != null && bChild);
+
+    return bChild;
   }
 
   @Override
