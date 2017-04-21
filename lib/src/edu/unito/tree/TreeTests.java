@@ -2,6 +2,7 @@ package edu.unito.tree;
 import org.junit.*;
 import java.util.ArrayList;
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 public class TreeTests {
   private Tree<String> tree;
@@ -29,6 +30,11 @@ public class TreeTests {
     tree.addTree(N,1);
     tree.addTree(M,2);
     //System.out.println(tree.toString());
+  }
+
+  @Test(expected = IndexOutOfBoundsException.class)
+  public void testAddTreeFail() {
+    tree.addTree(new Tree<>("A"), 1);
   }
 
   @Test
