@@ -3,7 +3,7 @@ package edu.unito.tree;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class Tree<T> implements Iterable<T> {// implements Iterable<T> {
+public class Tree<T> implements Iterable<T> {
   private T label;
   private Tree<T> parent;
   private Tree<T> child;
@@ -241,14 +241,9 @@ public class Tree<T> implements Iterable<T> {// implements Iterable<T> {
   public Iterator<T> iterator() {
       return new TreeIterator<T>(this);
   }
-
-  /*@Override
-  public Iterator<Tree<T>> iterator() {
-    return iterator(this);
-  }
   
-  public Iterator<Tree<T>> iterator(Tree<T> tree) {
-    return new TreeIterator<T>(tree);
-  }*/
+  private Iterator<T> iterator(Tree<T> tree) {
+	    return new TreeIterator<T>(tree);
+  }
 
 }

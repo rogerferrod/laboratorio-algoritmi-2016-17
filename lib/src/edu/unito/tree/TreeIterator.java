@@ -3,34 +3,8 @@ package edu.unito.tree;
 import java.util.Iterator;
 import java.util.Stack;
 import java.util.NoSuchElementException;
-
-public class TreeIterator<T> implements Iterator<T> {
-
-    /*private Tree<T> current;
-
-    public TreeIterator(Tree<T> tree) {
-        this.current = tree;
-    }
-
-    public boolean hasNext() {
-        return current.getChild() != null || current.getSibling() != null;
-    }
-
-    public T next() {
-    	Tree<T> tNext;
-        if(this.hasNext()) {
-            if(current.getChild() != null){
-            	tNext = current.getChild();ù
-            	current = current.next();
-            }
-        }
-        throw new NoSuchElementException();
-    }
-
-    public void remove() {
-        throw new UnsupportedOperationException();
-    }*/
 	
+public class TreeIterator<T> implements Iterator<T> {	
 	private Stack<Tree<T>> stack = new Stack<Tree<T>>();
 
 	/* Iteratore di profondità */
@@ -44,18 +18,18 @@ public class TreeIterator<T> implements Iterator<T> {
         return !stack.empty();
     }
 
-    public T next() { /* Tree<T> */
+    public T next() {
         if (!hasNext()){
             throw new NoSuchElementException ("Tree no such elements");
         }
         Tree<T> result = stack.pop();
-        /* push per ogni figlio */
-        if (result.getChild() != null) {
-            stack.push(result.getChild());
-        }
+        /* preordine sinistro */
         if (result.getSibling() != null) {
             stack.push(result.getSibling());
-        }        
+        }  
+        if (result.getChild() != null) {
+            stack.push(result.getChild());
+        }              
         return result.getLabel();
     }
 

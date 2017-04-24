@@ -2,6 +2,7 @@ package edu.unito.tree;
 import org.junit.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Collections;
 
 import static org.junit.Assert.*;
 
@@ -192,9 +193,31 @@ public class TreeTests {
   public void testIterator() {
     buildFixture();
     Iterator<String> it = tree.iterator();
+    ArrayList<String> expected = new ArrayList<String>();
+    ArrayList<String> result = new ArrayList<String>();
     while(it.hasNext()) {
-        System.out.println(it.next());
+    	result.add(it.next());
     }
+    
+    expected.add("root");
+    expected.add("B");
+    expected.add("D");
+    expected.add("E");
+    expected.add("H");
+    expected.add("I");
+    expected.add("F");
+    expected.add("C");
+    expected.add("G");
+    expected.add("J");
+    expected.add("K");
+    expected.add("L");
+    expected.add("M");
+    
+    Collections.reverse(result);
+    Collections.reverse(expected);
+    
+    assertEquals(expected, result);
+   
   }
 
   @Test
