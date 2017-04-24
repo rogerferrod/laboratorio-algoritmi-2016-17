@@ -9,6 +9,7 @@ import static org.junit.Assert.*;
 
 public class TreeTests {
   private Tree<String> tree;
+  private ArrayList<String> list;
 
   @Before
   public void setup() {
@@ -41,6 +42,21 @@ public class TreeTests {
     G.addTree(K);
     G.addTree(L);
     G.addTree(M);
+    
+    list = new ArrayList<String>();
+    list.add("root");
+    list.add("B");
+    list.add("D");
+    list.add("E");
+    list.add("H");
+    list.add("I");
+    list.add("F");
+    list.add("C");
+    list.add("G");
+    list.add("J");
+    list.add("K");
+    list.add("L");
+    list.add("M");
   }
 
   @Test
@@ -147,7 +163,6 @@ public class TreeTests {
   }
   @Test
   public void testDegreeEmpty(){
-    //buildFixture();
     assertEquals(0, tree.degree());
   }
 
@@ -194,39 +209,21 @@ public class TreeTests {
   public void testIterator() {
     buildFixture();
     Iterator<String> it = tree.iterator();
-    ArrayList<String> expected = new ArrayList<String>();
     ArrayList<String> result = new ArrayList<String>();
     while(it.hasNext()) {
     	result.add(it.next());
-    }
-    
-    expected.add("root");
-    expected.add("B");
-    expected.add("D");
-    expected.add("E");
-    expected.add("H");
-    expected.add("I");
-    expected.add("F");
-    expected.add("C");
-    expected.add("G");
-    expected.add("J");
-    expected.add("K");
-    expected.add("L");
-    expected.add("M");
-    
-    
-    assertEquals(expected, result);
-   
+    }    
+    assertEquals(list, result);   
   }
 
   @Test
-  public void testGetAllNode() {
-    ArrayList<Tree<String>> list = new ArrayList<>();
-    list.add(tree);
+  public void testGetAll() {
+	buildFixture();
     assertEquals(list, tree.getAll());
   }
 
-  @Test
+  
+  /*@Test
   public void testGetAllSimple() {
     Tree<String> B = new Tree<>("B");
     Tree<String> C = new Tree<>("C");
@@ -242,57 +239,18 @@ public class TreeTests {
     ArrayList<Tree<String>> t = tree.getAll();
 
     assertEquals(list, t);
-  }
+  }*/
 
   @Test
-  public void testGetAll() {
-    Tree<String> B = new Tree<>("B");
-    Tree<String> C = new Tree<>("C");
-    Tree<String> D = new Tree<>("D");
-    Tree<String> E = new Tree<>("E");
-    Tree<String> F = new Tree<>("F");
-    Tree<String> G = new Tree<>("G");
-    Tree<String> H = new Tree<>("H");
-    Tree<String> I = new Tree<>("I");
-    Tree<String> J = new Tree<>("J");
-    Tree<String> K = new Tree<>("K");
-    Tree<String> L = new Tree<>("L");
-    Tree<String> M = new Tree<>("M");
+  public void testSortedGetAll() {
+	buildFixture();
 
-    tree.addTree(B);
-    tree.addTree(C);
-    B.addTree(D);
-    B.addTree(E);
-    B.addTree(F);
-    E.addTree(H);
-    E.addTree(I);
-    C.addTree(G);
-    G.addTree(J);
-    G.addTree(K);
-    G.addTree(L);
-    G.addTree(M);
+    ArrayList<String> t = tree.getAll();
 
-    ArrayList<Tree<String>> list = new ArrayList<>();
-    list.add(tree);
-    list.add(B);
-    list.add(C);
-    list.add(D);
-    list.add(E);
-    list.add(F);
-    list.add(G);
-    list.add(H);
-    list.add(I);
-    list.add(J);
-    list.add(K);
-    list.add(L);
-    list.add(M);
-
-    ArrayList<Tree<String>> t = tree.getAll();
-
-    Comparator<Tree<String>> comparator = new Comparator<Tree<String>>() {
+    Comparator<String> comparator = new Comparator<String>() {
       @Override
-      public int compare(Tree<String> t1, Tree<String> t2) {
-        return t1.getLabel().compareTo(t2.getLabel());
+      public int compare(String t1, String t2) {
+        return t1.compareTo(t2);
       }
     };
 
@@ -303,7 +261,7 @@ public class TreeTests {
   }
 
   @Test
-  public void print(){
+  public void testToString(){
     buildFixture();
     assertEquals("(root(B(D,(E(H,(I)),(F))),(C(G(J,(K,(L,(M))))))))", tree.toString());
     //System.out.println(tree.toString());

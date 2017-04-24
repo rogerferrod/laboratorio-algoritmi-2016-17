@@ -112,22 +112,6 @@ public class Tree<T> implements Iterable<T> {
     return numChild(this);
   }
 
-  private boolean hasNextSibling(Tree<T> tree) {
-    return tree.sibling != null;
-  }
-
-  public boolean hasNextSibling() {
-    return hasNextSibling(this);
-  }
-
-  private boolean hasChild(Tree<T> tree) {
-    return tree.child != null;
-  }
-
-  public boolean hasChild() {
-    return hasChild(this);
-  }
-
   public int height(){
     return height(this);
   }
@@ -143,7 +127,7 @@ public class Tree<T> implements Iterable<T> {
       tree = tree.sibling;
     }
 
-    return max +1;
+    return max + 1;
   }
 
   public int degree() {
@@ -212,32 +196,27 @@ public class Tree<T> implements Iterable<T> {
     return bChild;
   }
 
-  public Tree<T> toBinaryTree(Comparator<Tree<T>> c) {
-    return toBinaryTree(this, c);
-  }
-
-  private Tree<T> toBinaryTree(Tree<T> tree, Comparator<Tree<T>> c) {
-    ArrayList<Tree<T>> list = tree.getAll();
-    list.sort(c);
-    return null;
-  }
-
-  public ArrayList<Tree<T>> getAll() {
+  public ArrayList<T> getAll() {
     return getAll(this);
   }
 
-  private ArrayList<Tree<T>> getAll(Tree<T> tree) {
-    if (tree == null) return new ArrayList<>();
+  private ArrayList<T> getAll(Tree<T> tree) {
+	Iterator<T> it = tree.iterator(tree);
+	ArrayList<T> list = new ArrayList<>();
+	while(it.hasNext()) {
+	  list.add(it.next());
+	}
+	return list;
+  }
+  
+  public Tree<T> toBinaryTree(Comparator<T> compare) {
+    return toBinaryTree(this, compare);
+  }
 
-    ArrayList<Tree<T>> list = new ArrayList<>();
-    list.add(tree);
-
-    ArrayList<Tree<T>> children = tree.children();
-
-    for (Tree<T> sub : children) {
-      list.addAll(sub.getAll());
-    }
-    return list;
+  private Tree<T> toBinaryTree(Tree<T> tree, Comparator<T> compare) {
+    ArrayList<T> list = tree.getAll();
+    list.sort(compare);
+    return null;
   }
 
   @Override

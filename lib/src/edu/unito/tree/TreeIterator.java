@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.Stack;
 import java.util.NoSuchElementException;
 	
-public class TreeIterator<T> implements Iterator<T> {	
+public class TreeIterator<T> implements Iterator<T> {
 	private Stack<Tree<T>> stack = new Stack<Tree<T>>();
 
 	/* Iteratore di profondità */
