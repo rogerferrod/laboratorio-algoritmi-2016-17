@@ -1,6 +1,7 @@
 package edu.unito.tree;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 
 public class Tree<T> {// implements Iterable<T> {
@@ -9,6 +10,10 @@ public class Tree<T> {// implements Iterable<T> {
   private Tree<T> child;
   private Tree<T> sibling;
 
+  /**
+   * Empty constructor
+   * Initialize a new tree with no label, parent, children and siblings.
+   */
   public Tree() {
     this.label = null;
     this.parent = null;
@@ -16,9 +21,65 @@ public class Tree<T> {// implements Iterable<T> {
     this.sibling= null;
   }
 
+  /**
+   * Basic constructor
+   * Initialize a new tree with a label but without parent, children and siblings.
+   *
+   * @param label Node label
+   */
   public Tree(T label) {
     this();
     this.label = label;
+  }
+
+  //getter
+  public T getLabel() {
+    return label;
+  }
+
+  //getter
+  public Tree<T> getParent() {
+    return parent;
+  }
+
+  //getter
+  public Tree<T> getSibling() {
+    return sibling;
+  }
+
+  //getter
+  public Tree<T> getChild() {
+    return child;
+  }
+
+  public Tree<T> getChild(int i) {
+    return children().get(i);
+  }
+
+  public Tree<T> addTree(Tree<T> tree, int i) {
+    if (tree == this) {
+      throw new IllegalArgumentException("Can't add this as child of this");
+    } else if (this.child == null) {
+      if (i != 0) throw new IndexOutOfBoundsException("Child index is too big for the list of sons");
+      this.child = tree;
+      tree.parent = this;
+    } else {
+      Tree<T> t = this.child;
+      int count = 1;
+      while (t.sibling != null && count < i) {
+        t = t.sibling;
+        count++;
+      }
+      if (count < i) throw new IndexOutOfBoundsException("Child index is too big for the list of sons");
+      tree.sibling = t.sibling;
+      t.sibling = tree;
+      tree.parent = this;
+    }
+    return this;
+  }
+
+  public Tree<T> addTree(Tree<T> tree) {
+    return addTree(tree, numChild(this));
   }
 
   private int numSibling(Tree<T> tree) {
@@ -51,47 +112,20 @@ public class Tree<T> {// implements Iterable<T> {
     return numChild(this);
   }
 
-  public Tree<T> addTree(Tree<T> tree, int i) {
-    if (tree == this) {
-      throw new IllegalArgumentException("Can't add this as child of this");
-    } else if (this.child == null) {
-      if (i != 0) throw new IndexOutOfBoundsException("Child index is too big for the list of sons");
-      this.child = tree;
-      tree.parent = this;
-    } else {
-      Tree<T> t = this.child;
-      int count = 1;
-      while (t.sibling != null && count < i) {
-        t = t.sibling;
-        count++;
-      }
-      if (count < i) throw new IndexOutOfBoundsException("Child index is too big for the list of sons");
-      tree.sibling = t.sibling;
-      t.sibling = tree;
-      tree.parent = this;
-    }
-    return this;
+  private boolean hasNextSibling(Tree<T> tree) {
+    return tree.sibling != null;
   }
 
-  public Tree<T> addTree(Tree<T> tree) {
-    return addTree(tree, numChild(this));
+  public boolean hasNextSibling() {
+    return hasNextSibling(this);
   }
 
-  private ArrayList<Tree<T>> children(Tree<T> tree) {
-    ArrayList<Tree<T>> list = new ArrayList<>();
-    if (tree != null && tree.child != null) {
-      list.add(tree.child);
-      tree = tree.child;
-      while (tree.sibling != null) {
-        list.add(tree.sibling);
-        tree = tree.sibling;
-      }
-    }
-    return list;
+  private boolean hasChild(Tree<T> tree) {
+    return tree.child != null;
   }
 
-  public ArrayList<Tree<T>> children() {
-    return children(this);
+  public boolean hasChild() {
+    return hasChild(this);
   }
 
   public int height(){
@@ -111,68 +145,6 @@ public class Tree<T> {// implements Iterable<T> {
 
     return max +1;
   }
-
-  private boolean hasChild(Tree<T> tree) {
-    return tree.child != null;
-  }
-
-  public boolean hasChild() {
-    return hasChild(this);
-  }
-
-  private boolean hasNextSibling(Tree<T> tree) {
-    return tree.sibling != null;
-  }
-
-  public boolean hasNextSibling() {
-    return hasNextSibling(this);
-  }
-
-  public T getLabel() {
-    return label;
-  }
-
-  public Tree<T> getParent() {
-    return parent;
-  }
-
-  public Tree<T> getChild() {
-    return child;
-  }
-
-  public Tree<T> getChild(int i) {
-    return children().get(i);
-  }
-
-  public Tree<T> getSibling() {
-    return sibling;
-  }
-
-/*  @Override
-  public String toString() {
-    String s = "L: "+label.toString()+" - ";
-    s += "P: ";
-    if (parent == null) {
-      s += "null";
-    } else {
-      s += parent.label.toString();
-    }
-    s += " - C: ";
-    if (child == null) {
-      s += "null";
-    } else {
-      s += child.label.toString();
-    }
-    s += " - S: ";
-    if (sibling == null) {
-      s += "null";
-    } else {
-      s += sibling.label.toString();
-    }
-
-    return s;
-  }
-*/
 
   public int degree() {
     return degree(this);
@@ -205,6 +177,23 @@ public class Tree<T> {// implements Iterable<T> {
     return iChild;
   }
 
+  private ArrayList<Tree<T>> children(Tree<T> tree) {
+    ArrayList<Tree<T>> list = new ArrayList<>();
+    if (tree != null && tree.child != null) {
+      list.add(tree.child);
+      tree = tree.child;
+      while (tree.sibling != null) {
+        list.add(tree.sibling);
+        tree = tree.sibling;
+      }
+    }
+    return list;
+  }
+
+  public ArrayList<Tree<T>> children() {
+    return children(this);
+  }
+
   public boolean isBinary() {
     return isBinary(this);
   }
@@ -221,6 +210,34 @@ public class Tree<T> {// implements Iterable<T> {
     } while (tree != null && bChild);
 
     return bChild;
+  }
+
+  public Tree<T> toBinaryTree(Comparator<Tree<T>> c) {
+    return toBinaryTree(this, c);
+  }
+
+  private Tree<T> toBinaryTree(Tree<T> tree, Comparator<Tree<T>> c) {
+    ArrayList<Tree<T>> list = tree.getAll();
+    list.sort(c);
+    return null;
+  }
+
+  public ArrayList<Tree<T>> getAll() {
+    return getAll(this);
+  }
+
+  private ArrayList<Tree<T>> getAll(Tree<T> tree) {
+    if (tree == null) return new ArrayList<>();
+
+    ArrayList<Tree<T>> list = new ArrayList<>();
+    list.add(tree);
+
+    ArrayList<Tree<T>> children = tree.children();
+
+    for (Tree<T> sub : children) {
+      list.addAll(sub.getAll());
+    }
+    return list;
   }
 
   @Override
@@ -245,4 +262,30 @@ public class Tree<T> {// implements Iterable<T> {
     return new TreeIterator<T>(tree);
   }
 */
+/*  @Override
+  public String toString() {
+    String s = "L: "+label.toString()+" - ";
+    s += "P: ";
+    if (parent == null) {
+      s += "null";
+    } else {
+      s += parent.label.toString();
+    }
+    s += " - C: ";
+    if (child == null) {
+      s += "null";
+    } else {
+      s += child.label.toString();
+    }
+    s += " - S: ";
+    if (sibling == null) {
+      s += "null";
+    } else {
+      s += sibling.label.toString();
+    }
+
+    return s;
+  }
+*/
+
 }

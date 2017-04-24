@@ -1,6 +1,7 @@
 package edu.unito.tree;
 import org.junit.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import static org.junit.Assert.*;
 public class TreeTests {
@@ -184,6 +185,89 @@ public class TreeTests {
     buildFixture();
     assertEquals(false, tree.isBinary());
     assertEquals(true, tree.getChild().getChild(1).isBinary());
+  }
+
+  @Test
+  public void testGetAllNode() {
+    ArrayList<Tree<String>> list = new ArrayList<>();
+    list.add(tree);
+    assertEquals(list, tree.getAll());
+  }
+
+  @Test
+  public void testGetAllSimple() {
+    Tree<String> B = new Tree<>("B");
+    Tree<String> C = new Tree<>("C");
+
+    tree.addTree(B);
+    tree.addTree(C);
+
+    ArrayList<Tree<String>> list = new ArrayList<>();
+    list.add(tree);
+    list.add(B);
+    list.add(C);
+
+    ArrayList<Tree<String>> t = tree.getAll();
+
+    assertEquals(list, t);
+  }
+
+  @Test
+  public void testGetAll() {
+    Tree<String> B = new Tree<>("B");
+    Tree<String> C = new Tree<>("C");
+    Tree<String> D = new Tree<>("D");
+    Tree<String> E = new Tree<>("E");
+    Tree<String> F = new Tree<>("F");
+    Tree<String> G = new Tree<>("G");
+    Tree<String> H = new Tree<>("H");
+    Tree<String> I = new Tree<>("I");
+    Tree<String> J = new Tree<>("J");
+    Tree<String> K = new Tree<>("K");
+    Tree<String> L = new Tree<>("L");
+    Tree<String> M = new Tree<>("M");
+
+    tree.addTree(B);
+    tree.addTree(C);
+    B.addTree(D);
+    B.addTree(E);
+    B.addTree(F);
+    E.addTree(H);
+    E.addTree(I);
+    C.addTree(G);
+    G.addTree(J);
+    G.addTree(K);
+    G.addTree(L);
+    G.addTree(M);
+
+    ArrayList<Tree<String>> list = new ArrayList<>();
+    list.add(tree);
+    list.add(B);
+    list.add(C);
+    list.add(D);
+    list.add(E);
+    list.add(F);
+    list.add(G);
+    list.add(H);
+    list.add(I);
+    list.add(J);
+    list.add(K);
+    list.add(L);
+    list.add(M);
+
+    ArrayList<Tree<String>> t = tree.getAll();
+
+    Comparator<Tree<String>> comparator = new Comparator<Tree<String>>() {
+      @Override
+      public int compare(Tree<String> t1, Tree<String> t2) {
+        return t1.getLabel().compareTo(t2.getLabel());
+      }
+    };
+
+    list.sort(comparator);
+    t.sort(comparator);
+
+    assertEquals(list, t);
   }
 
   @Test
