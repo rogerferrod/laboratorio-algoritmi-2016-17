@@ -2,8 +2,11 @@ package edu.unito.tree;
 import org.junit.*;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Iterator;
+
 
 import static org.junit.Assert.*;
+
 public class TreeTests {
   private Tree<String> tree;
 
@@ -185,6 +188,35 @@ public class TreeTests {
     buildFixture();
     assertEquals(false, tree.isBinary());
     assertEquals(true, tree.getChild().getChild(1).isBinary());
+  }
+  
+  @Test
+  public void testIterator() {
+    buildFixture();
+    Iterator<String> it = tree.iterator();
+    ArrayList<String> expected = new ArrayList<String>();
+    ArrayList<String> result = new ArrayList<String>();
+    while(it.hasNext()) {
+    	result.add(it.next());
+    }
+    
+    expected.add("root");
+    expected.add("B");
+    expected.add("D");
+    expected.add("E");
+    expected.add("H");
+    expected.add("I");
+    expected.add("F");
+    expected.add("C");
+    expected.add("G");
+    expected.add("J");
+    expected.add("K");
+    expected.add("L");
+    expected.add("M");
+    
+    
+    assertEquals(expected, result);
+   
   }
 
   @Test

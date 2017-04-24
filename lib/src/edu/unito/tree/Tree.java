@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 
-public class Tree<T> {// implements Iterable<T> {
+public class Tree<T> implements Iterable<T> {
   private T label;
   private Tree<T> parent;
   private Tree<T> child;
@@ -253,15 +253,17 @@ public class Tree<T> {// implements Iterable<T> {
     s += ")";
     return s;
   }
-/*
+
   @Override
   public Iterator<T> iterator() {
-    return iterator(this);
+      return new TreeIterator<T>(this);
   }
-  public Iterator<T> iterator(Tree<T> tree) {
-    return new TreeIterator<T>(tree);
+  
+  private Iterator<T> iterator(Tree<T> tree) {
+	    return new TreeIterator<T>(tree);
   }
-*/
+
+
 /*  @Override
   public String toString() {
     String s = "L: "+label.toString()+" - ";
@@ -287,5 +289,6 @@ public class Tree<T> {// implements Iterable<T> {
     return s;
   }
 */
+
 
 }
