@@ -2,7 +2,6 @@ package edu.unito.tree;
 import org.junit.*;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Collections;
 
 import static org.junit.Assert.*;
 
@@ -213,8 +212,6 @@ public class TreeTests {
     expected.add("L");
     expected.add("M");
     
-    Collections.reverse(result);
-    Collections.reverse(expected);
     
     assertEquals(expected, result);
    
