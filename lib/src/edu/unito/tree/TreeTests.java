@@ -1,5 +1,7 @@
 package edu.unito.tree;
+
 import org.junit.*;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -42,7 +44,7 @@ public class TreeTests {
     G.addTree(K);
     G.addTree(L);
     G.addTree(M);
-    
+
     list = new ArrayList<String>();
     list.add("root");
     list.add("B");
@@ -74,8 +76,8 @@ public class TreeTests {
     B.addTree(C);
     B.addTree(D);
     tree.addTree(B);
-    tree.addTree(N,1);
-    tree.addTree(M,2);
+    tree.addTree(N, 1);
+    tree.addTree(M, 2);
     //System.out.println(tree.toString());
   }
 
@@ -156,18 +158,19 @@ public class TreeTests {
   }
 
   @Test
-  public void testDegree(){
+  public void testDegree() {
     buildFixture();
     assertEquals(4, tree.degree());
     assertEquals(3, tree.getChild().degree());
   }
+
   @Test
-  public void testDegreeEmpty(){
+  public void testDegreeEmpty() {
     assertEquals(0, tree.degree());
   }
 
   @Test
-  public void testHeight(){
+  public void testHeight() {
     Tree<String> B = new Tree<>("B");
     Tree<String> C = new Tree<>("C");
     Tree<String> D = new Tree<>("D");
@@ -204,25 +207,25 @@ public class TreeTests {
     assertEquals(false, tree.isBinary());
     assertEquals(true, tree.getChild().getChild(1).isBinary());
   }
-  
+
   @Test
   public void testIterator() {
     buildFixture();
     Iterator<String> it = tree.iterator();
-    ArrayList<String> result = new ArrayList<String>();
-    while(it.hasNext()) {
-    	result.add(it.next());
-    }    
-    assertEquals(list, result);   
+    ArrayList<String> result = new ArrayList<>();
+    while (it.hasNext()) {
+      result.add(it.next());
+    }
+    assertEquals(list, result);
   }
 
   @Test
   public void testGetAll() {
-	buildFixture();
+    buildFixture();
     assertEquals(list, tree.getAll());
   }
 
-  
+
   /*@Test
   public void testGetAllSimple() {
     Tree<String> B = new Tree<>("B");
@@ -243,7 +246,7 @@ public class TreeTests {
 
   @Test
   public void testSortedGetAll() {
-	buildFixture();
+    buildFixture();
 
     ArrayList<String> t = tree.getAll();
 
@@ -261,7 +264,7 @@ public class TreeTests {
   }
 
   @Test
-  public void testToString(){
+  public void testToString() {
     buildFixture();
     assertEquals("(root(B(D,(E(H,(I)),(F))),(C(G(J,(K,(L,(M))))))))", tree.toString());
     //System.out.println(tree.toString());

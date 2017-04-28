@@ -18,7 +18,7 @@ public class Tree<T> implements Iterable<T> {
     this.label = null;
     this.parent = null;
     this.child = null;
-    this.sibling= null;
+    this.sibling = null;
   }
 
   /**
@@ -112,11 +112,11 @@ public class Tree<T> implements Iterable<T> {
     return numChild(this);
   }
 
-  public int height(){
+  public int height() {
     return height(this);
   }
 
-  private int height(Tree<T> tree){
+  private int height(Tree<T> tree) {
     if (tree.child == null) return 0;
 
     tree = tree.child;
@@ -137,7 +137,7 @@ public class Tree<T> implements Iterable<T> {
   private int degree(Tree<T> tree) {
     ArrayList<Tree<T>> list = children(tree);
     int max = list.size();
-    for (Tree<T> t: list) {
+    for (Tree<T> t : list) {
       int m = degree(t);
       if (m > max) max = m;
     }
@@ -201,14 +201,14 @@ public class Tree<T> implements Iterable<T> {
   }
 
   private ArrayList<T> getAll(Tree<T> tree) {
-	Iterator<T> it = tree.iterator(tree);
-	ArrayList<T> list = new ArrayList<>();
-	while(it.hasNext()) {
-	  list.add(it.next());
-	}
-	return list;
+    Iterator<T> it = tree.iterator(tree);
+    ArrayList<T> list = new ArrayList<>();
+    while (it.hasNext()) {
+      list.add(it.next());
+    }
+    return list;
   }
-  
+
   public Tree<T> toBinaryTree(Comparator<T> compare) {
     return toBinaryTree(this, compare);
   }
@@ -223,10 +223,10 @@ public class Tree<T> implements Iterable<T> {
   public String toString() {
     String s = "";
     s += "(" + label;
-    if(child != null){
+    if (child != null) {
       s += child.toString();
     }
-    if(sibling != null){
+    if (sibling != null) {
       s += "," + sibling.toString();
     }
     s += ")";
@@ -235,11 +235,11 @@ public class Tree<T> implements Iterable<T> {
 
   @Override
   public Iterator<T> iterator() {
-      return new TreeIterator<T>(this);
+    return new TreeIterator<T>(this);
   }
-  
+
   private Iterator<T> iterator(Tree<T> tree) {
-	    return new TreeIterator<T>(tree);
+    return new TreeIterator<T>(tree);
   }
 
 
