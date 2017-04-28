@@ -1,6 +1,7 @@
 package edu.unito.tree;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Comparator;
 import java.util.Iterator;
 
@@ -57,6 +58,8 @@ public class Tree<T> implements Iterable<T> {
   }
 
   public Tree<T> addTree(Tree<T> tree, int i) {
+    if (tree == null)
+      throw new IllegalArgumentException("Can't add null as child");
     if (tree == this) {
       throw new IllegalArgumentException("Can't add this as child of this");
     } else if (this.child == null) {
@@ -74,6 +77,25 @@ public class Tree<T> implements Iterable<T> {
       tree.sibling = t.sibling;
       t.sibling = tree;
       tree.parent = this;
+    }
+    return this;
+  }
+
+  /**
+   * Aggiunge un albero binario di ricerca
+   * che può essere null
+   * @param tree
+   * @param i
+   * @return
+   */
+  public Tree<T> addBRTree(Tree<T> tree, int i) {
+    if (tree == this) {
+      throw new IllegalArgumentException("Can't add this as child of this");
+    }
+    if (i == 0) {
+      this.child = tree;
+    } else if (i == 1) {
+      this.sibling = tree;
     }
     return this;
   }
@@ -209,14 +231,31 @@ public class Tree<T> implements Iterable<T> {
     return list;
   }
 
-  public Tree<T> toBinaryTree(Comparator<T> compare) {
-    return toBinaryTree(this, compare);
+  public Tree<T> toBinaryRTree(Comparator<T> compare) {
+    return toBinaryRTree(this, compare);
   }
 
-  private Tree<T> toBinaryTree(Tree<T> tree, Comparator<T> compare) {
+  private Tree<T> toBinaryRTree(Tree<T> tree, Comparator<T> compare) {
     ArrayList<T> list = tree.getAll();
     list.sort(compare);
-    return null;
+    System.out.println(list);
+    return buildBRT(list, 0, list.size()-1);
+  }
+
+  private Tree<T> buildBRT(List<T> list, int begin, int end) {
+    if (end - begin < 0) return null;
+
+    Tree<T> root;
+    root = new Tree<>(list.get(begin+(end - begin)/2));
+
+    Tree<T> left = buildBRT(list, begin, begin+(end - begin)/2-1);
+    root.addBRTree(left, 0);
+
+    Tree<T> right = buildBRT(list, begin+(end - begin)/2+1, end);
+    root.addBRTree(right, 1);
+
+    System.out.println(root);
+    return root;
   }
 
   @Override

@@ -13,9 +13,18 @@ public class TreeTests {
   private Tree<String> tree;
   private ArrayList<String> list;
 
+  private Comparator<String> comparator = new Comparator<String>() {
+    @Override
+    public int compare(String t1, String t2) {
+      return t1.compareTo(t2);
+    }
+  };
+
+
+
   @Before
   public void setup() {
-    tree = new Tree<>("root");
+    tree = new Tree<>("A");
   }
 
   public void buildFixture() {
@@ -46,7 +55,7 @@ public class TreeTests {
     G.addTree(M);
 
     list = new ArrayList<String>();
-    list.add("root");
+    list.add("A");
     list.add("B");
     list.add("D");
     list.add("E");
@@ -225,37 +234,11 @@ public class TreeTests {
     assertEquals(list, tree.getAll());
   }
 
-
-  /*@Test
-  public void testGetAllSimple() {
-    Tree<String> B = new Tree<>("B");
-    Tree<String> C = new Tree<>("C");
-
-    tree.addTree(B);
-    tree.addTree(C);
-
-    ArrayList<Tree<String>> list = new ArrayList<>();
-    list.add(tree);
-    list.add(B);
-    list.add(C);
-
-    ArrayList<Tree<String>> t = tree.getAll();
-
-    assertEquals(list, t);
-  }*/
-
   @Test
   public void testSortedGetAll() {
     buildFixture();
 
     ArrayList<String> t = tree.getAll();
-
-    Comparator<String> comparator = new Comparator<String>() {
-      @Override
-      public int compare(String t1, String t2) {
-        return t1.compareTo(t2);
-      }
-    };
 
     list.sort(comparator);
     t.sort(comparator);
@@ -264,9 +247,50 @@ public class TreeTests {
   }
 
   @Test
+  public void testToBinaryRTree() {
+    buildFixture();
+
+    Tree<String> A = new Tree<>("A");
+    Tree<String> B = new Tree<>("B");
+    Tree<String> C = new Tree<>("C");
+    Tree<String> D = new Tree<>("D");
+    Tree<String> E = new Tree<>("E");
+    Tree<String> F = new Tree<>("F");
+    Tree<String> G = new Tree<>("G");
+    Tree<String> H = new Tree<>("H");
+    Tree<String> I = new Tree<>("I");
+    Tree<String> J = new Tree<>("J");
+    Tree<String> K = new Tree<>("K");
+    Tree<String> L = new Tree<>("L");
+    Tree<String> M = new Tree<>("M");
+
+    Tree<String> brt = G;
+    brt.addTree(D, 0);
+    brt.addTree(K, 1);
+
+    D.addTree(B, 0);
+    D.addTree(F, 1);
+
+    B.addTree(A, 0);
+    B.addTree(C, 1);
+
+    F.addTree(E, 0);
+
+    K.addTree(I, 0);
+    K.addTree(M, 1);
+
+    I.addTree(H, 0);
+    I.addTree(J, 1);
+
+    M.addTree(L, 0);
+
+    assertEquals(brt, tree.toBinaryRTree(comparator));
+  }
+
+  @Test
   public void testToString() {
     buildFixture();
-    assertEquals("(root(B(D,(E(H,(I)),(F))),(C(G(J,(K,(L,(M))))))))", tree.toString());
+    assertEquals("(A(B(D,(E(H,(I)),(F))),(C(G(J,(K,(L,(M))))))))", tree.toString());
     //System.out.println(tree.toString());
   }
 
