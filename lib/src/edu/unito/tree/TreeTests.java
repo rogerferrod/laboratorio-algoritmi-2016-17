@@ -265,33 +265,50 @@ public class TreeTests {
     Tree<String> M = new Tree<>("M");
 
     Tree<String> brt = G;
-    brt.addTree(D, 0);
-    brt.addTree(K, 1);
-
-    D.addTree(B, 0);
-    D.addTree(F, 1);
-
-    B.addTree(A, 0);
-    B.addTree(C, 1);
-
-    F.addTree(E, 0);
-
-    K.addTree(I, 0);
-    K.addTree(M, 1);
-
-    I.addTree(H, 0);
-    I.addTree(J, 1);
-
-    M.addTree(L, 0);
-
+    brt.addBRTree(C, 0);
+    brt.addBRTree(J, 1);
+    
+    C.addBRTree(A, 0);
+    C.addBRTree(E, 1);
+    
+    A.addBRTree(null, 0);
+    A.addBRTree(B, 1);
+    
+    E.addBRTree(D, 0);
+    E.addBRTree(F, 1);
+    
+    J.addBRTree(H, 0);
+    J.addBRTree(L, 1);
+    
+    H.addBRTree(null, 0);
+    H.addBRTree(I, 1);
+    
+    L.addBRTree(K, 0);
+    L.addBRTree(M, 1);
+    
     assertEquals(brt, tree.toBinaryRTree(comparator));
   }
-
+  
+  @Test
+  public void testEquals(){
+    Tree<String> tree1 = new Tree<>("1");
+    Tree<String> tree2 = new Tree<>("1");   
+    Tree<String> a1 = new Tree<>("2"); 
+    Tree<String> a2 = new Tree<>("2");
+    Tree<String> b1 = new Tree<>("3"); 
+    Tree<String> b2 = new Tree<>("err");
+    
+    a1.addTree(b1);
+    a2.addTree(b2);
+    tree1.addTree(a1);
+    tree2.addTree(a2);
+    
+    assertNotEquals(tree1, tree2);
+  }
   @Test
   public void testToString() {
     buildFixture();
     assertEquals("(A(B(D,(E(H,(I)),(F))),(C(G(J,(K,(L,(M))))))))", tree.toString());
-    //System.out.println(tree.toString());
   }
 
 }
