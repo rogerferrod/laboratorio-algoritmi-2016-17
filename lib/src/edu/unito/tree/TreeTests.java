@@ -9,6 +9,14 @@ import java.util.Iterator;
 
 import static org.junit.Assert.*;
 
+/**
+ * A series of tests for the public method of Tree 
+ * implemented with JUnit
+ * @author Riccardo Ferrero Regis
+ * @author Roger Ferrod
+ * @author Luca Chironna
+ */
+
 public class TreeTests {
   private Tree<String> tree;
   private ArrayList<String> list;
@@ -90,6 +98,15 @@ public class TreeTests {
   @Test(expected = IllegalArgumentException.class)
   public void testAddTreeCyclic() {
     tree.addTree(tree);
+    
+    /*Tree<String> tree2 = new Tree<>("A");
+    Tree<String> B = new Tree<>("B");
+    Tree<String> C = new Tree<>("C");
+    Tree<String> D = new Tree<>("D");
+	D.addTree(B);
+    C.addTree(D);
+    B.addTree(C);
+    tree2.addTree(B);*/
   }
   
   @Test
@@ -112,51 +129,6 @@ public class TreeTests {
   public void testAddTreeWrongPosition() {
     tree.addTree(new Tree<>("A"), 1);
   }
-
-  /*@Test
-  public void testNumSiblingEmpty() {
-    assertEquals(0, tree.numSibling());
-  }*/
-
-  /*@Test
-  public void testNumSibling() {
-    Tree<String> c1 = new Tree<>("figlio1");
-    Tree<String> c2 = new Tree<>("figlio2");
-    Tree<String> c3 = new Tree<>("figlio3");
-
-    tree.addTree(c1);
-    tree.addTree(c2);
-    tree.addTree(c3);
-
-    assertEquals(0, tree.numSibling());
-    assertEquals(3, c1.numSibling());
-    assertEquals(3, c2.numSibling());
-    assertEquals(3, c3.numSibling());
-  }*/
-
-  /*@Test
-  public void testNumChildEmpty() {
-    assertEquals(0, tree.numChild());
-  }
-
-  @Test
-  public void testNumChild() {
-    Tree<String> c1 = new Tree<>("figlio1");
-    Tree<String> c2 = new Tree<>("figlio2");
-    Tree<String> c3 = new Tree<>("figlio3");
-    Tree<String> c4 = new Tree<>("figlio4");
-
-    tree.addTree(c1);
-    tree.addTree(c2);
-    c3.addTree(c4);
-    tree.addTree(c3);
-
-
-    assertEquals(3, tree.numChild());
-    assertEquals(0, c1.numChild());
-    assertEquals(0, c2.numChild());
-    assertEquals(1, c3.numChild());
-  }*/
 
   @Test
   public void testChildren() {
@@ -260,7 +232,7 @@ public class TreeTests {
   }
 
   @Test
-  public void testToBinaryResearchTree() {
+  public void testToBinarySearchTree() {
     buildFixture();
 
     Tree<String> A = new Tree<>("A");
@@ -278,28 +250,28 @@ public class TreeTests {
     Tree<String> M = new Tree<>("M");
 
     Tree<String> brt = G;
-    brt.addBRTree(C, 0);
-    brt.addBRTree(J, 1);
+    brt.addBSTree(C, 0);
+    brt.addBSTree(J, 1);
     
-    C.addBRTree(A, 0);
-    C.addBRTree(E, 1);
+    C.addBSTree(A, 0);
+    C.addBSTree(E, 1);
     
-    A.addBRTree(null, 0);
-    A.addBRTree(B, 1);
+    A.addBSTree(null, 0);
+    A.addBSTree(B, 1);
     
-    E.addBRTree(D, 0);
-    E.addBRTree(F, 1);
+    E.addBSTree(D, 0);
+    E.addBSTree(F, 1);
     
-    J.addBRTree(H, 0);
-    J.addBRTree(L, 1);
+    J.addBSTree(H, 0);
+    J.addBSTree(L, 1);
     
-    H.addBRTree(null, 0);
-    H.addBRTree(I, 1);
+    H.addBSTree(null, 0);
+    H.addBSTree(I, 1);
     
-    L.addBRTree(K, 0);
-    L.addBRTree(M, 1);
+    L.addBSTree(K, 0);
+    L.addBSTree(M, 1);
     
-    assertEquals(brt, tree.toBinaryResearchTree(comparator));
+    assertEquals(brt, tree.toBinarySearchTree(comparator));
   }
   
   @Test

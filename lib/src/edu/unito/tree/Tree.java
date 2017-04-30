@@ -5,6 +5,13 @@ import java.util.List;
 import java.util.Comparator;
 import java.util.Iterator;
 
+/**
+ * The class Tree is used to collect all of the tree types, and acts as a generic k-Tree
+ * @author Riccardo Ferrero Regis
+ * @author Roger Ferrod
+ * @author Luca Chironna
+ */
+
 public class Tree<T> implements Iterable<T> {
   private T label;
   private Tree<T> parent;
@@ -15,8 +22,8 @@ public class Tree<T> implements Iterable<T> {
   /**
    * Empty constructor 
    * <p>
-   * Returns a new Tree with no label, parent, left and right. 
-   * @return      new Tree
+   * Create a new Tree with no label and children
+   * @return	the new tree
    */
   public Tree() {
     this.label = null;
@@ -27,100 +34,102 @@ public class Tree<T> implements Iterable<T> {
 
   /**
    * Basic constructor
-   * Initialize a new tree with a label but without parent, left and right.
+   * Initialize a new tree with a given label
    * 
-   * @param label <T>label 
-   * @return      new Tree
+   * @param		label the label of the node
+   * @return	the new tree
    */
   public Tree(T label) {
     this();
     this.label = label;
+    this.parent = null;
+    this.left = null;
+    this.right = null;
   }
 
   /**
-   * Text
-   * 
-   * @param param 
-   * @return  return
+   * Return the label of this node
+   *  
+   * @return	label
    */
   public T getLabel() {
     return label;
   }
   
   /**
-   * Text
+   * Return the left subtree of this node if exist, otherwise null
    * 
-   * @param param 
-   * @return  return
+   * @return  left subtree
    */
   public Tree<T> getLeft(){
 	  return left;
   }
   
   /**
-   * Text
+   * Return the right subtree of this node if exist, otherwise null
    * 
-   * @param param 
-   * @return  return
+   * @return  right subtree
    */
   public Tree<T> getRight(){
 	  return right;
   }
 
   /**
-   * Text
+   * Return the parent of this node if exist, otherwise null
    * 
-   * @param param 
-   * @return  return
+   * @return  parent
    */
   public Tree<T> getParent() {
     return parent;
   }
   
   /**
-   * Text
+   * Add a subtree to the current node as child and return the new tree
    * <p>
-   * Non è possibile aggiungere un albero null
+   * The parameter cannot be null and must be different to the node itself
+   * actually the method cannot prevent the creation of cycle in the tree
    * 
-   * @param param 
-   * @return  return
+   * @param		tree the new subtree 
+   * @return  	the new tree with changes
    */
   public Tree<T> addTree(Tree<T> tree) {
 	return addTree(tree, numChild(this));
   }
 
   /**
-   * Text
+   * Add a subtree to the current node as child number i and return the new tree
    * <p>
-   * Non è possibile aggiungere un albero null
+   * The parameter cannot be null and must be different to the node itself
+   * actually the method cannot prevent the creation of cycle in the tree
    * 
-   * @param param 
-   * @return  return
+   * @param		tree the new subtree 
+   * @param		i the index position at which to add the new subtree
+   * @return  	the new tree with changes
    */
   public Tree<T> addTree(Tree<T> tree, int i) {
     if (tree == null)
       throw new IllegalArgumentException("Cannot add empty subtree");
     
-    if (tree == this)
+    if (tree == this) /* in realtà è più complesso di cosi ma vabbe */
       throw new IllegalArgumentException("Cannot create a cycle");
     
     if (this.left == null) {
-      if (i != 0) 
+      if (i != 0){
         throw new IndexOutOfBoundsException("Child index is too big for the list of sons");
+      }
       this.left = tree;
       tree.parent = this;
-    } else {
+    } 
+    else {
       Tree<T> t = this.left;
-      int count = 1;
-      
+      int count = 1;      
       while (t.right != null && count < i) {
         t = t.right;
         count++;
-      }
-      
-      if (count < i) 
+      }      
+      if (count < i) {
         throw new IndexOutOfBoundsException("Child index is too big for the list of sons");
-      
+      }      
       tree.right = t.right;
       t.right = tree;
       tree.parent = this;
@@ -130,13 +139,17 @@ public class Tree<T> implements Iterable<T> {
   
 
   /**
-   * Aggiunge un albero binario di ricerca
-   * che può essere null
-   * @param tree
-   * @param i
-   * @return
+   * Add a subtree to the current node as child number i and return the new tree.
+   * The parameter and the returned tree are Binary Search Tree
+   * <p>
+   * The parameter can be null and must be different to the node itself
+   * actually the method cannot prevent the creation of cycle in the tree
+   * 
+   * @param		tree the new subtree 
+   * @param		i the index position at which to add the new subtree
+   * @return  	the new tree with changes
    */
-  public Tree<T> addBRTree(Tree<T> tree, int i) {
+  public Tree<T> addBSTree(Tree<T> tree, int i) {
     if (tree == this)
       throw new IllegalArgumentException("Cannot create a cycle");
     
@@ -155,80 +168,73 @@ public class Tree<T> implements Iterable<T> {
   }  
   
   /**
-   * Text
+   * Finds the height of the tree
    * 
-   * @param param 
-   * @return  return
+   * @return	the height
    */
   public int height() {
     return height(this);
   }
   
   /**
-   * Text
-   * 
-   * @param param 
-   * @return  return
+   * Finds the maximum degree of the tree
+   *  
+   * @return  the maximum degree
    */
   public int degree() {
     return degree(this);
   }
   
   /**
-   * Text
-   * 
-   * @param param 
-   * @return  return
+   * Returns the number of nodes the tree contains
+   *  
+   * @return  the size
    */
   public int size() {
     return size(this);
   }
   
   /**
-   * Text
-   * 
-   * @param param 
-   * @return  return
+   * Returns a list of children for the current node
+   *  
+   * @return  the children of the node
    */
   public ArrayList<Tree<T>> children() {
     return children(this);
   }
 
   /**
-   * Text
+   * Return true is the tree is a binary tree, false otherwise
    * 
-   * @param param 
-   * @return  return
+   * @return true if the tree is a binary tree
    */
   public boolean isBinary() {
     return isBinary(this);
   }
   
   /**
-   * Text
+   * Returns the tree as a list
    * 
-   * @param param 
-   * @return  return
+   * @return  list of all elements in the tree
    */
   public ArrayList<T> getAll() {
     return getAll(this);
   }
   
   /**
-   * Text
+   * Returns the Binary Search Tree rappresentation of the tree 
    * 
-   * @param param 
-   * @return  return
+   * @param compare the Comparator used to order the tree
+   * @return  the binary search tree 
    */
-  public Tree<T> toBinaryResearchTree(Comparator<T> compare) {
-    return toBinaryResearchTree(this, compare);
+  public Tree<T> toBinarySearchTree(Comparator<T> compare) {
+    return toBinarySearchTree(this, compare);
   }
   
   /**
-   * Text
+   * Converts tree to string in Penn Treebank format.
    * 
-   * @param param 
-   * @return  return
+   * @return  the tree as string
    */
   @Override
   public String toString() {
@@ -245,10 +251,9 @@ public class Tree<T> implements Iterable<T> {
   }
 
   /**
-   * Text
+   * Returns an iterator over all the nodes of the tree with left preorder
    * 
-   * @param param 
-   * @return  return
+   * @return  the iterator over the nodes of the tree
    */
   @Override
   public Iterator<T> iterator() {
@@ -256,14 +261,14 @@ public class Tree<T> implements Iterable<T> {
   }
 
   /**
-   * Text
+   * Implements equality for Tree's. 
+   * <p> Two Tree objects are equal if they have equal value()s, the same number of children, and their children are pairwise equal.
    * 
-   * @param param 
-   * @return  return
+   * @param obj the tree to compare with 
+   * @return  true is the two trees are equal, false otherwise
    */
   @Override @SuppressWarnings("unchecked")  /* da rimettere i wornings */
   public boolean equals(Object obj){
-	//return obj instanceof Tree && getAll(this).equals(getAll((Tree<T>)obj));
 	  boolean equal = true;
 	  if(obj instanceof Tree){ /* x instanceof y is false if x is null*/
 		  Tree<T>tree = (Tree<T>)obj;
@@ -280,28 +285,50 @@ public class Tree<T> implements Iterable<T> {
   }
   
   /**
-   * Text
+   * Implements a hashCode for Tree's
    * 
-   * @param param 
-   * @return  return
+   * @return  the hash code
    */
   @Override
   public int hashCode() {
 	throw new UnsupportedOperationException("Operation not supported");
   }
   
+  
+  /**
+   * returns the next sibling of the node
+   * 
+   * @return  	the right sibling
+   */
   private Tree<T> getSibling() {
     return right;
   }
 
+  /**
+   * returns the child of the node
+   * 
+   * @return  	the child
+   */
   private Tree<T> getChild() {
     return left;
   }
 
+  /**
+   * returns the child in the position i
+   * 
+   * @param i index position of the child
+   * @return  	the child
+   */
   private Tree<T> getChild(int i) {
     return children().get(i);
   }
 
+  /**
+   * finds the number of siblings of the tree
+   * 
+   * @param tree the tree
+   * @return  	the number of siblings
+   */
   private int numSibling(Tree<T> tree) {
     if (tree.parent == null)
     	return 0;
@@ -318,10 +345,21 @@ public class Tree<T> implements Iterable<T> {
     return count;
   }
 
+  /**
+   * finds the number of siblings of the current node
+   * 
+   * @return  	the number of siblings
+   */
   private int numSibling() {
     return numSibling(this);
   }
 
+  /**
+   * finds the number of children of the tree
+   * 
+   * @param tree the tree
+   * @return  	the number of children
+   */
   private int numChild(Tree<T> tree) {
     if (tree.left == null)
       return 0;
@@ -330,10 +368,21 @@ public class Tree<T> implements Iterable<T> {
 
   }
 
+  /**
+   * finds the number of siblings of the current node
+   * 
+   * @return  	the number of children
+   */
   private int numChild() {
     return numChild(this);
   }
 
+  /**
+   * finds the height of the tree
+   * 
+   * @param tree the tree
+   * @return  	the height
+   */
   private int height(Tree<T> tree) {
     if (tree.left == null)
     	return 0;
@@ -351,6 +400,12 @@ public class Tree<T> implements Iterable<T> {
     return max + 1;
   }
 
+  /**
+   * finds the degree of the tree
+   * 
+   * @param tree the tree
+   * @return  	the degree
+   */
   private int degree(Tree<T> tree) {
     ArrayList<Tree<T>> list = children(tree);
     int max = list.size();
@@ -364,6 +419,12 @@ public class Tree<T> implements Iterable<T> {
     return max;
   }
 
+  /**
+   * finds the size of the tree
+   * 
+   * @param tree the tree
+   * @return  	the size
+   */
   private int size(Tree<T> tree) {
     if (tree.left == null)
     	return 1;
@@ -379,6 +440,12 @@ public class Tree<T> implements Iterable<T> {
     return iChild;
   }
 
+  /**
+   * Returns a list of children for the tree
+   *  
+   *  @param tree the tree
+   * @return  the children of the node
+   */
   private ArrayList<Tree<T>> children(Tree<T> tree) {
     ArrayList<Tree<T>> list = new ArrayList<>();
     if (tree != null && tree.left != null) {
@@ -392,6 +459,12 @@ public class Tree<T> implements Iterable<T> {
     return list;
   }
 
+  /**
+   * Return true is the tree is a binary tree, false otherwise
+   * 
+   * @param tree the tree
+   * @return true if the tree is a binary tree
+   */
   private boolean isBinary(Tree<T> tree) {
     if (numChild(tree) > 2)
     	return false;
@@ -408,6 +481,12 @@ public class Tree<T> implements Iterable<T> {
     return bChild;
   }
 
+  /**
+   * Returns the tree as a list
+   * 
+   * @param tree the tree
+   * @return  list of all elements in the tree
+   */
   private ArrayList<T> getAll(Tree<T> tree) {
     Iterator<T> it = tree.iterator(tree);
     ArrayList<T> list = new ArrayList<>();
@@ -417,28 +496,50 @@ public class Tree<T> implements Iterable<T> {
     return list;
   }
 
-  private Tree<T> toBinaryResearchTree(Tree<T> tree, Comparator<T> compare) {
+  /**
+   * Returns the Binary Search Tree rappresentation of the tree 
+   * 
+   * @param tree the tree
+   * @param compare the Comparator used to order the tree
+   * @return  the binary search tree 
+   */
+  private Tree<T> toBinarySearchTree(Tree<T> tree, Comparator<T> compare) {
     ArrayList<T> list = tree.getAll();
     list.sort(compare);
-    return buildBRT(list, 0, list.size()-1);
+    return buildBST(list, 0, list.size()-1);
   }
 
-  private Tree<T> buildBRT(List<T> list, int begin, int end) {
+  /**
+   * Converts a sorted list into a Binary Search Tree
+   * begin and end are the index of sublist considered in the recursive call
+   * 
+   * @param list the sorted list
+   * @param begin index of the first element to be considered in the list
+   * @param end index of the last element to be considered in the list
+   * @return  the binary search tree 
+   */
+  private Tree<T> buildBST(List<T> list, int begin, int end) {
     if (end - begin < 0)
     	return null;
 
     Tree<T> root;
     root = new Tree<>(list.get(begin+(end - begin)/2));
 
-    Tree<T> BRTleft = buildBRT(list, begin, begin+(end - begin)/2-1);
-    root.addBRTree(BRTleft, 0);
+    Tree<T> BSTleft = buildBST(list, begin, begin+(end - begin)/2-1);
+    root.addBSTree(BSTleft, 0);
 
-    Tree<T> BRTright = buildBRT(list, begin+(end - begin)/2+1, end);
-    root.addBRTree(BRTright, 1);
+    Tree<T> BSTright = buildBST(list, begin+(end - begin)/2+1, end);
+    root.addBSTree(BSTright, 1);
 
     return root;
   }
-  
+
+  /**
+   * Returns an iterator for the tree
+   * 
+   * @param tree the tree
+   * @return  the iterator over the nodes of the tree
+   */
   private Iterator<T> iterator(Tree<T> tree) {
     return new TreeIterator<T>(tree);
   }

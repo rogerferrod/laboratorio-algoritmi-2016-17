@@ -4,10 +4,18 @@ import java.util.Iterator;
 import java.util.Stack;
 import java.util.NoSuchElementException;
 
+
+/**
+ * The implementation of an Iterator for the Tree
+ * the traversing of the Tree is Depth-first search with left preorder
+ * @author Riccardo Ferrero Regis
+ * @author Roger Ferrod
+ * @author Luca Chironna
+ */
+
 public class TreeIterator<T> implements Iterator<T> {
   private Stack<Tree<T>> stack = new Stack<>();
 
-  /* Iteratore di profondità con preordire sinistro*/
   public TreeIterator(Tree<T> tree) {
     if (tree != null) {
       stack.push(tree);
