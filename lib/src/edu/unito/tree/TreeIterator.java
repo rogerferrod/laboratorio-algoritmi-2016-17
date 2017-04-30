@@ -7,7 +7,7 @@ import java.util.NoSuchElementException;
 public class TreeIterator<T> implements Iterator<T> {
   private Stack<Tree<T>> stack = new Stack<>();
 
-  /* Iteratore di profondità */
+  /* Iteratore di profondità con preordire sinistro*/
   public TreeIterator(Tree<T> tree) {
     if (tree != null) {
       stack.push(tree);
@@ -23,12 +23,11 @@ public class TreeIterator<T> implements Iterator<T> {
       throw new NoSuchElementException("Tree no such elements");
     }
     Tree<T> result = stack.pop();
-        /* preordine sinistro */
-    if (result.getSibling() != null) {
-      stack.push(result.getSibling());
+    if (result.getRight() != null) {
+      stack.push(result.getRight());
     }
-    if (result.getChild() != null) {
-      stack.push(result.getChild());
+    if (result.getLeft() != null) {
+      stack.push(result.getLeft());
     }
     return result.getLabel();
   }

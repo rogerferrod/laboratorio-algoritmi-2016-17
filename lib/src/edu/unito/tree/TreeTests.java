@@ -20,8 +20,6 @@ public class TreeTests {
     }
   };
 
-
-
   @Before
   public void setup() {
     tree = new Tree<>("A");
@@ -87,12 +85,27 @@ public class TreeTests {
     tree.addTree(B);
     tree.addTree(N, 1);
     tree.addTree(M, 2);
-    //System.out.println(tree.toString());
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testAddTreeCyclic() {
     tree.addTree(tree);
+  }
+  
+  @Test
+  public void testAddTreePosition() {
+	Tree<String> tree2 = new Tree<>("A");
+	tree2.addTree(new Tree<>("B"), 0);
+    tree2.addTree(new Tree<>("C"), 1);
+    tree2.addTree(new Tree<>("D"), 2);
+    tree2.addTree(new Tree<>("E"), 3);
+    
+    tree.addTree(new Tree<>("B"), 0);
+    tree.addTree(new Tree<>("D"), 1);
+    tree.addTree(new Tree<>("E"), 2);
+    tree.addTree(new Tree<>("C"), 1);
+    
+    assertEquals(tree, tree2);
   }
 
   @Test(expected = IndexOutOfBoundsException.class)
@@ -100,12 +113,12 @@ public class TreeTests {
     tree.addTree(new Tree<>("A"), 1);
   }
 
-  @Test
+  /*@Test
   public void testNumSiblingEmpty() {
     assertEquals(0, tree.numSibling());
-  }
+  }*/
 
-  @Test
+  /*@Test
   public void testNumSibling() {
     Tree<String> c1 = new Tree<>("figlio1");
     Tree<String> c2 = new Tree<>("figlio2");
@@ -119,9 +132,9 @@ public class TreeTests {
     assertEquals(3, c1.numSibling());
     assertEquals(3, c2.numSibling());
     assertEquals(3, c3.numSibling());
-  }
+  }*/
 
-  @Test
+  /*@Test
   public void testNumChildEmpty() {
     assertEquals(0, tree.numChild());
   }
@@ -143,7 +156,7 @@ public class TreeTests {
     assertEquals(0, c1.numChild());
     assertEquals(0, c2.numChild());
     assertEquals(1, c3.numChild());
-  }
+  }*/
 
   @Test
   public void testChildren() {
@@ -170,7 +183,7 @@ public class TreeTests {
   public void testDegree() {
     buildFixture();
     assertEquals(4, tree.degree());
-    assertEquals(3, tree.getChild().degree());
+    assertEquals(3, tree.getLeft().degree());
   }
 
   @Test
@@ -207,14 +220,14 @@ public class TreeTests {
   public void testSize() {
     buildFixture();
     assertEquals(13, tree.size());
-    assertEquals(6, tree.getChild().size());
+    assertEquals(6, tree.getLeft().size());
   }
 
   @Test
   public void testIsBinary() {
     buildFixture();
     assertEquals(false, tree.isBinary());
-    assertEquals(true, tree.getChild().getChild(1).isBinary());
+    //aggiungerne un altro...
   }
 
   @Test
@@ -247,7 +260,7 @@ public class TreeTests {
   }
 
   @Test
-  public void testToBinaryRTree() {
+  public void testToBinaryResearchTree() {
     buildFixture();
 
     Tree<String> A = new Tree<>("A");
@@ -286,7 +299,7 @@ public class TreeTests {
     L.addBRTree(K, 0);
     L.addBRTree(M, 1);
     
-    assertEquals(brt, tree.toBinaryRTree(comparator));
+    assertEquals(brt, tree.toBinaryResearchTree(comparator));
   }
   
   @Test

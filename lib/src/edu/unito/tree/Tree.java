@@ -11,9 +11,12 @@ public class Tree<T> implements Iterable<T> {
   private Tree<T> left;
   private Tree<T> right;
 
+
   /**
-   * Empty constructor
-   * Initialize a new tree with no label, parent, children and siblings.
+   * Empty constructor 
+   * <p>
+   * Returns a new Tree with no label, parent, left and right. 
+   * @return      new Tree
    */
   public Tree() {
     this.label = null;
@@ -24,62 +27,107 @@ public class Tree<T> implements Iterable<T> {
 
   /**
    * Basic constructor
-   * Initialize a new tree with a label but without parent, children and siblings.
-   *
-   * @param label Node label
+   * Initialize a new tree with a label but without parent, left and right.
+   * 
+   * @param label <T>label 
+   * @return      new Tree
    */
   public Tree(T label) {
     this();
     this.label = label;
   }
 
-  //getter
+  /**
+   * Text
+   * 
+   * @param param 
+   * @return  return
+   */
   public T getLabel() {
     return label;
   }
+  
+  /**
+   * Text
+   * 
+   * @param param 
+   * @return  return
+   */
+  public Tree<T> getLeft(){
+	  return left;
+  }
+  
+  /**
+   * Text
+   * 
+   * @param param 
+   * @return  return
+   */
+  public Tree<T> getRight(){
+	  return right;
+  }
 
-  //getter
+  /**
+   * Text
+   * 
+   * @param param 
+   * @return  return
+   */
   public Tree<T> getParent() {
     return parent;
   }
-
-  //getter
-  public Tree<T> getSibling() {
-    return right;
+  
+  /**
+   * Text
+   * <p>
+   * Non è possibile aggiungere un albero null
+   * 
+   * @param param 
+   * @return  return
+   */
+  public Tree<T> addTree(Tree<T> tree) {
+	return addTree(tree, numChild(this));
   }
 
-  //getter
-  public Tree<T> getChild() {
-    return left;
-  }
-
-  public Tree<T> getChild(int i) {
-    return children().get(i);
-  }
-
+  /**
+   * Text
+   * <p>
+   * Non è possibile aggiungere un albero null
+   * 
+   * @param param 
+   * @return  return
+   */
   public Tree<T> addTree(Tree<T> tree, int i) {
     if (tree == null)
-      throw new IllegalArgumentException("Can't add null as child");
-    if (tree == this) {
-      throw new IllegalArgumentException("Can't add this as child of this");
-    } else if (this.left == null) {
-      if (i != 0) throw new IndexOutOfBoundsException("Child index is too big for the list of sons");
+      throw new IllegalArgumentException("Cannot add empty subtree");
+    
+    if (tree == this)
+      throw new IllegalArgumentException("Cannot create a cycle");
+    
+    if (this.left == null) {
+      if (i != 0) 
+        throw new IndexOutOfBoundsException("Child index is too big for the list of sons");
       this.left = tree;
       tree.parent = this;
     } else {
       Tree<T> t = this.left;
       int count = 1;
+      
       while (t.right != null && count < i) {
         t = t.right;
         count++;
       }
-      if (count < i) throw new IndexOutOfBoundsException("Child index is too big for the list of sons");
+      
+      if (count < i) 
+        throw new IndexOutOfBoundsException("Child index is too big for the list of sons");
+      
       tree.right = t.right;
       t.right = tree;
       tree.parent = this;
     }
     return this;
   }
+  
 
   /**
    * Aggiunge un albero binario di ricerca
@@ -89,23 +137,162 @@ public class Tree<T> implements Iterable<T> {
    * @return
    */
   public Tree<T> addBRTree(Tree<T> tree, int i) {
-    if (tree == this) {
-      throw new IllegalArgumentException("Can't add this as child of this");
+    if (tree == this)
+      throw new IllegalArgumentException("Cannot create a cycle");
+    
+    switch(i){
+	  case 0:
+		this.left = tree;
+		break;
+	  case 1:
+		this.right = tree;
+		break;
+	  default:
+		throw new IllegalArgumentException("Invalid position for a binary tree");
     }
-    if (i == 0) {
-      this.left = tree;
-    } else if (i == 1) {
-      this.right = tree;
-    }
+    
     return this;
+  }  
+  
+  /**
+   * Text
+   * 
+   * @param param 
+   * @return  return
+   */
+  public int height() {
+    return height(this);
+  }
+  
+  /**
+   * Text
+   * 
+   * @param param 
+   * @return  return
+   */
+  public int degree() {
+    return degree(this);
+  }
+  
+  /**
+   * Text
+   * 
+   * @param param 
+   * @return  return
+   */
+  public int size() {
+    return size(this);
+  }
+  
+  /**
+   * Text
+   * 
+   * @param param 
+   * @return  return
+   */
+  public ArrayList<Tree<T>> children() {
+    return children(this);
   }
 
-  public Tree<T> addTree(Tree<T> tree) {
-    return addTree(tree, numChild(this));
+  /**
+   * Text
+   * 
+   * @param param 
+   * @return  return
+   */
+  public boolean isBinary() {
+    return isBinary(this);
+  }
+  
+  /**
+   * Text
+   * 
+   * @param param 
+   * @return  return
+   */
+  public ArrayList<T> getAll() {
+    return getAll(this);
+  }
+  
+  /**
+   * Text
+   * 
+   * @param param 
+   * @return  return
+   */
+  public Tree<T> toBinaryResearchTree(Comparator<T> compare) {
+    return toBinaryResearchTree(this, compare);
+  }
+  
+  /**
+   * Text
+   * 
+   * @param param 
+   * @return  return
+   */
+  @Override
+  public String toString() {
+    String str = "";
+    str += "(" + label.toString();
+    if (left != null) {
+      str += left.toString();
+    }
+    if (right != null) {
+      str += "," + right.toString();
+    }
+    str += ")";
+    return str;
+  }
+
+  /**
+   * Text
+   * 
+   * @param param 
+   * @return  return
+   */
+  @Override
+  public Iterator<T> iterator() {
+    return new TreeIterator<T>(this);
+  }
+
+  /**
+   * Text
+   * 
+   * @param param 
+   * @return  return
+   */
+  @Override @SuppressWarnings("unchecked")  /* da rimettere i wornings */
+  public boolean equals(Object obj){
+	return obj instanceof Tree && getAll(this).equals(getAll((Tree<T>)obj));
+  }
+  
+  /**
+   * Text
+   * 
+   * @param param 
+   * @return  return
+   */
+  @Override
+  public int hashCode() {
+	throw new UnsupportedOperationException("Operation not supported");
+  }
+  
+  private Tree<T> getSibling() {
+    return right;
+  }
+
+  private Tree<T> getChild() {
+    return left;
+  }
+
+  private Tree<T> getChild(int i) {
+    return children().get(i);
   }
 
   private int numSibling(Tree<T> tree) {
-    if (tree.parent == null) return 0;
+    if (tree.parent == null)
+    	return 0;
+    
     int count = 0;
     if (tree.parent.left != null) {
       tree = tree.parent.left;
@@ -118,68 +305,64 @@ public class Tree<T> implements Iterable<T> {
     return count;
   }
 
-  public int numSibling() {
+  private int numSibling() {
     return numSibling(this);
   }
 
   private int numChild(Tree<T> tree) {
-    if (tree.left == null) {
+    if (tree.left == null)
       return 0;
-    } else {
-      return numSibling(tree.left);
-    }
+    
+    return numSibling(tree.left);
+
   }
 
-  public int numChild() {
+  private int numChild() {
     return numChild(this);
   }
 
-  public int height() {
-    return height(this);
-  }
-
   private int height(Tree<T> tree) {
-    if (tree.left == null) return 0;
+    if (tree.left == null)
+    	return 0;
 
     tree = tree.left;
     int max = height(tree);
+    
     while (tree.right != null) {
       int n = height(tree.right);
-      if (n > max) max = n;
+      if (n > max){
+    	  max = n;
+      }
       tree = tree.right;
     }
-
     return max + 1;
-  }
-
-  public int degree() {
-    return degree(this);
   }
 
   private int degree(Tree<T> tree) {
     ArrayList<Tree<T>> list = children(tree);
     int max = list.size();
+    
     for (Tree<T> t : list) {
       int m = degree(t);
-      if (m > max) max = m;
+      if (m > max){
+    	  max = m;
+      }
     }
     return max;
   }
 
-  public int size() {
-    return size(this);
-  }
-
   private int size(Tree<T> tree) {
-    if (tree.left == null) return 1;
+    if (tree.left == null)
+    	return 1;
 
     int iChild = 1;
     tree = tree.left;
+    
     do {
       iChild += size(tree);
       tree = tree.right;
     } while (tree != null);
-
+    
     return iChild;
   }
 
@@ -196,17 +379,11 @@ public class Tree<T> implements Iterable<T> {
     return list;
   }
 
-  public ArrayList<Tree<T>> children() {
-    return children(this);
-  }
-
-  public boolean isBinary() {
-    return isBinary(this);
-  }
-
   private boolean isBinary(Tree<T> tree) {
-    if (numChild(tree) > 2) return false;
-    if (tree.left == null) return true;
+    if (numChild(tree) > 2)
+    	return false;
+    if (tree.left == null)
+    	return true;
 
     boolean bChild = true;
     tree = tree.left;
@@ -218,10 +395,6 @@ public class Tree<T> implements Iterable<T> {
     return bChild;
   }
 
-  public ArrayList<T> getAll() {
-    return getAll(this);
-  }
-
   private ArrayList<T> getAll(Tree<T> tree) {
     Iterator<T> it = tree.iterator(tree);
     ArrayList<T> list = new ArrayList<>();
@@ -231,18 +404,15 @@ public class Tree<T> implements Iterable<T> {
     return list;
   }
 
-  public Tree<T> toBinaryRTree(Comparator<T> compare) {
-    return toBinaryRTree(this, compare);
-  }
-
-  private Tree<T> toBinaryRTree(Tree<T> tree, Comparator<T> compare) {
+  private Tree<T> toBinaryResearchTree(Tree<T> tree, Comparator<T> compare) {
     ArrayList<T> list = tree.getAll();
     list.sort(compare);
     return buildBRT(list, 0, list.size()-1);
   }
 
   private Tree<T> buildBRT(List<T> list, int begin, int end) {
-    if (end - begin < 0) return null;
+    if (end - begin < 0)
+    	return null;
 
     Tree<T> root;
     root = new Tree<>(list.get(begin+(end - begin)/2));
@@ -255,39 +425,10 @@ public class Tree<T> implements Iterable<T> {
 
     return root;
   }
-
-  @Override
-  public String toString() {
-    String s = "";
-    s += "(" + label;
-    if (left != null) {
-      s += left.toString();
-    }
-    if (right != null) {
-      s += "," + right.toString();
-    }
-    s += ")";
-    return s;
-  }
-
-  @Override
-  public Iterator<T> iterator() {
-    return new TreeIterator<T>(this);
-  }
-
+  
   private Iterator<T> iterator(Tree<T> tree) {
     return new TreeIterator<T>(tree);
   }
-  
-  @Override @SuppressWarnings("unchecked")  /* da rimettere i wornings */
-  public boolean equals(Object obj){
-	return obj instanceof Tree && getAll(this).equals(getAll((Tree<T>)obj));
-  }
-  
-  @Override
-  public int hashCode() {
-	return 0;
-  }
-
 
 }
+
