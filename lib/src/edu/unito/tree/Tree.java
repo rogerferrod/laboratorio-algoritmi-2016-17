@@ -263,7 +263,20 @@ public class Tree<T> implements Iterable<T> {
    */
   @Override @SuppressWarnings("unchecked")  /* da rimettere i wornings */
   public boolean equals(Object obj){
-	return obj instanceof Tree && getAll(this).equals(getAll((Tree<T>)obj));
+	//return obj instanceof Tree && getAll(this).equals(getAll((Tree<T>)obj));
+	  boolean equal = true;
+	  if(obj instanceof Tree){ /* x instanceof y is false if x is null*/
+		  Tree<T>tree = (Tree<T>)obj;
+		  equal = label.equals(tree.getLabel());
+		  if (left != null) {
+		    equal &= left.equals(tree.getLeft());
+		  }
+		  if (right != null) {
+			equal &= right.equals(tree.getRight());
+		  }
+		  return equal;
+	  }
+	  return false;
   }
   
   /**

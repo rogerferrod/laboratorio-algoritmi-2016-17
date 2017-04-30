@@ -304,17 +304,18 @@ public class TreeTests {
   
   @Test
   public void testEquals(){
-    Tree<String> tree1 = new Tree<>("1");
-    Tree<String> tree2 = new Tree<>("1");   
-    Tree<String> a1 = new Tree<>("2"); 
-    Tree<String> a2 = new Tree<>("2");
-    Tree<String> b1 = new Tree<>("3"); 
-    Tree<String> b2 = new Tree<>("err");
+    Tree<String> tree1 = new Tree<>("a");
+    Tree<String> tree2 = new Tree<>("a");   
+    Tree<String> b1 = new Tree<>("b"); 
+    Tree<String> b2 = new Tree<>("b");
+    Tree<String> c1 = new Tree<>("c"); 
+    Tree<String> c2 = new Tree<>("c");
     
-    a1.addTree(b1);
-    a2.addTree(b2);
-    tree1.addTree(a1);
-    tree2.addTree(a2);
+    b1.addTree(c1);
+    tree1.addTree(b1);
+    
+    tree2.addTree(b2);
+    tree2.addTree(c2);
     
     assertNotEquals(tree1, tree2);
   }
