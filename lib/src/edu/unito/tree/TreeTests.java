@@ -10,7 +10,7 @@ import java.util.Iterator;
 import static org.junit.Assert.*;
 
 /**
- * A series of tests for the public method of Tree 
+ * A series of tests for the public method of Tree
  * implemented with JUnit
  * @author Riccardo Ferrero Regis
  * @author Roger Ferrod
@@ -98,30 +98,30 @@ public class TreeTests {
   @Test(expected = IllegalArgumentException.class)
   public void testAddTreeCyclic() {
     tree.addTree(tree);
-    
+
     /*Tree<String> tree2 = new Tree<>("A");
     Tree<String> B = new Tree<>("B");
     Tree<String> C = new Tree<>("C");
     Tree<String> D = new Tree<>("D");
-	D.addTree(B);
+    D.addTree(B);
     C.addTree(D);
     B.addTree(C);
     tree2.addTree(B);*/
   }
-  
+
   @Test
   public void testAddTreePosition() {
-	Tree<String> tree2 = new Tree<>("A");
-	tree2.addTree(new Tree<>("B"), 0);
+    Tree<String> tree2 = new Tree<>("A");
+    tree2.addTree(new Tree<>("B"), 0);
     tree2.addTree(new Tree<>("C"), 1);
     tree2.addTree(new Tree<>("D"), 2);
     tree2.addTree(new Tree<>("E"), 3);
-    
+
     tree.addTree(new Tree<>("B"), 0);
     tree.addTree(new Tree<>("D"), 1);
     tree.addTree(new Tree<>("E"), 2);
     tree.addTree(new Tree<>("C"), 1);
-    
+
     assertEquals(tree, tree2);
   }
 
@@ -252,43 +252,43 @@ public class TreeTests {
     Tree<String> brt = G;
     brt.addBSTree(C, 0);
     brt.addBSTree(J, 1);
-    
+
     C.addBSTree(A, 0);
     C.addBSTree(E, 1);
-    
+
     A.addBSTree(null, 0);
     A.addBSTree(B, 1);
-    
+
     E.addBSTree(D, 0);
     E.addBSTree(F, 1);
-    
+
     J.addBSTree(H, 0);
     J.addBSTree(L, 1);
-    
+
     H.addBSTree(null, 0);
     H.addBSTree(I, 1);
-    
+
     L.addBSTree(K, 0);
     L.addBSTree(M, 1);
-    
+
     assertEquals(brt, tree.toBinarySearchTree(comparator));
   }
-  
+
   @Test
   public void testEquals(){
     Tree<String> tree1 = new Tree<>("a");
-    Tree<String> tree2 = new Tree<>("a");   
-    Tree<String> b1 = new Tree<>("b"); 
+    Tree<String> tree2 = new Tree<>("a");
+    Tree<String> b1 = new Tree<>("b");
     Tree<String> b2 = new Tree<>("b");
-    Tree<String> c1 = new Tree<>("c"); 
+    Tree<String> c1 = new Tree<>("c");
     Tree<String> c2 = new Tree<>("c");
-    
+
     b1.addTree(c1);
     tree1.addTree(b1);
-    
+
     tree2.addTree(b2);
     tree2.addTree(c2);
-    
+
     assertNotEquals(tree1, tree2);
   }
   @Test
