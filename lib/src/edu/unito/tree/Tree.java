@@ -23,7 +23,6 @@ public class Tree<T> implements Iterable<T> {
    * Empty constructor
    * <p>
    * Create a new Tree with no label and children
-   * @return  the new tree
    */
   public Tree() {
     this.label = null;
@@ -37,7 +36,6 @@ public class Tree<T> implements Iterable<T> {
    * Initialize a new tree with a given label
    *
    * @param  label the label of the node
-   * @return  the new tree
    */
   public Tree(T label) {
     this();

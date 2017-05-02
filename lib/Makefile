@@ -38,6 +38,10 @@ tests_sort: build_sort
 tests_tree: build_treeTest
 	java $(JAVA_RUN_PARAMS) org.junit.runner.JUnitCore edu.unito.tree.TreeTests
 
+docs: docs_tree
+docs_tree: src/edu/unito/tree/*.java
+	javadoc -d docs -author -private src/edu/unito/tree/Tree.java src/edu/unito/tree/TreeIterator.java
+
 # regola per compilare un .c in un .o
 # viene applicata ogni volta che una dipendenza richiede di compilare un file in
 #    `build` e con suffisso .o. Il simbolo % effettua pattern matching con quanto
