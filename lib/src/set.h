@@ -20,16 +20,12 @@
 /* Definition of the set's opaque type */
 typedef struct _mySet set_o;
 
-/* Definition of the array's compare function */
-typedef int (*SetCompare)(void*, void*);
-
-
 
 /* ....... */
 extern void make_set(set_o*, size_t);
 
-extern set_o* union_set(set_o*, set_o*);
+extern void  union_set(set_o*, size_t, size_t);
 
-extern set_o* link_set(set_o*, set_o*);
+extern void link_set(set_o*, size_t, size_t);
 
-extern set_o* find_set(set_o*);
+extern size_t find_set(set_o*, size_t);

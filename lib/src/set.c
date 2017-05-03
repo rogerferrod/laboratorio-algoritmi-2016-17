@@ -20,41 +20,34 @@
 
 /* Implementation of the opaque type */
 struct _mySet {
-  set_o *parent;  /* pointer to parent */
+  size_t parent;  /* index of parent */
   int rank;
 };
 
-void make_set(set_o subset[], size_t i){
-  subset[i]->parent = subset[i];
-  subset[i]->rank = 0;
+void make_set(set_o singletons[], size_t i){
+  singletons[i].parent = i;
+  singletons[i].rank = 0;
 }
 
-set_o* union_set(set_o* x, set_o* y) {
-  return link_set(find_set(x), find_set(y));
+void union_set(set_o singletons[], size_t x, size_t y) {
+  link_set(singletons, find_set(singletons, x), find_set(singletons, y));
 }
 
-set_o* link_set(set_o* x, set_o* y) {
-  if (x->rank > y->rank) {
-    y->parent = x;
-    return x;
+void link_set(set_o singletons[], size_t x, size_t y) {
+  if (singletons[x].rank > singletons[y].rank) {
+    singletons[y].parent = x;
   }
-
-  x->parent = y;
-
-  if (x->rank == y->rank) {
-    y->rank++;
-  }
-
-  return y;
+  else{
+    singletons[x].parent = y;
+    if (singletons[x].rank == singletons[y].rank) {
+      singletons[y].rank++;
+    }
+  } 
 }
 
-set_o* find_set(set_o* elem) {
-  while (elem != elem->parent) {
-    elem = elem->parent;
+size_t find_set(set_o singletons[], size_t i) {
+  if(i != singletons[i].parent){
+    i = find_set(singletons, singletons[i].parent);
   }
-  return elem;
-}
-
-void free_set(set_o* elem) {
-  free(elem);
+  return i;
 }
