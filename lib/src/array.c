@@ -86,6 +86,23 @@ void array_insert(array_o* array, void* element) {
   return;
 }
 
+void array_insert_at(array_o* array, void* element, size_t index) {
+  if(index >= array->capacity){
+    array->capacity *= INCREMENT_FACTOR;
+    array->array = realloc(array->array, array->capacity*sizeof(void*));
+    if(array->array == NULL){
+      fprintf(stderr, "Not enough memory for realloc\n");
+      errno = ENOMEM;
+      exit(EXIT_FAILURE);
+    }
+    array->size=index;
+  }
+  array->array[index] = element;
+  array->size++;
+ 
+  return;
+}
+
 void array_delete(array_o* array, size_t position) {
   if(position >= array->size ) {
     fprintf(stderr, "Array index (%ld) out of bounds (0:%ld)\n", position, array->size);

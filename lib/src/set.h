@@ -16,12 +16,16 @@
 
 #include <stddef.h>
 
+#define MAX_ARRAY 50
+
 
 /* Definition of the set's opaque type */
 typedef struct _mySet set_o;
 
 
 /* ....... */
+extern set_o* build_set();
+
 extern void make_set(set_o*, size_t);
 
 extern void  union_set(set_o*, size_t, size_t);

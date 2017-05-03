@@ -108,6 +108,18 @@ static void test_ordered_array_insert_at_end() {
   free_fixture(array);
 }
 
+static void test_ordered_array_insert_at() {
+  array_o* array = build_fixture();
+
+  array_insert_at(array, new_int(20), 1);
+  TEST_ASSERT_EQUAL_INT(20, *(int*)array_at(array, 1));
+
+  array_insert_at(array, new_int(96), 6);
+  TEST_ASSERT_EQUAL_INT(96, *(int*)array_at(array, 6));
+
+  free_fixture(array);
+}
+
 static void test_ordered_array_delete(){
   array_o* array = build_fixture();
   
@@ -139,6 +151,7 @@ int main() {
   RUN_TEST(test_ordered_array_realloc);
   RUN_TEST(test_ordered_array_at);
   RUN_TEST(test_ordered_array_insert_at_end);
+  RUN_TEST(test_ordered_array_insert_at);
   RUN_TEST(test_ordered_array_delete);
   RUN_TEST(test_ordered_array_swap);
   return UNITY_END();

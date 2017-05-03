@@ -16,38 +16,46 @@
 #include <stdio.h>
 #include <errno.h>
 #include "set.h"
+#include "array.h"
 
 
 /* Implementation of the opaque type */
 struct _mySet {
-  size_t parent;  /* index of parent */
-  int rank;
+  array_o *parent;
+  array_o *rank;
 };
 
-void make_set(set_o singletons[], size_t i){
-  singletons[i].parent = i;
-  singletons[i].rank = 0;
+set_o* build_set(){
+  set_o *set = (set_o*)malloc(sizeof(set_o));
+  set->parent = array_new(MAX_ARRAY);
+  set->rank = array_new(MAX_ARRAY);
+  return set;
 }
 
-void union_set(set_o singletons[], size_t x, size_t y) {
-  link_set(singletons, find_set(singletons, x), find_set(singletons, y));
+void make_set(set_o *set, size_t i){
+  array_insert_at(set->parent, (size_t*)i, i);
+  array_insert_at(set->rank, (size_t*)0, i);
 }
 
-void link_set(set_o singletons[], size_t x, size_t y) {
-  if (singletons[x].rank > singletons[y].rank) {
-    singletons[y].parent = x;
+void union_set(set_o *set, size_t x, size_t y) {
+  link_set(set, find_set(set, x), find_set(set, y));
+}
+
+void link_set(set_o *set, size_t x, size_t y) { /* da rimettere come prima */ 
+  if(array_at(set->rank, x) > array_at(set->rank, y)){
+    array_insert_at(set->parent, (size_t*)x, y); /* p[y] = x */
   }
-  else{
-    singletons[x].parent = y;
-    if (singletons[x].rank == singletons[y].rank) {
-      singletons[y].rank++;
-    }
-  } 
+  else {
+    array_insert_at(set->parent, (size_t*)y, x); /* p[x] = y */
+  }
+  if(array_at(set->rank,x) == array_at(set->rank, y)){
+    array_insert_at(set->rank, (size_t*)array_at(set->rank, y) + 1, y); /* rank[y] = rank[y] + 1 */
+  }
 }
 
-size_t find_set(set_o singletons[], size_t i) {
-  if(i != singletons[i].parent){
-    i = find_set(singletons, singletons[i].parent);
+size_t find_set(set_o *set, size_t x) {
+  if(x != (size_t)array_at(set->parent, x)){
+    x = find_set(set, (size_t)array_at(set->parent, x));
   }
-  return i;
+  return x;
 }
