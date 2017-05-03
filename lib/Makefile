@@ -18,6 +18,7 @@ all: build
 build: build_es2
 build_es1: build_array build_sort
 build_es2: build_tree build_treeTest
+#build_es4: build_set
 
 build_array: bin/array_tests
 build_sort: bin/sort_tests
@@ -25,11 +26,13 @@ build_tree: src/edu/unito/tree/Tree.java
 	javac $(JAVA_COMPILE_PARAMS) src/edu/unito/tree/Tree.java
 build_treeTest: build_tree src/edu/unito/tree/TreeTests.java
 	javac $(JAVA_COMPILE_PARAMS) src/edu/unito/tree/TreeTests.java
+#build_set: bin/set_tests
 
 # compila e esegue i test
 tests: tests_es2
 tests_es1: tests_array tests_sort
 tests_es2: tests_tree
+#tests_es4: tests_unionfind
 
 tests_array: build_array
 	bin/array_tests
@@ -37,6 +40,8 @@ tests_sort: build_sort
 	bin/sort_tests
 tests_tree: build_treeTest
 	java $(JAVA_RUN_PARAMS) org.junit.runner.JUnitCore edu.unito.tree.TreeTests
+#tests_unionfind: build_set
+#	bin/unionfind_tests
 
 docs: docs_tree
 docs_tree: src/edu/unito/tree/*.java
@@ -64,6 +69,9 @@ bin/sort: build/sort.o build/array.o $(C_COMMON_DEPS)
 
 bin/sort_tests: build/sort_tests.o build/sort.o build/array.o build/unity.o $(C_COMMON_DEPS)
 	$(CC) -o bin/sort_tests build/sort_tests.o build/sort.o build/array.o build/unity.o
+
+#bin/set_tests: build/set_tests.o build/set.o build/unity.o $(C_COMMON_DEPS)
+#	$(CC) -o bin/set_tests  build/set_tests.o build/set.o build/unity.o
 
 clean:
 	rm -fr build/* bin/*

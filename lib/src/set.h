@@ -2,7 +2,7 @@
  *  File: set.h
  *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna
  *
- *  Date: 11-04-2017
+ *  Date: 03-05-2017
  *
  */
 
@@ -26,10 +26,10 @@ typedef int (*SetCompare)(void*, void*);
 
 
 /* ....... */
-extern set_o* make_set(void*);
+extern void make_set(set_o*, size_t);
 
-extern set_o* union_set(void*, void*);
+extern set_o* union_set(set_o*, set_o*);
 
-extern set_o* link_set(void*, void*);
+extern set_o* link_set(set_o*, set_o*);
 
-extern set_o* find_set(void*);
+extern set_o* find_set(set_o*);

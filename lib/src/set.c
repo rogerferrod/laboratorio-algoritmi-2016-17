@@ -2,7 +2,7 @@
  *  File: set.c
  *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna
  *
- *  Date: 11-04-2017
+ *  Date: 03-05-2017
  *
  */
  
@@ -20,21 +20,41 @@
 
 /* Implementation of the opaque type */
 struct _mySet {
-  _mySet parent;  /* pointer to parent */
+  set_o *parent;  /* pointer to parent */
   int rank;
-  void* label;
 };
 
-set_o* make_set(void* label){
-  set_o *elem = malloc(sizeof(set_o));
-  elem.parent = elem;
-  elem.rank = 0;
-  elem.label = label;
+void make_set(set_o subset[], size_t i){
+  subset[i]->parent = subset[i];
+  subset[i]->rank = 0;
+}
+
+set_o* union_set(set_o* x, set_o* y) {
+  return link_set(find_set(x), find_set(y));
+}
+
+set_o* link_set(set_o* x, set_o* y) {
+  if (x->rank > y->rank) {
+    y->parent = x;
+    return x;
+  }
+
+  x->parent = y;
+
+  if (x->rank == y->rank) {
+    y->rank++;
+  }
+
+  return y;
+}
+
+set_o* find_set(set_o* elem) {
+  while (elem != elem->parent) {
+    elem = elem->parent;
+  }
   return elem;
 }
 
-extern set_o* union_set(void*, void*);
-
-extern set_o* link_set(void*, void*);
-
-extern set_o* find_set(void*)
+void free_set(set_o* elem) {
+  free(elem);
+}
