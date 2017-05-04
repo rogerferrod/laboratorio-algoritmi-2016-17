@@ -12,12 +12,10 @@
 #include "unity_internals.h"
 #include "set.h"
 
-#define MAX_LENGHT 10
+#define MAX_LENGTH 10
 
-/*static int array[MAX_ARRAY] = {1,2,3,4,5,6};
- */
 static int* build_fixture() {
-  int *array = malloc(MAX_ARRAY*sizeof(int));
+  int *array = malloc(MAX_LENGTH*sizeof(int));
   array[0] = 2;
   array[1] = 5;
   array[2] = 7;
@@ -32,6 +30,7 @@ static void test_makeSet() {
   set_o *set = build_set();
   make_set(set, 1);
   //  TEST_ASSERT_EQUAL_INT();
+  free_set(set);
 }
 
 static void test_findSet(){
@@ -47,6 +46,7 @@ static void test_findSet(){
   printf("find_set: %d\n", array[(int)find_set(set, 0)]);
   printf("find_set: %d\n", array[(int)find_set(set, 1)]);
   printf("find_set: %d\n", array[(int)find_set(set, 2)]);
+  free_set(set);
 }
 
 static void test_unionSet(){
@@ -102,7 +102,7 @@ static void test_unionSet(){
   printf("find_set: %d\n", array[(int)find_set(set, 5)]);
   printf("find_set: %d\n", array[(int)find_set(set, 6)]);
 
-  
+  free_set(set);
 }
 
 int main() {
