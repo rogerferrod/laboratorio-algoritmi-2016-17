@@ -33,8 +33,8 @@ set_o* build_set(){
 }
 
 void make_set(set_o *set, size_t i){
-  array_insert_at(set->parent, (size_t*)i, i);
-  array_insert_at(set->rank, (size_t*)0, i);
+  array_insert_at(set->parent, i, (size_t*)i);
+  array_insert_at(set->rank, i, (size_t*)0);
 }
 
 void union_set(set_o *set, size_t x, size_t y) {
@@ -43,13 +43,13 @@ void union_set(set_o *set, size_t x, size_t y) {
 
 void link_set(set_o *set, size_t x, size_t y) {
   if(array_at(set->rank, x) > array_at(set->rank, y)){
-    array_insert_at(set->parent, (size_t*)x, y); /* p[y] = x */
+    array_insert_at(set->parent, y, (size_t*)x); /* p[y] = x */
   }
   else {
-    array_insert_at(set->parent, (size_t*)y, x); /* p[x] = y */
+    array_insert_at(set->parent, x, (size_t*)y); /* p[x] = y */
   }
   if(array_at(set->rank,x) == array_at(set->rank, y)){
-    array_insert_at(set->rank, (size_t*)array_at(set->rank, y) + 1, y); /* rank[y] = rank[y] + 1 */
+    array_insert_at(set->rank, y, (size_t*)array_at(set->rank, y) + 1); /* rank[y] = rank[y] + 1 */
   }
 }
 
