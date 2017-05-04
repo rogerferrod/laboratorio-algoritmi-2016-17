@@ -47,15 +47,15 @@ void link_set(set_o *set, size_t x, size_t y) {
   }
   else {
     array_insert_at(set->parent, x, (size_t*)y); /* p[x] = y */
-  }
-  if(array_at(set->rank,x) == array_at(set->rank, y)){
-    array_insert_at(set->rank, y, (size_t*)array_at(set->rank, y) + 1); /* rank[y] = rank[y] + 1 */
+    if(array_at(set->rank,x) == array_at(set->rank, y)){
+      array_insert_at(set->rank, y, (size_t*)array_at(set->rank, y) + 1); /* rank[y] = rank[y] + 1 */
+    }
   }
 }
 
 size_t find_set(set_o *set, size_t x) {
-  if(x != (size_t)array_at(set->parent, x)){
-    x = find_set(set, (size_t)array_at(set->parent, x));
+  while(x != (size_t)array_at(set->parent, x)){
+    x = (size_t)array_at(set->parent, x);
   }
   return x;
 }

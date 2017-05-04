@@ -29,7 +29,7 @@ static int* build_fixture() {
 static void test_makeSet() {
   set_o *set = build_set();
   make_set(set, 1);
-  //  TEST_ASSERT_EQUAL_INT();
+  TEST_ASSERT_EQUAL_INT_MESSAGE(1, 1, "Make set failed");
   free_set(set);
 }
 
@@ -41,11 +41,9 @@ static void test_findSet(){
   make_set(set, 1); /* 5 */
   make_set(set, 2); /* 7 */
 
-  printf("make(2); make(5); make(7); \n");
-  printf("find(2); find(5); find(7); \n");
-  printf("find_set: %d\n", array[(int)find_set(set, 0)]);
-  printf("find_set: %d\n", array[(int)find_set(set, 1)]);
-  printf("find_set: %d\n", array[(int)find_set(set, 2)]);
+  TEST_ASSERT_EQUAL_INT(2, array[(int)find_set(set, 0)]);
+  TEST_ASSERT_EQUAL_INT(5, array[(int)find_set(set, 1)]);
+  TEST_ASSERT_EQUAL_INT(7, array[(int)find_set(set, 2)]);
   free_set(set);
 }
 
@@ -62,45 +60,43 @@ static void test_unionSet(){
   make_set(set, 6); /* 1 */
 
 
-  printf("make(2); make(5); make(7); make(6); make(4); make(3); make(1); union(2,5); \n");
-  union_set(set, 0, 1); 
-  printf("find(2); find(5); find(7); \n");
-  printf("find_set: %d\n", array[(int)find_set(set, 0)]);
-  printf("find_set: %d\n", array[(int)find_set(set, 1)]);
-  printf("find_set: %d\n", array[(int)find_set(set, 2)]);
+  union_set(set, 0, 1);
+  TEST_ASSERT_EQUAL_INT(5, array[(int)find_set(set, 0)]);
+  TEST_ASSERT_EQUAL_INT(5, array[(int)find_set(set, 1)]);
+  TEST_ASSERT_EQUAL_INT(7, array[(int)find_set(set, 2)]);
 
-  printf("union(2,7); \n");
   union_set(set, 0, 2);
-  printf("find(2); find(5); find(7); \n");
-  printf("find_set: %d\n", array[(int)find_set(set, 0)]);
-  printf("find_set: %d\n", array[(int)find_set(set, 1)]);
-  printf("find_set: %d\n", array[(int)find_set(set, 2)]);
+  TEST_ASSERT_EQUAL_INT(5, array[(int)find_set(set, 0)]);
+  TEST_ASSERT_EQUAL_INT(5, array[(int)find_set(set, 1)]);
+  TEST_ASSERT_EQUAL_INT(5, array[(int)find_set(set, 2)]);
 
-  printf("union(6,4); union(3,1); \n");
   union_set(set, 3, 4);
   union_set(set, 5, 6);
-  printf("find(6); find(4); find(3); find(1); \n");
-  printf("find_set: %d\n", array[(int)find_set(set, 3)]);
-  printf("find_set: %d\n", array[(int)find_set(set, 4)]);
-  printf("find_set: %d\n", array[(int)find_set(set, 5)]);
-  printf("find_set: %d\n", array[(int)find_set(set, 6)]);
+  TEST_ASSERT_EQUAL_INT(5, array[(int)find_set(set, 0)]);
+  TEST_ASSERT_EQUAL_INT(5, array[(int)find_set(set, 1)]);
+  TEST_ASSERT_EQUAL_INT(5, array[(int)find_set(set, 2)]);
+  TEST_ASSERT_EQUAL_INT(4, array[(int)find_set(set, 3)]);
+  TEST_ASSERT_EQUAL_INT(4, array[(int)find_set(set, 4)]);
+  TEST_ASSERT_EQUAL_INT(1, array[(int)find_set(set, 5)]);
+  TEST_ASSERT_EQUAL_INT(1, array[(int)find_set(set, 6)]);
 
-  printf("union(4,3); \n");
   union_set(set, 4, 5);
-  printf("find(4); find(3); \n");
-  printf("find_set: %d\n", array[(int)find_set(set, 4)]);
-  printf("find_set: %d\n", array[(int)find_set(set, 5)]);
+  TEST_ASSERT_EQUAL_INT(5, array[(int)find_set(set, 0)]);
+  TEST_ASSERT_EQUAL_INT(5, array[(int)find_set(set, 1)]);
+  TEST_ASSERT_EQUAL_INT(5, array[(int)find_set(set, 2)]);
+  TEST_ASSERT_EQUAL_INT(1, array[(int)find_set(set, 3)]);
+  TEST_ASSERT_EQUAL_INT(1, array[(int)find_set(set, 4)]);
+  TEST_ASSERT_EQUAL_INT(1, array[(int)find_set(set, 5)]);
+  TEST_ASSERT_EQUAL_INT(1, array[(int)find_set(set, 6)]);
 
-  printf("union(5,6); \n");
   union_set(set, 1, 3);
-  printf("find(2); find(5); find(7); find(6); find(4); find(3); find(1); \n");
-  printf("find_set: %d\n", array[(int)find_set(set, 0)]);
-  printf("find_set: %d\n", array[(int)find_set(set, 1)]);
-  printf("find_set: %d\n", array[(int)find_set(set, 2)]);
-  printf("find_set: %d\n", array[(int)find_set(set, 3)]);
-  printf("find_set: %d\n", array[(int)find_set(set, 4)]);
-  printf("find_set: %d\n", array[(int)find_set(set, 5)]);
-  printf("find_set: %d\n", array[(int)find_set(set, 6)]);
+  TEST_ASSERT_EQUAL_INT(1, array[(int)find_set(set, 0)]);
+  TEST_ASSERT_EQUAL_INT(1, array[(int)find_set(set, 1)]);
+  TEST_ASSERT_EQUAL_INT(1, array[(int)find_set(set, 2)]);
+  TEST_ASSERT_EQUAL_INT(1, array[(int)find_set(set, 3)]);
+  TEST_ASSERT_EQUAL_INT(1, array[(int)find_set(set, 4)]);
+  TEST_ASSERT_EQUAL_INT(1, array[(int)find_set(set, 5)]);
+  TEST_ASSERT_EQUAL_INT(1, array[(int)find_set(set, 6)]);
 
   free_set(set);
 }
