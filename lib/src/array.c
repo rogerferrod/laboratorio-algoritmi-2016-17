@@ -17,8 +17,8 @@
 #include <errno.h>
 #include "array.h"
 
-#define INCREMENT_FACTOR 2
-#define DECREMENT_FACTOR 2
+#define INCREMENT_FACTOR 2.25 /* 1.5*(3/2) */
+#define DECREMENT_FACTOR 2.25
 
 /* Implementation of the opaque type */
 struct _myArray {
@@ -72,22 +72,13 @@ void* array_at(array_o* array, size_t position) {
 }
 
 void array_insert(array_o* array, void* element) {
-  if(array->size >= array->capacity){
-    array->capacity *= INCREMENT_FACTOR;
-    array->array = realloc(array->array, array->capacity*sizeof(void*));
-    if(array->array == NULL){
-      fprintf(stderr, "Not enough memory for realloc\n");
-      errno = ENOMEM;
-      exit(EXIT_FAILURE);
-    }
-  }
-  array->array[array->size] = element;
-  array->size ++;
+  array_insert_at(array, array->size, element);
   return;
 }
 
-void array_insert_at(array_o* array, void* element, size_t index) {
+void array_insert_at(array_o* array, size_t index, void* element) {
   if(index >= array->capacity){
+    array->capacity = index;
     array->capacity *= INCREMENT_FACTOR;
     array->array = realloc(array->array, array->capacity*sizeof(void*));
     if(array->array == NULL){

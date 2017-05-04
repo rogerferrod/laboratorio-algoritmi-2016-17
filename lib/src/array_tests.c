@@ -111,10 +111,10 @@ static void test_ordered_array_insert_at_end() {
 static void test_ordered_array_insert_at() {
   array_o* array = build_fixture();
 
-  array_insert_at(array, new_int(20), 1);
+  array_insert_at(array, 1, new_int(20));
   TEST_ASSERT_EQUAL_INT(20, *(int*)array_at(array, 1));
 
-  array_insert_at(array, new_int(96), 6);
+  array_insert_at(array, 6, new_int(96));
   TEST_ASSERT_EQUAL_INT(96, *(int*)array_at(array, 6));
 
   free_fixture(array);

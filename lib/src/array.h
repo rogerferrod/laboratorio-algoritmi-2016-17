@@ -51,7 +51,7 @@ extern void* array_at(array_o* array, size_t position);
 extern void array_insert(array_o* array, void* element);
 
 /* Nuova 03-05-2017 */
-extern void array_insert_at(array_o* array, void* element, size_t index);
+extern void array_insert_at(array_o* array, size_t index, void* element);
 
 /* Delete the element in the specified position  */
 extern void array_delete(array_o* array, size_t position);
