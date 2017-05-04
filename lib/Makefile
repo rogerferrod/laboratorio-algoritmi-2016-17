@@ -16,6 +16,7 @@ all: build
 
 # compila (grazie alla dipendenza) i sorgenti (crea i binari e i file .class)
 build: build_set
+build_all: build_es1 build_es2 build_es4
 build_es1: build_array build_sort
 build_es2: build_tree build_treeTest
 build_es4: build_set
@@ -30,6 +31,7 @@ build_set: bin/set_tests
 
 # compila e esegue i test
 tests: tests_es4
+tests_all: tests_es1 tests_es2 tests_es4
 tests_es1: tests_array tests_sort
 tests_es2: tests_tree
 tests_es4: tests_unionfind
@@ -58,9 +60,6 @@ docs_tree: src/edu/unito/tree/*.java
 build/%.o: src/%.c $(C_COMMON_DEPS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-bin/array: build/array.o build/array_main.o $(C_COMMON_DEPS)
-	$(CC) -o bin/array build/array.o build/array_main.o
-
 bin/array_tests: build/array_tests.o build/array.o build/unity.o $(C_COMMON_DEPS)
 	$(CC) -o bin/array_tests  build/array_tests.o build/array.o build/unity.o
 
@@ -69,9 +68,6 @@ bin/sort: build/sort.o build/array.o $(C_COMMON_DEPS)
 
 bin/sort_tests: build/sort_tests.o build/sort.o build/array.o build/unity.o $(C_COMMON_DEPS)
 	$(CC) -o bin/sort_tests build/sort_tests.o build/sort.o build/array.o build/unity.o
-
-bin/set: build/set.o build/array.o build/set_main.o $(C_COMMON_DEPS)
-	$(CC) -o bin/set build/set.o build/array.o build/set_main.o
 
 bin/set_tests: build/set_tests.o build/set.o build/array.o build/unity.o $(C_COMMON_DEPS)
 	$(CC) -o bin/set_tests  build/set_tests.o build/set.o build/array.o build/unity.o
