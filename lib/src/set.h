@@ -33,3 +33,5 @@ extern void  union_set(set_o*, size_t, size_t);
 extern void link_set(set_o*, size_t, size_t);
 
 extern size_t find_set(set_o*, size_t);
+
+extern void free_set(set_o *set);

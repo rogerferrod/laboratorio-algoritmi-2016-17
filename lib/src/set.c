@@ -41,7 +41,7 @@ void union_set(set_o *set, size_t x, size_t y) {
   link_set(set, find_set(set, x), find_set(set, y));
 }
 
-void link_set(set_o *set, size_t x, size_t y) { /* da rimettere come prima */ 
+void link_set(set_o *set, size_t x, size_t y) {
   if(array_at(set->rank, x) > array_at(set->rank, y)){
     array_insert_at(set->parent, (size_t*)x, y); /* p[y] = x */
   }
@@ -58,4 +58,10 @@ size_t find_set(set_o *set, size_t x) {
     x = find_set(set, (size_t)array_at(set->parent, x));
   }
   return x;
+}
+
+void free_set(set_o *set) {
+  array_free(set->parent);
+  array_free(set->rank);
+  free(set);
 }
