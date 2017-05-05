@@ -2,7 +2,7 @@
  *  File: set_tests.c
  *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna 
  *
- *  Date: 03-05-2017
+ *  Date: 05-05-2017
  *
  */
 
