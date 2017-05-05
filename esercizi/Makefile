@@ -12,6 +12,7 @@ INCLUDES = src/*.h
 # Tutti i target vanno ricompilati se cambiano gli header o questo Makefile
 COMMON_DEPS = $(INCLUDES) Makefile
 COMMON_DEPS = Makefile
+JAVA_COMPILE_PARAMS = -d bin/ -Xlint:all -Xdiags:verbose
 
 # Lista dei target da eseguire sempre
 all: compile
@@ -23,12 +24,18 @@ compile_es1:
 	$(MAKE) -C ../lib build_es1
 	$(MAKE) bin/esercizio1
 
+compile_es2:
+	javac -cp ../lib/bin/Tree.jar src/esercizio2.java -d bin
+	#$(MAKE) -C ../lib build_es2
+    #$(MAKE) bin/esercizio2
+
 #  compila e esegue l'esercizio1
-exec: exec_es1
+exec: exec_es2
 
 exec_es1: compile_es1
 	bin/esercizio1 data/records.csv ${COUNT} ${ALG} ${FIELD} ${ORDER}
-
+exec_es2: compile_es2
+	java -cp bin:../lib/bin/Tree.jar esercizio2 ../../datasets/multywaytree/multywaytree_1.csv
 
 # regola per compilare un .c in un .o
 # viene applicata ogni volta che una dipendenza richiede di compilare un file in
@@ -43,6 +50,9 @@ build/%.o: src/%.c $(COMMON_DEPS)
 
 bin/esercizio1: build/esercizio1.o $(COMMON_DEPS)
 	$(CC) -o bin/esercizio1  build/esercizio1.o ../lib/build/array.o ../lib/build/sort.o
+
+bin/esercizio2: src/esercizio2.java
+	javac $(JAVA_COMPILE_PARAMS) src/esercizio2.java
 
 clean:
 	rm -f build/* bin/*
