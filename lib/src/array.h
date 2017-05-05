@@ -38,9 +38,6 @@ extern size_t array_size(array_o* array);
 /* Return the capacity of an array */
 extern size_t array_capacity(array_o* array);
 
-/* Check if it is necessary reallocate memory */
-extern void array_check_realloc(array_o* array);
-
 /* Return 1 if the array is empty, 0 otherwise */
 extern int array_empty(array_o* array);
 

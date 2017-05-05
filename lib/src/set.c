@@ -8,7 +8,7 @@
  
  
 /*
- * Implements disjoint-set 
+ * Implements union-find data structure
  *
  */
 
@@ -38,11 +38,17 @@ set_o* make_set(void* elem){
 }
 
 void union_set(set_o *x, set_o *y) {
+  if(x == NULL || y == NULL){
+    fprintf(stderr, "Invalid parameter NULL\n");
+    errno = EINVAL;
+    exit(EXIT_FAILURE);
+  }
+  
   link_set(find_set(x), find_set(y));
   return;
 }
 
-void link_set(set_o *x, set_o *y) {
+void link_set(set_o *x, set_o *y) {  
   if(x->rank > y->rank){
     y->parent = x;
   }
@@ -61,6 +67,7 @@ set_o* find_set(set_o *x) {
     errno = EINVAL;
     exit(EXIT_FAILURE);
   }
+  
   while(x != x->parent){
     x = x->parent;
   }
