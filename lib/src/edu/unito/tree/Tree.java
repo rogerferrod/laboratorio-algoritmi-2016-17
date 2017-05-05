@@ -137,35 +137,6 @@ public class Tree<T> implements Iterable<T> {
 
 
   /**
-   * Add a subtree to the current node as child number i and return the new tree.
-   * The parameter and the returned tree are Binary Search Tree
-   * <p>
-   * The parameter can be null and must be different to the node itself
-   * actually the method cannot prevent the creation of cycle in the tree
-   *
-   * @param    tree the new subtree
-   * @param    i the index position at which to add the new subtree
-   * @return    the new tree with changes
-   */
-  public Tree<T> addBSTree(Tree<T> tree, int i) {
-    if (tree == this)
-      throw new IllegalArgumentException("Cannot create a cycle");
-
-    switch(i){
-    case 0:
-    this.left = tree;
-    break;
-    case 1:
-    this.right = tree;
-    break;
-    default:
-    throw new IllegalArgumentException("Invalid position for a binary tree");
-    }
-
-    return this;
-  }
-
-  /**
    * Finds the height of the tree
    *
    * @return  the height
@@ -505,7 +476,7 @@ public class Tree<T> implements Iterable<T> {
   private Tree<T> toBinarySearchTree(Tree<T> tree, Comparator<T> compare) {
     ArrayList<T> list = tree.getAll();
     list.sort(compare);
-    return buildBST(list, 0, list.size()-1);
+    return buildBST(list);
   }
 
   /**
@@ -513,22 +484,25 @@ public class Tree<T> implements Iterable<T> {
    * begin and end are the index of sublist considered in the recursive call
    *
    * @param list the sorted list
-   * @param begin index of the first element to be considered in the list
-   * @param end index of the last element to be considered in the list
+   * //@param begin index of the first element to be considered in the list
+   * //@param end index of the last element to be considered in the list
    * @return  the binary search tree
    */
-  private Tree<T> buildBST(List<T> list, int begin, int end) {
-    if (end - begin < 0)
+  private Tree<T> buildBST(List<T> list) {
+    if (list.size() == 0)
       return null;
 
     Tree<T> root;
-    root = new Tree<>(list.get(begin+(end - begin)/2));
+    root = new Tree<>(list.get(list.size()/2));
 
-    Tree<T> BSTleft = buildBST(list, begin, begin+(end - begin)/2-1);
-    root.addBSTree(BSTleft, 0);
 
-    Tree<T> BSTright = buildBST(list, begin+(end - begin)/2+1, end);
-    root.addBSTree(BSTright, 1);
+    Tree<T> BSTLeft = buildBST(list.subList(0, list.size()/2));
+    if (BSTLeft != null)
+      root.addTree(BSTLeft);
+
+    Tree<T> BSTRight = buildBST(list.subList(list.size()/2+1, list.size()));
+    if (BSTRight != null)
+      root.addTree(BSTRight);
 
     return root;
   }

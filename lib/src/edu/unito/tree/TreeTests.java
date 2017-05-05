@@ -250,26 +250,24 @@ public class TreeTests {
     Tree<String> M = new Tree<>("M");
 
     Tree<String> brt = G;
-    brt.addBSTree(C, 0);
-    brt.addBSTree(J, 1);
+    brt.addTree(D, 0);
+    brt.addTree(K, 1);
 
-    C.addBSTree(A, 0);
-    C.addBSTree(E, 1);
+    D.addTree(B, 0);
+    D.addTree(F, 1);
 
-    A.addBSTree(null, 0);
-    A.addBSTree(B, 1);
+    B.addTree(A, 0);
+    B.addTree(C, 1);
 
-    E.addBSTree(D, 0);
-    E.addBSTree(F, 1);
+    F.addTree(E, 0);
 
-    J.addBSTree(H, 0);
-    J.addBSTree(L, 1);
+    K.addTree(I, 0);
+    K.addTree(M, 1);
 
-    H.addBSTree(null, 0);
-    H.addBSTree(I, 1);
+    I.addTree(H, 0);
+    I.addTree(J, 1);
 
-    L.addBSTree(K, 0);
-    L.addBSTree(M, 1);
+    M.addTree(L, 0);
 
     assertEquals(brt, tree.toBinarySearchTree(comparator));
   }
