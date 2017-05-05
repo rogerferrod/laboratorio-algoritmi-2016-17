@@ -72,13 +72,7 @@ void* array_at(array_o* array, size_t position) {
 }
 
 void array_insert(array_o* array, void* element) {
-  array_insert_at(array, array->size, element);
-  return;
-}
-
-void array_insert_at(array_o* array, size_t index, void* element) {
-  if(index >= array->capacity){
-    array->capacity = index;
+  if(array->size >= array->capacity){
     array->capacity *= INCREMENT_FACTOR;
     array->array = realloc(array->array, array->capacity*sizeof(void*));
     if(array->array == NULL){
@@ -86,14 +80,11 @@ void array_insert_at(array_o* array, size_t index, void* element) {
       errno = ENOMEM;
       exit(EXIT_FAILURE);
     }
-    array->size=index;
   }
-  array->array[index] = element;
+  array->array[array->size] = element;
   array->size++;
- 
   return;
 }
-
 void array_delete(array_o* array, size_t position) {
   if(position >= array->size ) {
     fprintf(stderr, "Array index (%ld) out of bounds (0:%ld)\n", position, array->size);

@@ -2,13 +2,13 @@
  *  File: set.c
  *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna
  *
- *  Date: 03-05-2017
+ *  Date: 05-05-2017
  *
  */
  
  
 /*
- * Implements disjoint-set ...
+ * Implements disjoint-set 
  *
  */
 
@@ -16,52 +16,58 @@
 #include <stdio.h>
 #include <errno.h>
 #include "set.h"
-#include "array.h"
-
 
 /* Implementation of the opaque type */
 struct _mySet {
-  array_o *parent;
-  array_o *rank;
+  set_o *parent;
+  int rank;
+  void *elem;
 };
 
-set_o* build_set(){
+set_o* make_set(void* elem){
   set_o *set = (set_o*)malloc(sizeof(set_o));
-  set->parent = array_new(MAX_ARRAY);
-  set->rank = array_new(MAX_ARRAY);
+  if(set == NULL){
+    fprintf(stderr, "Not enough memory for malloc\n");
+    errno = ENOMEM;
+    exit(EXIT_FAILURE);
+  }
+  set->parent = set;
+  set->rank = 0;
+  set->elem = elem;
   return set;
 }
 
-void make_set(set_o *set, size_t i){
-  array_insert_at(set->parent, i, (size_t*)i);
-  array_insert_at(set->rank, i, (size_t*)0);
+void union_set(set_o *x, set_o *y) {
+  link_set(find_set(x), find_set(y));
+  return;
 }
 
-void union_set(set_o *set, size_t x, size_t y) {
-  link_set(set, find_set(set, x), find_set(set, y));
-}
-
-void link_set(set_o *set, size_t x, size_t y) {
-  if(array_at(set->rank, x) > array_at(set->rank, y)){
-    array_insert_at(set->parent, y, (size_t*)x); /* p[y] = x */
+void link_set(set_o *x, set_o *y) {
+  if(x->rank > y->rank){
+    y->parent = x;
   }
   else {
-    array_insert_at(set->parent, x, (size_t*)y); /* p[x] = y */
-    if(array_at(set->rank,x) == array_at(set->rank, y)){
-      array_insert_at(set->rank, y, (size_t*)array_at(set->rank, y) + 1); /* rank[y] = rank[y] + 1 */
+    x->parent = y;
+    if(x->rank == y->rank){
+      y->rank++;
     }
   }
+  return;
 }
 
-size_t find_set(set_o *set, size_t x) {
-  while(x != (size_t)array_at(set->parent, x)){
-    x = (size_t)array_at(set->parent, x);
+set_o* find_set(set_o *x) {
+  if(x == NULL){
+    fprintf(stderr, "Invalid parameter NULL\n");
+    errno = EINVAL;
+    exit(EXIT_FAILURE);
+  }
+  while(x != x->parent){
+    x = x->parent;
   }
   return x;
 }
 
 void free_set(set_o *set) {
-  array_free(set->parent);
-  array_free(set->rank);
   free(set);
+  return;
 }
