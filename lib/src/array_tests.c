@@ -120,6 +120,25 @@ static void test_ordered_array_insert_at() {
   free_fixture(array);
 }
 
+static void test_ordered_array_hole() {
+  array_o* array = build_fixture();
+
+  printf("size: %d, capacity: %d\n", array_size(array), array_capacity(array));
+  for(int i = 0; i < array_size(array); i++){
+    printf("[%d] == NULL? %d\n", i, (array_at(array, i) == NULL));
+  }
+
+  array_insert_at(array, 6, new_int(96));
+  TEST_ASSERT_EQUAL_INT(96, *(int*)array_at(array, 6));
+  
+  printf("size: %d, capacity: %d\n", array_size(array), array_capacity(array));
+  for(int i = 0; i < array_size(array); i++){
+    printf("[%d] == NULL? %d\n", i, (array_at(array, i) == NULL));
+  }
+
+  free_fixture(array);
+}
+
 static void test_ordered_array_delete(){
   array_o* array = build_fixture();
   
@@ -152,6 +171,7 @@ int main() {
   RUN_TEST(test_ordered_array_at);
   RUN_TEST(test_ordered_array_insert_at_end);
   RUN_TEST(test_ordered_array_insert_at);
+  RUN_TEST(test_ordered_array_hole);
   RUN_TEST(test_ordered_array_delete);
   RUN_TEST(test_ordered_array_swap);
   return UNITY_END();
