@@ -2,13 +2,13 @@
  *  File: set.h
  *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna
  *
- *  Date: 03-05-2017
+ *  Date: 05-05-2017
  *
  */
 
 
 /*
- * Defines an abstracted etc etc
+ * Defines an abstracted union-find data structure
  *
  */
 
@@ -16,22 +16,21 @@
 
 #include <stddef.h>
 
-#define MAX_ARRAY 50
-
-
 /* Definition of the set's opaque type */
 typedef struct _mySet set_o;
 
 
-/* ....... */
-extern set_o* build_set();
+/* return new set */
+extern set_o* make_set(void*);
 
-extern void make_set(set_o*, size_t);
+/* union between two sets */
+extern void union_set(set_o*, set_o*);
 
-extern void  union_set(set_o*, size_t, size_t);
+/* link two trees */
+extern void link_set(set_o*, set_o*);
 
-extern void link_set(set_o*, size_t, size_t);
+/* return rappresentative of set */
+extern set_o* find_set(set_o*);
 
-extern size_t find_set(set_o*, size_t);
-
-extern void free_set(set_o *set);
+/* free memory */
+extern void free_set(set_o*);

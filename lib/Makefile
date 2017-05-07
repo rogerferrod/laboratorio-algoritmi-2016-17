@@ -28,6 +28,7 @@ build_tree: src/edu/unito/tree/Tree.java
 build_treeTest: build_tree src/edu/unito/tree/TreeTests.java
 	javac $(JAVA_COMPILE_PARAMS) src/edu/unito/tree/TreeTests.java
 build_set: bin/set_tests
+build_list: bin/list_tests
 
 # compila e esegue i test
 tests: tests_es4
@@ -44,6 +45,8 @@ tests_tree: build_treeTest
 	java $(JAVA_RUN_PARAMS) org.junit.runner.JUnitCore edu.unito.tree.TreeTests
 tests_unionfind: build_set
 	bin/set_tests
+tests_list: build_list
+	bin/list_tests
 
 docs: docs_tree
 docs_tree: src/edu/unito/tree/*.java
@@ -71,6 +74,9 @@ bin/sort_tests: build/sort_tests.o build/sort.o build/array.o build/unity.o $(C_
 
 bin/set_tests: build/set_tests.o build/set.o build/array.o build/unity.o $(C_COMMON_DEPS)
 	$(CC) -o bin/set_tests  build/set_tests.o build/set.o build/array.o build/unity.o
+
+bin/list_tests: build/list_tests.o build/list.o build/unity.o $(C_COMMON_DEPS)
+	$(CC) -o bin/list_tests  build/list_tests.o build/list.o build/unity.o
 
 
 clean:
