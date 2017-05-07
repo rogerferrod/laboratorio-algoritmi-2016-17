@@ -191,6 +191,42 @@ public class Tree<T> implements Iterable<T> {
   }
 
   /**
+   * Search in the current tree if the given tree is present
+   *
+   * @param tree The tree to be searched
+   * @return The searched tree, null otherwise
+   */
+  public Tree<T> find(Tree<T> tree) {
+    if (tree == null) return null;
+    if (tree == this) return tree;
+    ArrayList<Tree<T>> children = children(this);
+    if (children == null) return null;
+    for (Tree<T> child : children) {
+      Tree<T> found = child.find(tree);
+      if (found != null) return found;
+    }
+    return null;
+  }
+
+  /**
+   * Search in the current tree if the given label is present
+   *
+   * @param item The label to be searched
+   * @return The searched tree, null otherwise
+   */
+  public Tree<T> find(T item) {
+    if (item == null) return null;
+    if (item.equals(this.label)) return this;
+    ArrayList<Tree<T>> children = children(this);
+    if (children == null) return null;
+    for (Tree<T> child : children) {
+      Tree<T> found = child.find(item);
+      if (found != null) return found;
+    }
+    return null;
+  }
+
+  /**
    * Returns the Binary Search Tree rappresentation of the tree
    *
    * @param compare the Comparator used to order the tree

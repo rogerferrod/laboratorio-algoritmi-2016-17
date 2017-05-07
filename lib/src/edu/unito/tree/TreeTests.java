@@ -289,10 +289,58 @@ public class TreeTests {
 
     assertNotEquals(tree1, tree2);
   }
+
   @Test
   public void testToString() {
     buildFixture();
     assertEquals("(A(B(D,(E(H,(I)),(F))),(C(G(J,(K,(L,(M))))))))", tree.toString());
   }
 
+  @Test
+  public void testFindLabelNull() {
+    assertEquals(null, tree.find((String)null));
+  }
+
+  @Test
+  public void testFindLabel() {
+    Tree<String> B = new Tree<>("B");
+    Tree<String> C = new Tree<>("C");
+    Tree<String> D = new Tree<>("D");
+    Tree<String> E = new Tree<>("E");
+    Tree<String> F = new Tree<>("F");
+
+    tree.addTree(B);
+    tree.addTree(C);
+
+    B.addTree(D);
+    B.addTree(E);
+
+    C.addTree(F);
+
+    assertEquals(tree, tree.find("A"));
+    assertEquals(B, tree.find("B"));
+    assertEquals(C, tree.find("C"));
+    assertEquals(D, tree.find("D"));
+    assertEquals(E, tree.find("E"));
+    assertEquals(F, tree.find("F"));
+  }
+
+  @Test
+  public void testFindLabelNotFound() {
+    Tree<String> B = new Tree<>("B");
+    Tree<String> C = new Tree<>("C");
+    Tree<String> D = new Tree<>("D");
+    Tree<String> E = new Tree<>("E");
+    Tree<String> F = new Tree<>("F");
+
+    tree.addTree(B);
+    tree.addTree(C);
+
+    B.addTree(D);
+    B.addTree(E);
+
+    C.addTree(F);
+
+    assertEquals(null, tree.find("FF"));
+  }
 }
