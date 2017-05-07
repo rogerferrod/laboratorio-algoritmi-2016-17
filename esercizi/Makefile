@@ -25,9 +25,9 @@ compile_es1:
 	$(MAKE) bin/esercizio1
 
 compile_es2:
+	$(MAKE) -C ../lib build_es2
 	javac -cp ../lib/bin/Tree.jar src/esercizio2.java -d bin
-	#$(MAKE) -C ../lib build_es2
-    #$(MAKE) bin/esercizio2
+	#$(MAKE) bin/esercizio2
 
 #  compila e esegue l'esercizio1
 exec: exec_es2

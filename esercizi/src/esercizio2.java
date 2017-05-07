@@ -1,6 +1,7 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import edu.unito.tree.Tree;
 
 /**
@@ -12,40 +13,80 @@ import edu.unito.tree.Tree;
  */
 
 public class esercizio2 {
-  private static Tree<String> rowToTree(String row) {
+
+  private static String rowRootLabel(String s) {
+    if (s == null) return null;
     String[] splitted = s.split(",");
-    if (tree == null)
-      tree = new Tree<>(splitted[0]);
-    Tree<String> root = new Tree<>(splitted[0]);
-    for (int i = 1; i < splitted.length; i++) {
-      root.addTree(new Tree<>(splitted[i]));
-    }
-    System.out.println(root);
+    if (splitted.length > 0) return splitted[0];
+    return null;
   }
+
+  private static ArrayList<String> rowChildrenLabel(String s) {
+    if (s == null) return null;
+    String[] splitted = s.split(",");
+    if (splitted.length > 1) {
+      ArrayList<String> list = new ArrayList<>(Arrays.asList(splitted));
+      list.remove(0);
+      return list;
+    }
+    return null;
+  }
+
   public static void main(String[] args) {
     if (args.length < 1) throw new IllegalArgumentException("NoEnoughArguments");
 
     String path = args[0];
+
+    int max_lines = 5;
+    if (args.length > 1) {
+      max_lines = Integer.parseInt(args[1]);
+    }
+
     try {
-      BufferedReader br = new BufferedReader(new FileReader(path));
+      File file = new File(path);
+      if (!file.isFile()) throw new FileNotFoundException("File ("+path+") is't a file.");
+
+      BufferedReader br = new BufferedReader(new FileReader(file));
       String s;
       Tree<String> tree = null;
       int lines=0;
-      while((s = br.readLine()) != null && lines < 2) {
-        Tree<String> subtree = rowToTree(s);
-        if (subtree != null) {
-          tree.addTree(subtree);
-        }
-
-        System.out.println(lines);
+      while(lines < max_lines && (s = br.readLine()) != null) {
         lines++;
+        System.out.println("Line: " + lines +":\t" + s);
+
+        String rowRootLabel = rowRootLabel(s);
+        if (rowRootLabel == null) continue;
+        if (tree == null) {
+          tree = new Tree<>(rowRootLabel);
+          ArrayList<String> rowChildrenLabel = rowChildrenLabel(s);
+          if (rowChildrenLabel != null) {
+            for (String label : rowChildrenLabel) {
+              tree.addTree(new Tree<>(label));
+            }
+          }
+        } else {
+          ArrayList<String> rowChildrenLabel = rowChildrenLabel(s);
+          if (rowChildrenLabel != null) {
+            Tree<String> found = tree.find(rowRootLabel);
+            if (found == null) throw new Exception("Non so dove aggiungere questo sotto-albero: "+rowRootLabel + "("+s+")");
+            for (String label : rowChildrenLabel) {
+              found.addTree(new Tree<>(label));
+            }
+          }
+        }
+        System.out.println(tree.toString());
       }
-      System.out.println(tree.toString());
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+      System.out.println("FileNotFoundException");
     } catch (IOException e) {
       e.printStackTrace();
+      System.out.println("IOException");
     } catch (NullPointerException e) {
       e.printStackTrace();
-      System.out.println("nullpointerexception");
+      System.out.println("NullPointerException");
+    } catch (Exception e) {
+      e.printStackTrace();
     }
 
   }

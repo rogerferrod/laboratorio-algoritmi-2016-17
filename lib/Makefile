@@ -18,7 +18,10 @@ all: build
 build: build_set
 build_all: build_es1 build_es2 build_es4
 build_es1: build_array build_sort
-build_es2: build_tree build_treeTest
+build_es2: build_tree build_treeTest build_es2_jar
+build_es2_jar:
+	jar cf bin/Tree.jar -C src edu/unito/
+
 build_es4: build_set
 
 build_array: bin/array_tests
