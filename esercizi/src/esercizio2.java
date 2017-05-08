@@ -40,7 +40,7 @@ public class esercizio2 {
   };
 
   public static void main(String[] args) {
-		//String path = "data/multiwaytree_1.csv";
+		
     if (args.length < 1) throw new IllegalArgumentException("NoEnoughArguments");
 
 		String path;
@@ -50,7 +50,7 @@ public class esercizio2 {
     if (args.length > 1) {
       max_lines = Integer.parseInt(args[1]);
     }
-
+		
     try {
       File file = new File(path);
       if (!file.isFile()) throw new FileNotFoundException("File ("+path+") isn't a file.");

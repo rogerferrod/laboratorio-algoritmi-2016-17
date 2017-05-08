@@ -5,7 +5,7 @@ ALG = qsort
 FIELD = field1
 ORDER = ascending
 # Parametri per l'esercizio 2
-FILE = "data/multiwaytree_1.csv"
+CSV = "data/multywaytree_1.csv"
 # Flags per il compilatore
 CFLAGS = -g -Wall -pedantic -Wno-padded -std=c99 -O3 -march=native
 # Lista degli header files
@@ -36,7 +36,7 @@ exec: exec_es2
 exec_es1: compile_es1
 	bin/esercizio1 data/records.csv ${COUNT} ${ALG} ${FIELD} ${ORDER}
 exec_es2: compile_es2
-	java -cp bin:../lib/bin/Tree.jar esercizio2 data/multywaytree_1.csv ${COUNT}
+	java -cp bin:../lib/bin/Tree.jar esercizio2 ${CSV} ${COUNT}
 
 # regola per compilare un .c in un .o
 # viene applicata ogni volta che una dipendenza richiede di compilare un file in
