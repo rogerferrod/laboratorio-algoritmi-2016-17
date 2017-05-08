@@ -28,3 +28,11 @@ typedef int (*GraphCompare)(void*, void*);
 
 /* Return a newly allocated graph */
 extern graph_o* graph_new(size_t capacity);
+
+extern void graph_free(graph_o *graph);
+
+extern size_t graph_size(graph_o *graph);
+
+extern void graph_add(graph_o *graph, void *elem);
+
+extern void graph_link(graph_o *graph, void *x, void *y);

@@ -84,8 +84,8 @@ bin/set_tests: build/set_tests.o build/set.o build/unity.o $(C_COMMON_DEPS)
 bin/list_tests: build/list_tests.o build/list.o build/unity.o $(C_COMMON_DEPS)
 	$(CC) -o bin/list_tests  build/list_tests.o build/list.o build/unity.o
 
-bin/graph_tests: build/graph_tests.o build/graph.o build/list.o build/array.o build/unity.o $(C_COMMON_DEPS)
-	$(CC) -o bin/graph_tests build/graph_tests.o build/list.o build/array.o build/unity.o
+bin/graph_tests: build/graph_tests.o build/graph.o build/array.o build/list.o build/set.o build/unity.o $(C_COMMON_DEPS)
+	$(CC) -o bin/graph_tests  build/graph_tests.o build/graph.o build/array.o build/list.o build/set.o build/unity.o
 
 
 
