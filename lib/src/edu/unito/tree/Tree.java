@@ -6,7 +6,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 /**
- * The class Tree is used to collect all of the tree types, and acts as a generic k-Tree
+ * The class Tree is used to collect all of the tree types, and acts as a generic k-Tree.
+ *
  * @author Riccardo Ferrero Regis
  * @author Roger Ferrod
  * @author Luca Chironna
@@ -56,7 +57,7 @@ public class Tree<T> implements Iterable<T> {
    *
    * @return  The label.
    */
-  T getLabel() {
+  public T getLabel() {
     return label;
   }
 
@@ -65,7 +66,7 @@ public class Tree<T> implements Iterable<T> {
    *
    * @return  The left subtree.
    */
-  Tree<T> getLeft(){
+  public Tree<T> getLeft(){
     return left;
   }
 
@@ -74,7 +75,7 @@ public class Tree<T> implements Iterable<T> {
    *
    * @return  The right subtree.
    */
-  Tree<T> getRight(){
+  public Tree<T> getRight(){
     return right;
   }
 
@@ -83,7 +84,7 @@ public class Tree<T> implements Iterable<T> {
    *
    * @return  The parent.
    */
-  Tree<T> getParent() {
+  public Tree<T> getParent() {
     return parent;
   }
 
@@ -96,8 +97,8 @@ public class Tree<T> implements Iterable<T> {
    * @param   tree The new subtree.
    * @return  The new tree with the subtree added.
    */
-  Tree<T> addTree(Tree<T> tree) {
-  return addTree(tree, numChild(this));
+  public Tree<T> addTree(Tree<T> tree) {
+    return addTree(tree, numChild(this));
   }
 
   /**
@@ -110,7 +111,7 @@ public class Tree<T> implements Iterable<T> {
    * @param    i The index position at which to add the new subtree.
    * @return   The new tree with the subtree added.
    */
-  Tree<T> addTree(Tree<T> tree, int i) {
+  public Tree<T> addTree(Tree<T> tree, int i) {
     if (tree == null)
       throw new IllegalArgumentException("Cannot add empty subtree");
 
@@ -147,7 +148,7 @@ public class Tree<T> implements Iterable<T> {
    *
    * @return  The height of the tree.
    */
-  int height() {
+  public int height() {
     return height(this);
   }
 
@@ -156,7 +157,7 @@ public class Tree<T> implements Iterable<T> {
    *
    * @return  The maximum degree of the tree.
    */
-  int degree() {
+  public int degree() {
     return degree(this);
   }
 
@@ -165,7 +166,7 @@ public class Tree<T> implements Iterable<T> {
    *
    * @return  The size of the tree.
    */
-  int size() {
+  public int size() {
     return size(this);
   }
 
@@ -174,7 +175,7 @@ public class Tree<T> implements Iterable<T> {
    *
    * @return  The children of the node.
    */
-  ArrayList<Tree<T>> children() {
+  public ArrayList<Tree<T>> children() {
     return children(this);
   }
 
@@ -183,7 +184,7 @@ public class Tree<T> implements Iterable<T> {
    *
    * @return true if the tree is a binary tree, false otherwise.
    */
-  boolean isBinary() {
+  public boolean isBinary() {
     return isBinary(this);
   }
 
@@ -192,7 +193,7 @@ public class Tree<T> implements Iterable<T> {
    *
    * @return  The list of all elements in the tree.
    */
-  ArrayList<T> getAll() {
+  public ArrayList<T> getAll() {
     return getAll(this);
   }
 
@@ -202,7 +203,7 @@ public class Tree<T> implements Iterable<T> {
    * @param tree The tree to be searched.
    * @return The searched tree, null otherwise.
    */
-  Tree<T> find(Tree<T> tree) {
+  public Tree<T> find(Tree<T> tree) {
     //TODO: useless method if think (lukakiro).
     if (tree == null) return null;
     if (tree == this) return tree;
@@ -221,7 +222,7 @@ public class Tree<T> implements Iterable<T> {
    * @param item The label to be searched
    * @return The searched tree, null otherwise
    */
-  Tree<T> find(T item) {
+  public Tree<T> find(T item) {
     if (item == null) return null;
     if (item.equals(this.label)) return this;
     ArrayList<Tree<T>> children = children(this);
@@ -239,7 +240,7 @@ public class Tree<T> implements Iterable<T> {
    * @param compare The function Comparator used to order the tree.
    * @return  The generated binary search tree.
    */
-  Tree<T> toBinarySearchTree(Comparator<T> compare) {
+  public Tree<T> toBinarySearchTree(Comparator<T> compare) {
     return toBinarySearchTree(this, compare);
   }
 

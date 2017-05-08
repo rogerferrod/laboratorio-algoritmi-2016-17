@@ -10,13 +10,12 @@ import java.util.Iterator;
 import static org.junit.Assert.*;
 
 /**
- * A series of tests for the public method of Tree
- * implemented with JUnit
+ * A series of tests for the public method of Tree implemented with JUnit.
+ *
  * @author Riccardo Ferrero Regis
  * @author Roger Ferrod
  * @author Luca Chironna
  */
-
 public class TreeTests {
   private Tree<String> tree;
   private ArrayList<String> list;
