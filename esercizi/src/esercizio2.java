@@ -37,7 +37,7 @@ public class esercizio2 {
 
     String path = args[0];
 
-    int max_lines = 5;
+    int max_lines = Integer.MAX_VALUE;
     if (args.length > 1) {
       max_lines = Integer.parseInt(args[1]);
     }

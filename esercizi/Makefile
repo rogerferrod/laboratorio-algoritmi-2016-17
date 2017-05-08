@@ -1,6 +1,6 @@
 CC = gcc
 # Parametri per l'esercizio 1
-COUNT = 1000
+COUNT = 1000	# Parametro anche per l'esercizio 2
 ALG = qsort
 FIELD = field1
 ORDER = ascending
@@ -27,15 +27,14 @@ compile_es1:
 compile_es2:
 	$(MAKE) -C ../lib build_es2
 	javac -cp ../lib/bin/Tree.jar src/esercizio2.java -d bin
-	#$(MAKE) bin/esercizio2
 
-#  compila e esegue l'esercizio1
+#  compila e esegue l'esercizio2
 exec: exec_es2
 
 exec_es1: compile_es1
 	bin/esercizio1 data/records.csv ${COUNT} ${ALG} ${FIELD} ${ORDER}
 exec_es2: compile_es2
-	java -cp bin:../lib/bin/Tree.jar esercizio2 ../../datasets/multywaytree/multywaytree_1.csv
+	java -cp bin:../lib/bin/Tree.jar esercizio2 data/multywaytree_1.csv ${COUNT}
 
 # regola per compilare un .c in un .o
 # viene applicata ogni volta che una dipendenza richiede di compilare un file in
