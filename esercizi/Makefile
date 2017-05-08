@@ -4,6 +4,8 @@ COUNT = 1000	# Parametro anche per l'esercizio 2
 ALG = qsort
 FIELD = field1
 ORDER = ascending
+# Parametri per l'esercizio 2
+FILE = "data/multiwaytree_1.csv"
 # Flags per il compilatore
 CFLAGS = -g -Wall -pedantic -Wno-padded -std=c99 -O3 -march=native
 # Lista degli header files

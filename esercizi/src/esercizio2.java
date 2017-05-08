@@ -1,6 +1,7 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 
 import edu.unito.tree.Tree;
 
@@ -19,7 +20,7 @@ public class esercizio2 {
     String[] splitted = s.split(",");
     if (splitted.length > 0) return splitted[0];
     return null;
-  }
+  };
 
   private static ArrayList<String> rowChildrenLabel(String s) {
     if (s == null) return null;
@@ -30,12 +31,20 @@ public class esercizio2 {
       return list;
     }
     return null;
-  }
+  };
+
+  private static Comparator<String> comparator = new Comparator<String>(){
+    public int compare(String t1,String t2){
+      return t1.compareTo(t2);
+    }
+  };
 
   public static void main(String[] args) {
+		//String path = "data/multiwaytree_1.csv";
     if (args.length < 1) throw new IllegalArgumentException("NoEnoughArguments");
 
-    String path = args[0];
+		String path;
+		path = args[0];
 
     int max_lines = Integer.MAX_VALUE;
     if (args.length > 1) {
@@ -44,15 +53,20 @@ public class esercizio2 {
 
     try {
       File file = new File(path);
-      if (!file.isFile()) throw new FileNotFoundException("File ("+path+") is't a file.");
+      if (!file.isFile()) throw new FileNotFoundException("File ("+path+") isn't a file.");
 
       BufferedReader br = new BufferedReader(new FileReader(file));
       String s;
       Tree<String> tree = null;
       int lines=0;
-      while(lines < max_lines && (s = br.readLine()) != null) {
-        lines++;
-        System.out.println("Line: " + lines +":\t" + s);
+			boolean limit = true;
+				
+
+      while(limit && (s = br.readLine()) != null) {
+				if (max_lines != -1){
+					limit = lines < max_lines;
+					lines++;
+				}
 
         String rowRootLabel = rowRootLabel(s);
         if (rowRootLabel == null) continue;
@@ -74,8 +88,13 @@ public class esercizio2 {
             }
           }
         }
-        System.out.println(tree.toString());
+				
       }
+			System.out.println(tree);
+			System.out.println("\n ************************************************************************************************* \n");
+			Tree<String> BST = tree.toBinarySearchTree(comparator);
+			System.out.println(BST);
+      
     } catch (FileNotFoundException e) {
       e.printStackTrace();
       System.out.println("FileNotFoundException");
