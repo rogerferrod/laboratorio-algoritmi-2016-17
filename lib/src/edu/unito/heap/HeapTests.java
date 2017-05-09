@@ -28,8 +28,18 @@ public class HeapTests {
   };
 
   @Test
-  public void testStaticIsMaxHeap() {
+  public void testStaticIsMaxHeapIterative() {
     assertEquals(true, Heap.isMaxHeap(new Integer[]{4,3,2,1}, comparatorObjects));
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testStaticIsMaxHeapIterativeNull() {
+    assertEquals(true, Heap.isMaxHeap(null, comparatorObjects));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testStaticIsMaxHeapIterativeEmpty() {
+    assertEquals(true, Heap.isMaxHeap(new Integer[]{}, comparatorObjects));
   }
 
   @Test
@@ -38,7 +48,7 @@ public class HeapTests {
   }
 
   @Test
-  public void testStaticIsMinHeap() {
+  public void testStaticIsMinHeapIterative() {
     assertEquals(true, Heap.isMinHeap(new Integer[]{1,3,5,6,8,7}, comparatorObjects));
   }
 

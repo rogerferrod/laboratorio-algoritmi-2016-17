@@ -19,8 +19,11 @@ public class Heap<T> {
    * @return true if <code>heap</code> is a maxHeap
    */
   public static boolean isMaxHeap(Object[] heap, Comparator<Object> comparator) {
+    if (heap == null) throw new NullPointerException("heap mustn't be null.");
+    if (comparator == null) throw new NullPointerException("comparator mustn't be null.");
     int size = heap.length;
     int child;
+    if (size == 0) throw new IllegalArgumentException("Empty heap is neither max nor min");
 
     for (int i=0; i<size; i++) {
       child = left(i, size);
@@ -49,8 +52,11 @@ public class Heap<T> {
    * @return true if <code>heap</code> is a maxHeap
    */
   public static boolean isMaxHeap(Object[] heap, Comparator<Object> comparator, int pos) {
+    if (heap == null) throw new NullPointerException("heap mustn't be null.");
+    if (comparator == null) throw new NullPointerException("comparator mustn't be null.");
     int size = heap.length;
     int left, right;
+    if (size == 0) throw new IllegalArgumentException("Empty heap is neither max nor min");
 
     left = left(pos, size);
     if (left != pos) {
@@ -78,8 +84,12 @@ public class Heap<T> {
    * @return true if <code>heap</code> is a minHeap.
    */
   public static boolean isMinHeap(Object[] heap, Comparator<Object> comparator) {
+    if (heap == null) throw new NullPointerException("heap mustn't be null.");
+    if (comparator == null) throw new NullPointerException("comparator mustn't be null.");
     int size = heap.length;
     int child;
+    if (size == 0) throw new IllegalArgumentException("Empty heap is neither max nor min");
+
     for (int i=0; i<size; i++) {
       child = left(i, size);
       if (child != i) {
@@ -107,8 +117,11 @@ public class Heap<T> {
    * @return true if <code>heap</code> is a minHeap.
    */
   public static boolean isMinHeap(Object[] heap, Comparator<Object> comparator, int pos) {
+    if (heap == null) throw new NullPointerException("heap mustn't be null.");
+    if (comparator == null) throw new NullPointerException("comparator mustn't be null.");
     int size = heap.length;
     int left, right;
+    if (size == 0) throw new IllegalArgumentException("Empty heap is neither max nor min");
 
     left = left(pos, size);
     if (left != pos) {
