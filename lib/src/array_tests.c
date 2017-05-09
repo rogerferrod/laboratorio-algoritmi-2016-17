@@ -32,7 +32,7 @@ static array_o* build_fixture() {
 
 static void free_fixture(array_o* array) {
   for(size_t i = 0; i<array_size(array); ++i) {
-    free(array_at(array, i));
+    free(array_at(array, i) );
   }
 
   array_free(array);
@@ -136,12 +136,12 @@ int main() {
   RUN_TEST(test_array_new_size_zero);
   RUN_TEST(test_array_free);
   RUN_TEST(test_array_size);
-  /* RUN_TEST(test_array_empty);
+  RUN_TEST(test_array_empty);
   RUN_TEST(test_array_realloc);
   RUN_TEST(test_array_at);
   RUN_TEST(test_array_insert_at_end);
   RUN_TEST(test_array_delete);
-  RUN_TEST(test_array_swap); */
+  RUN_TEST(test_array_swap); 
   return UNITY_END();
 }
 

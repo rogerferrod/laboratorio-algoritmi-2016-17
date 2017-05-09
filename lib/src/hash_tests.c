@@ -16,7 +16,7 @@
 static void test_hashtableNew(){
   hashtable_o *table = hashtable_new(5);
   TEST_ASSERT_EQUAL_INT_MESSAGE(1, 1, "New hash table failed");
-  //graph_free(graph);
+  hashtable_free(table);
 }
 
 static void test_hashtableFree(){
@@ -25,19 +25,6 @@ static void test_hashtableFree(){
   TEST_ASSERT_EQUAL_INT_MESSAGE(1, 1, "Free hash table failed");
 }
 
-/*static void test_graphSizeEmpty(){
-  graph_o *graph = graph_new(5);
-  TEST_ASSERT_EQUAL_INT(0, graph_size(graph));
-  graph_free(graph);
-}
-
-static void test_graphAdd(){
-  graph_o *graph = graph_new(5);
-  graph_add(graph, "A");
-  TEST_ASSERT_EQUAL_INT(1, graph_size(graph));
-  //graph_free(graph); ERRORE!
-}
-*/
 
 int main() {
   UNITY_BEGIN();

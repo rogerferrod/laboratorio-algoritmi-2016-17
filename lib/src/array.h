@@ -33,6 +33,7 @@ extern array_o* array_new(size_t capacity);
 extern void array_free(array_o* array);
 
 /* Return the size of an array */
+
 extern size_t array_size(array_o* array);
 
 /* Return the capacity of an array */

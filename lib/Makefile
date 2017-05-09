@@ -93,8 +93,8 @@ bin/list_tests: build/list_tests.o build/list.o build/unity.o $(C_COMMON_DEPS)
 bin/graph_tests: build/graph_tests.o build/graph.o build/array.o build/list.o build/set.o build/unity.o $(C_COMMON_DEPS)
 	$(CC) -o bin/graph_tests build/graph_tests.o build/graph.o build/array.o build/list.o build/set.o build/unity.o
 
-bin/hash_tests: build/hash_tests.o build/hash.o build/array.o build/list.o build/unity.o $(C_COMMON_DEPS)
-	$(CC) -o bin/hash_tests build/hash_tests.o build/hash.o build/array.o build/list.o build/unity.o
+bin/hash_tests: build/hash_tests.o build/hash.o build/list.o build/unity.o $(C_COMMON_DEPS)
+	$(CC) -o bin/hash_tests build/hash_tests.o build/hash.o build/list.o build/unity.o
 
 
 
