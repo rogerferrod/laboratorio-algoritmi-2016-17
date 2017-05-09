@@ -15,7 +15,7 @@ JAVA_RUN_PARAMS = -cp $(JAVA_CLASS_PATH):bin/
 all: build
 
 # compila (grazie alla dipendenza) i sorgenti (crea i binari e i file .class)
-build: build_set
+build: build_graph
 build_all: build_es1 build_es2 build_es4
 build_es1: build_array build_sort
 build_es2: build_tree build_treeTest build_es2_jar
@@ -23,6 +23,7 @@ build_es2_jar:
 	jar cf bin/Tree.jar -C src edu/unito/
 
 build_es4: build_set
+build_es5: build_graph
 
 build_array: bin/array_tests
 build_sort: bin/sort_tests
@@ -32,13 +33,16 @@ build_treeTest: build_tree src/edu/unito/tree/TreeTests.java
 	javac $(JAVA_COMPILE_PARAMS) src/edu/unito/tree/TreeTests.java
 build_set: bin/set_tests
 build_list: bin/list_tests
+build_graph: bin/graph_tests
+build_hash: bin/hash_tests
 
 # compila e esegue i test
-tests: tests_es4
+tests: tests_hash
 tests_all: tests_es1 tests_es2 tests_es4
 tests_es1: tests_array tests_sort
 tests_es2: tests_tree
 tests_es4: tests_unionfind
+tests_es5: tests_graph
 
 tests_array: build_array
 	bin/array_tests
@@ -50,6 +54,11 @@ tests_unionfind: build_set
 	bin/set_tests
 tests_list: build_list
 	bin/list_tests
+tests_graph: build_graph
+	bin/graph_tests
+tests_hash: build_hash
+	bin/hash_tests
+
 
 docs: docs_tree
 docs_tree: src/edu/unito/tree/*.java
@@ -75,11 +84,18 @@ bin/sort: build/sort.o build/array.o $(C_COMMON_DEPS)
 bin/sort_tests: build/sort_tests.o build/sort.o build/array.o build/unity.o $(C_COMMON_DEPS)
 	$(CC) -o bin/sort_tests build/sort_tests.o build/sort.o build/array.o build/unity.o
 
-bin/set_tests: build/set_tests.o build/set.o build/array.o build/unity.o $(C_COMMON_DEPS)
-	$(CC) -o bin/set_tests  build/set_tests.o build/set.o build/array.o build/unity.o
+bin/set_tests: build/set_tests.o build/set.o build/unity.o $(C_COMMON_DEPS)
+	$(CC) -o bin/set_tests build/set_tests.o build/set.o build/unity.o
 
 bin/list_tests: build/list_tests.o build/list.o build/unity.o $(C_COMMON_DEPS)
-	$(CC) -o bin/list_tests  build/list_tests.o build/list.o build/unity.o
+	$(CC) -o bin/list_tests build/list_tests.o build/list.o build/unity.o
+
+bin/graph_tests: build/graph_tests.o build/graph.o build/array.o build/list.o build/set.o build/unity.o $(C_COMMON_DEPS)
+	$(CC) -o bin/graph_tests build/graph_tests.o build/graph.o build/array.o build/list.o build/set.o build/unity.o
+
+bin/hash_tests: build/hash_tests.o build/hash.o build/array.o build/list.o build/unity.o $(C_COMMON_DEPS)
+	$(CC) -o bin/hash_tests build/hash_tests.o build/hash.o build/array.o build/list.o build/unity.o
+
 
 
 clean:
