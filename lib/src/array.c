@@ -20,6 +20,11 @@
 #define REALLOC_FACTOR   2.25 /* 1.5*(3/2) */
 #define DECREMENT_LIMIT  0.25 /* 1/4 */
 
+#define ASSERT_PARAMETERS_NOT_NULL(x) if((x) == NULL){     \
+           fprintf(stderr, "Invalid parameter NULL\n");    \
+           errno = EINVAL;                                 \
+           exit(EXIT_FAILURE);}
+    
 /* Implementation of the opaque type */
 struct _myArray {
   void** array;             /* generic array */
@@ -45,48 +50,30 @@ array_o* array_new(size_t capacity) {
 }
 
 void array_free(array_o* array) {
+  ASSERT_PARAMETERS_NOT_NULL(array);
   free(array->array);
   free(array);
   return;
 }
 
 size_t array_size(array_o* array) {
-  if(array == NULL){
-    fprintf(stderr, "Invalid parameter NULL\n");
-    errno = EINVAL;
-    exit(EXIT_FAILURE);
-  }
-  
+  ASSERT_PARAMETERS_NOT_NULL(array);
   return array->size;
 }
 
 size_t array_capacity(array_o* array) {
-  if(array == NULL){
-    fprintf(stderr, "Invalid parameter NULL\n");
-    errno = EINVAL;
-    exit(EXIT_FAILURE);
-  }
-  
+  ASSERT_PARAMETERS_NOT_NULL(array);
   return array->capacity;
 }
 
 int array_empty(array_o* array) {
-  if(array == NULL){
-    fprintf(stderr, "Invalid parameter NULL\n");
-    errno = EINVAL;
-    exit(EXIT_FAILURE);
-  }
-  
+  ASSERT_PARAMETERS_NOT_NULL(array);
   return array->size == 0;
 }
 
 void* array_at(array_o* array, size_t position) {
-  if(array == NULL){
-    fprintf(stderr, "Invalid parameter NULL\n");
-    errno = EINVAL;
-    exit(EXIT_FAILURE);
-  }
-  
+  ASSERT_PARAMETERS_NOT_NULL(array);  
+
   if(position >= array->size ) {
     fprintf(stderr, "Array index (%ld) out of bounds (0:%ld)\n", position, array->size);
     errno = ENOMEM;
@@ -96,12 +83,8 @@ void* array_at(array_o* array, size_t position) {
 }
 
 void array_insert(array_o* array, void* element) {
-  if(array == NULL){
-    fprintf(stderr, "Invalid parameter NULL\n");
-    errno = EINVAL;
-    exit(EXIT_FAILURE);
-  }
-  
+  ASSERT_PARAMETERS_NOT_NULL(array);
+
   if(array->size >= array->capacity){
     array->capacity *= REALLOC_FACTOR;
     array->array = realloc(array->array, array->capacity*sizeof(void*));
@@ -117,12 +100,8 @@ void array_insert(array_o* array, void* element) {
 }
 
 void array_delete(array_o* array, size_t position) {
-  if(array == NULL){
-    fprintf(stderr, "Invalid parameter NULL\n");
-    errno = EINVAL;
-    exit(EXIT_FAILURE);
-  }
-  
+  ASSERT_PARAMETERS_NOT_NULL(array);
+
   if(position >= array->size ) {
     fprintf(stderr, "Array index (%ld) out of bounds (0:%ld)\n", position, array->size);
     errno = ENOMEM;
@@ -149,11 +128,7 @@ void array_delete(array_o* array, size_t position) {
 }
 
 void array_swap(array_o* array, size_t position_a, size_t position_b){
-  if(array == NULL){
-    fprintf(stderr, "Invalid parameter NULL\n");
-    errno = EINVAL;
-    exit(EXIT_FAILURE);
-  }
+  ASSERT_PARAMETERS_NOT_NULL(array);
   
   if(position_a >= array->size || position_b>= array->size){
     fprintf(stderr, "Array index out of bounds (0:%ld)\n", array->size);
@@ -166,4 +141,3 @@ void array_swap(array_o* array, size_t position_a, size_t position_b){
   array->array[position_b] = temp;
   return;
 }
-
