@@ -17,14 +17,7 @@ import static org.junit.Assert.*;
  */
 
 public class HeapTests {
-  private Heap<Integer> heap;
 
-  private Comparator<Integer> comparator = new Comparator<Integer>() {
-    @Override
-    public int compare(Integer t1, Integer t2) {
-      return t1.compareTo(t2);
-    }
-  };
   private Comparator<Object> comparatorObjects = new Comparator<Object>() {
     @Override
     public int compare(Object t1, Object t2) {
@@ -34,76 +27,23 @@ public class HeapTests {
     }
   };
 
-  @Before
-  public void setup() {
-    heap = new Heap<>(comparator);
-  }
-
-  public void buildFixtureMax() {
-    for (int i = 1; i < 8; i++)
-      heap.add(i);
-  }
-
-  @Test
-  public void testAdd() {
-    buildFixtureMax();
-
-    ArrayList<Integer> list = new ArrayList<>();
-    list.add(7);
-    list.add(4);
-    list.add(6);
-    list.add(1);
-    list.add(3);
-    list.add(2);
-    list.add(5);
-
-    assertEquals(list, heap.toList());
-  }
-
-  @Test
-  public void testIsMaxHeap() {
-    buildFixtureMax();
-
-    assertEquals(true, heap.isMaxHeap());
-  }
-
   @Test
   public void testStaticIsMaxHeap() {
-    System.out.println("iter");
     assertEquals(true, Heap.isMaxHeap(new Integer[]{4,3,2,1}, comparatorObjects));
-
-    buildFixtureMax();
-    System.out.println(heap);
-    assertEquals(true, Heap.isMaxHeap(heap.toList().toArray(), comparatorObjects));
   }
 
   @Test
   public void testStaticIsMaxHeapRecursive() {
-    System.out.println("ric");
     assertEquals(true, Heap.isMaxHeap(new Integer[]{4,3,2,1}, comparatorObjects, 0));
-
-    buildFixtureMax();
-    System.out.println(heap);
-    assertEquals(true, Heap.isMaxHeap(heap.toList().toArray(), comparatorObjects, 0));
   }
 
   @Test
   public void testStaticIsMinHeap() {
-    System.out.println("iter");
     assertEquals(true, Heap.isMinHeap(new Integer[]{1,3,5,6,8,7}, comparatorObjects));
-
-    buildFixtureMax();
-    System.out.println(heap);
-    assertEquals(false, Heap.isMinHeap(heap.toList().toArray(), comparatorObjects));
   }
 
   @Test
   public void testStaticIsMinHeapRecursive() {
-    System.out.println("ric");
     assertEquals(true, Heap.isMinHeap(new Integer[]{1,3,5,6,8,7}, comparatorObjects, 0));
-
-    buildFixtureMax();
-    System.out.println(heap);
-    assertEquals(false, Heap.isMinHeap(heap.toList().toArray(), comparatorObjects, 0));
   }
 }
