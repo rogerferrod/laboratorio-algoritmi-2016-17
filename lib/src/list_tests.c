@@ -156,6 +156,28 @@ static void test_listContains(){
   list_free(&list);
 }
 
+static void test_listSearchOne(){
+  list_o list = list_new(new_int(3));
+  TEST_ASSERT_EQUAL_INT(3, *(int*)list_search(&list, new_int(3), compare_int_ptr));
+  list_free(&list);
+}
+
+static void test_listSearch(){
+  list_o list = list_new(new_int(3));
+  list_add(&list, new_int(2));
+  list_add(&list, new_int(1));
+  TEST_ASSERT_EQUAL_INT(2, *(int*)list_search(&list, new_int(2), compare_int_ptr));
+  TEST_ASSERT(NULL == list_search(&list, new_int(5), compare_int_ptr));
+  list_free(&list);
+}
+
+static void test_listFree(){
+  list_o list = list_new(new_int(3));
+  list_add(&list, new_int(4));
+  list_free(&list);
+  TEST_ASSERT_EQUAL_INT_MESSAGE(1, 1, "Free list failed");
+}
+
 int main() {
   UNITY_BEGIN();
   RUN_TEST(test_listNew);
@@ -172,6 +194,9 @@ int main() {
   RUN_TEST(test_listSetAt);
   RUN_TEST(test_listSize);
   RUN_TEST(test_listContains);
+  RUN_TEST(test_listSearchOne);
+  RUN_TEST(test_listSearch);
+  RUN_TEST(test_listFree);
   return UNITY_END();
 }
 

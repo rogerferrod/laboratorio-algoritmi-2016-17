@@ -187,4 +187,15 @@ int list_contains(list_o *list, void *elem, ListCompare compare){
   return bool;
 }
 
+void* list_search(list_o *list, void *elem, ListCompare compare){
+  node_o *current = *list;
+  while(current != NULL){
+    if(compare(current->elem, elem) == 0){
+      return current->elem;
+    }
+    current = current->next;
+  }
+  return NULL;
+}
+
 
