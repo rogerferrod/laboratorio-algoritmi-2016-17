@@ -2,10 +2,9 @@ package edu.unito.heap;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Iterator;
 
 /**
- * The class Heap is used to ...
+ * The Heap class
  * @author Riccardo Ferrero Regis
  * @author Roger Ferrod
  * @author Luca Chironna
@@ -98,13 +97,19 @@ public class Heap<T> {
     return true;
   }
 
+  @Override
+  public String toString() {
+    return heap.toString();
+  }
+
   /**
-   * Verifica se lo heap è un maxHeap.
+   * Check if heap is a maxHeap.
    *
-   * Versione iterativa
-   * @param heap
-   * @param comparator
-   * @return
+   * Iterative version.
+   *
+   * @param heap Object's array representing the heap.
+   * @param comparator Method to compare two heap elements.
+   * @return true if <code>heap</code> is a maxHeap
    */
   public static boolean isMaxHeap(Object[] heap, Comparator<Object> comparator) {
     int size = heap.length;
@@ -128,12 +133,13 @@ public class Heap<T> {
   }
 
   /**
-   * Verifica se lo heap è un maxHeap.
+   * Check if heap is a maxHeap.
    *
-   * Versione ricorsiva
-   * @param heap
-   * @param comparator
-   * @return
+   * Recursive version.
+   *
+   * @param heap Object's array representing the heap.
+   * @param comparator Method to compare two heap elements.
+   * @return true if <code>heap</code> is a maxHeap
    */
   public static boolean isMaxHeap(Object[] heap, Comparator<Object> comparator, int pos) {
     int size = heap.length;
@@ -168,10 +174,5 @@ public class Heap<T> {
       return 2*pos+2;
     else
       return pos;
-  }
-
-  @Override
-  public String toString() {
-    return heap.toString();
   }
 }

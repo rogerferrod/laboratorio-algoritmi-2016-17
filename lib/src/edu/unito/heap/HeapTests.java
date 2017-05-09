@@ -4,7 +4,6 @@ import org.junit.*;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Iterator;
 
 
 import static org.junit.Assert.*;
@@ -40,14 +39,14 @@ public class HeapTests {
     heap = new Heap<>(comparator);
   }
 
-  public void buildFixture() {
+  public void buildFixtureMax() {
     for (int i = 1; i < 8; i++)
       heap.add(i);
   }
 
   @Test
   public void testAdd() {
-    buildFixture();
+    buildFixtureMax();
 
     ArrayList<Integer> list = new ArrayList<>();
     list.add(7);
@@ -63,7 +62,7 @@ public class HeapTests {
 
   @Test
   public void testIsMaxHeap() {
-    buildFixture();
+    buildFixtureMax();
 
     assertEquals(true, heap.isMaxHeap());
   }
@@ -73,7 +72,7 @@ public class HeapTests {
     System.out.println("iter");
     assertEquals(true, Heap.isMaxHeap(new Integer[]{4,3,2,1,}, comparatorObjects));
 
-    buildFixture();
+    buildFixtureMax();
     System.out.println(heap);
     assertEquals(true, Heap.isMaxHeap(heap.toList().toArray(), comparatorObjects));
   }
@@ -83,7 +82,7 @@ public class HeapTests {
     System.out.println("ric");
     assertEquals(true, Heap.isMaxHeap(new Integer[]{4,3,2,1,}, comparatorObjects, 0));
 
-    buildFixture();
+    buildFixtureMax();
     System.out.println(heap);
     assertEquals(true, Heap.isMaxHeap(heap.toList().toArray(), comparatorObjects, 0));
   }
