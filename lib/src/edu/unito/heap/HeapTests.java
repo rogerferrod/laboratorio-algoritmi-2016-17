@@ -26,6 +26,14 @@ public class HeapTests {
       return t1.compareTo(t2);
     }
   };
+  private Comparator<Object> comparatorObjects = new Comparator<Object>() {
+    @Override
+    public int compare(Object t1, Object t2) {
+      Integer i1 = (Integer)t1;
+      Integer i2 = (Integer)t2;
+      return i1.compareTo(i2);
+    }
+  };
 
   @Before
   public void setup() {
@@ -39,9 +47,8 @@ public class HeapTests {
 
   @Test
   public void testAdd() {
-    for (int i=1; i<8; i++) {
-      heap.add(i);
-    }
+    buildFixture();
+
     ArrayList<Integer> list = new ArrayList<>();
     list.add(7);
     list.add(4);
@@ -56,9 +63,28 @@ public class HeapTests {
 
   @Test
   public void testIsMaxHeap() {
-    for (int i=1; i<8; i++) {
-      heap.add(i);
-    }
+    buildFixture();
+
     assertEquals(true, heap.isMaxHeap());
+  }
+
+  @Test
+  public void testStaticIsMaxHeap() {
+    System.out.println("iter");
+    assertEquals(true, Heap.isMaxHeap(new Integer[]{4,3,2,1,}, comparatorObjects));
+
+    buildFixture();
+    System.out.println(heap);
+    assertEquals(true, Heap.isMaxHeap(heap.toList().toArray(), comparatorObjects));
+  }
+
+  @Test
+  public void testStaticIsMaxHeapRecursive() {
+    System.out.println("ric");
+    assertEquals(true, Heap.isMaxHeap(new Integer[]{4,3,2,1,}, comparatorObjects, 0));
+
+    buildFixture();
+    System.out.println(heap);
+    assertEquals(true, Heap.isMaxHeap(heap.toList().toArray(), comparatorObjects, 0));
   }
 }

@@ -61,16 +61,18 @@ public class Heap<T> {
     int size = heap.size();
     int child;
     for (int i=0; i<size; i++) {
-      System.out.println("-i: "+i+"  left: "+left(i)+"  right: "+right(i));
+      //System.out.println("-i: "+i+"  left: "+left(i)+"  right: "+right(i));
       child = left(i);
       if (child != i) {
-        if (comparator.compare(heap.get(i), heap.get(child)) < 1)   //heap.get(i) <= heap.get(child)
+        if (comparator.compare(heap.get(i), heap.get(child)) < 1) {   //heap.get(i) <= heap.get(child)
           return false;
+        }
       }
       child = right(i);
       if (child != i) {
-        if (comparator.compare(heap.get(i), heap.get(child)) < 1)     //heap.get(i) <= heap.get(child)
+        if (comparator.compare(heap.get(i), heap.get(child)) < 1) {     //heap.get(i) <= heap.get(child)
           return false;
+        }
       }
     }
     return true;
@@ -82,13 +84,15 @@ public class Heap<T> {
     for (int i=0; i<size; i++) {
       child = left(i);
       if (child != i) {
-        if (comparator.compare(heap.get(i), heap.get(child)) > 1)   //heap.get(i) <= heap.get(child)
+        if (comparator.compare(heap.get(i), heap.get(child)) > 1) {   //heap.get(i) <= heap.get(child)
           return false;
+        }
       }
       child = right(i);
       if (child != i) {
-        if (comparator.compare(heap.get(i), heap.get(child)) > 1)     //heap.get(i) <= heap.get(child)
+        if (comparator.compare(heap.get(i), heap.get(child)) > 1) {     //heap.get(i) <= heap.get(child)
           return false;
+        }
       }
     }
     return true;
@@ -106,18 +110,21 @@ public class Heap<T> {
     int size = heap.length;
     int child;
     for (int i=0; i<size; i++) {
+      System.out.println("-i: "+i+"  left: "+left(i, size)+"  right: "+right(i, size));
       child = left(i, size);
       if (child != i) {
-        if (comparator.compare(heap[i], heap[child]) > 1)   //heap[i] <= heap[child]
+        if (comparator.compare(heap[i], heap[child]) < 1) {   //heap[i] <= heap[child]
           return false;
+        }
       }
       child = right(i, size);
       if (child != i) {
-        if (comparator.compare(heap[i], heap[child]) > 1)   //heap[i] <= heap[child]
+        if (comparator.compare(heap[i], heap[child]) < 1) {   //heap[i] <= heap[child]
           return false;
+        }
       }
     }
-    return false;
+    return true;
   }
 
   /**
@@ -131,18 +138,22 @@ public class Heap<T> {
   public static boolean isMaxHeap(Object[] heap, Comparator<Object> comparator, int pos) {
     int size = heap.length;
     int left, right;
+    System.out.println("-i: "+pos+"  left: "+left(pos, size)+"  right: "+right(pos, size));
 
     left = left(pos, size);
     if (left != pos) {
-      if (comparator.compare(heap[pos], heap[left]) > 1)   //heap[i] <= heap[child]
+      if (comparator.compare(heap[pos], heap[left]) < 1) {   //heap[i] <= heap[child]
         return false;
+      }
     }
     right = right(pos, size);
     if (right != pos) {
-      if (comparator.compare(heap[pos], heap[right]) > 1)   //heap[i] <= heap[child]
+      if (comparator.compare(heap[pos], heap[right]) < 1) {   //heap[i] <= heap[child]
         return false;
+      }
     }
-    return isMaxHeap(heap, comparator, left) && isMaxHeap(heap, comparator, right);
+    return (left == pos || isMaxHeap(heap, comparator, left)) && (right == pos || isMaxHeap(heap, comparator, right));
+    //return (left != pos ? isMaxHeap(heap, comparator, left) : true) && (right != pos ? isMaxHeap(heap, comparator, right) : true);
   }
 
   private static int left(int pos, int size) {
