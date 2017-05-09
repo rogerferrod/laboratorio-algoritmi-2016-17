@@ -45,7 +45,7 @@ graph_o* graph_new(size_t capacity) {
 vertex_o *vertex_new(graph_o *graph, size_t index, void *elem){
   vertex_o *vertex = malloc(sizeof(vertex_o));
   vertex->elem = elem;
-  vertex->adj = malloc(sizeof(list_o)); //controllare NULL
+  vertex->adj = list_new(NULL);
   return vertex;
 }
 
