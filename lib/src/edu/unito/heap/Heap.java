@@ -118,13 +118,13 @@ public class Heap<T> {
       System.out.println("-i: "+i+"  left: "+left(i, size)+"  right: "+right(i, size));
       child = left(i, size);
       if (child != i) {
-        if (comparator.compare(heap[i], heap[child]) < 1) {   //heap[i] <= heap[child]
+        if (comparator.compare(heap[i], heap[child]) < 0) {   //heap[i] <= heap[child]
           return false;
         }
       }
       child = right(i, size);
       if (child != i) {
-        if (comparator.compare(heap[i], heap[child]) < 1) {   //heap[i] <= heap[child]
+        if (comparator.compare(heap[i], heap[child]) < 0) {   //heap[i] <= heap[child]
           return false;
         }
       }
@@ -148,13 +148,13 @@ public class Heap<T> {
 
     left = left(pos, size);
     if (left != pos) {
-      if (comparator.compare(heap[pos], heap[left]) < 1) {   //heap[i] <= heap[child]
+      if (comparator.compare(heap[pos], heap[left]) < 0) {   //heap[i] <= heap[child]
         return false;
       }
     }
     right = right(pos, size);
     if (right != pos) {
-      if (comparator.compare(heap[pos], heap[right]) < 1) {   //heap[i] <= heap[child]
+      if (comparator.compare(heap[pos], heap[right]) < 0) {   //heap[i] <= heap[child]
         return false;
       }
     }
@@ -178,13 +178,13 @@ public class Heap<T> {
       System.out.println("-i: "+i+"  left: "+left(i, size)+"  right: "+right(i, size));
       child = left(i, size);
       if (child != i) {
-        if (comparator.compare(heap[i], heap[child]) > 1) {   //heap[i] >= heap[child]
+        if (comparator.compare(heap[i], heap[child]) > 0) {   //heap[i] >= heap[child]
           return false;
         }
       }
       child = right(i, size);
       if (child != i) {
-        if (comparator.compare(heap[i], heap[child]) > 1) {   //heap[i] >= heap[child]
+        if (comparator.compare(heap[i], heap[child]) > 0) {   //heap[i] >= heap[child]
           return false;
         }
       }
@@ -208,13 +208,13 @@ public class Heap<T> {
 
     left = left(pos, size);
     if (left != pos) {
-      if (comparator.compare(heap[pos], heap[left]) > 1) {   //heap[i] >= heap[child]
+      if (comparator.compare(heap[pos], heap[left]) > 0) {   //heap[i] >= heap[child]
         return false;
       }
     }
     right = right(pos, size);
     if (right != pos) {
-      if (comparator.compare(heap[pos], heap[right]) > 1) {   //heap[i] >= heap[child]
+      if (comparator.compare(heap[pos], heap[right]) > 0) {   //heap[i] >= heap[child]
         return false;
       }
     }
