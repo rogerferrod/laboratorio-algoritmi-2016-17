@@ -22,6 +22,8 @@ build_es2: build_tree build_treeTest build_es2_jar
 build_es2_jar:
 	jar cf bin/Tree.jar -C src edu/unito/
 
+build_es2: build_tree build_treeTest
+build_es3: build_heap build_heapTest
 build_es4: build_set
 build_es5: build_graph
 
@@ -31,6 +33,10 @@ build_tree: src/edu/unito/tree/Tree.java
 	javac $(JAVA_COMPILE_PARAMS) src/edu/unito/tree/Tree.java
 build_treeTest: build_tree src/edu/unito/tree/TreeTests.java
 	javac $(JAVA_COMPILE_PARAMS) src/edu/unito/tree/TreeTests.java
+build_heap: src/edu/unito/heap/Heap.java
+	javac $(JAVA_COMPILE_PARAMS) src/edu/unito/heap/Heap.java
+build_heapTest: build_heap src/edu/unito/heap/HeapTests.java
+	javac $(JAVA_COMPILE_PARAMS) src/edu/unito/heap/HeapTests.java
 build_set: bin/set_tests
 build_list: bin/list_tests
 build_graph: bin/graph_tests
@@ -41,6 +47,7 @@ tests: tests_hash
 tests_all: tests_es1 tests_es2 tests_es4
 tests_es1: tests_array tests_sort
 tests_es2: tests_tree
+tests_es3: tests_heap
 tests_es4: tests_unionfind
 tests_es5: tests_graph
 
@@ -50,6 +57,8 @@ tests_sort: build_sort
 	bin/sort_tests
 tests_tree: build_treeTest
 	java $(JAVA_RUN_PARAMS) org.junit.runner.JUnitCore edu.unito.tree.TreeTests
+tests_heap: build_heapTest
+	java $(JAVA_RUN_PARAMS) org.junit.runner.JUnitCore edu.unito.heap.HeapTests
 tests_unionfind: build_set
 	bin/set_tests
 tests_list: build_list
@@ -60,9 +69,11 @@ tests_hash: build_hash
 	bin/hash_tests
 
 
-docs: docs_tree
+docs: docs_tree docs_heap
 docs_tree: src/edu/unito/tree/*.java
 	javadoc -d docs -author -private src/edu/unito/tree/Tree.java src/edu/unito/tree/TreeIterator.java
+docs_heap: src/edu/unito/heap/*.java
+	javadoc -d docs -author -private src/edu/unito/heap/Heap.java
 
 # regola per compilare un .c in un .o
 # viene applicata ogni volta che una dipendenza richiede di compilare un file in
