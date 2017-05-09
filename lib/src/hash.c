@@ -43,7 +43,8 @@ void hashtable_free(hashtable_o *table){
   free(table);
   return;
 }
-
-void hashtable_put(hashtable_o *table){
+/*
+void hashtable_put(hashtable_o *table, size_t key, void *value){
+  if(array_at(table->array, key) == NULL)
   
-}
+  }*/
