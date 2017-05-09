@@ -94,8 +94,69 @@ public class Heap<T> {
     return true;
   }
 
-  public static boolean isMaxHeap(Object[] heap, Comparator comparator) {
+  /**
+   * Verifica se lo heap è un maxHeap.
+   *
+   * Versione iterativa
+   * @param heap
+   * @param comparator
+   * @return
+   */
+  public static boolean isMaxHeap(Object[] heap, Comparator<Object> comparator) {
+    int size = heap.length;
+    int child;
+    for (int i=0; i<size; i++) {
+      child = left(i, size);
+      if (child != i) {
+        if (comparator.compare(heap[i], heap[child]) > 1)   //heap[i] <= heap[child]
+          return false;
+      }
+      child = right(i, size);
+      if (child != i) {
+        if (comparator.compare(heap[i], heap[child]) > 1)   //heap[i] <= heap[child]
+          return false;
+      }
+    }
     return false;
+  }
+
+  /**
+   * Verifica se lo heap è un maxHeap.
+   *
+   * Versione ricorsiva
+   * @param heap
+   * @param comparator
+   * @return
+   */
+  public static boolean isMaxHeap(Object[] heap, Comparator<Object> comparator, int pos) {
+    int size = heap.length;
+    int left, right;
+
+    left = left(pos, size);
+    if (left != pos) {
+      if (comparator.compare(heap[pos], heap[left]) > 1)   //heap[i] <= heap[child]
+        return false;
+    }
+    right = right(pos, size);
+    if (right != pos) {
+      if (comparator.compare(heap[pos], heap[right]) > 1)   //heap[i] <= heap[child]
+        return false;
+    }
+    return isMaxHeap(heap, comparator, left) && isMaxHeap(heap, comparator, right);
+  }
+
+  private static int left(int pos, int size) {
+    if (size > 2*pos+1)
+      return 2*pos+1;
+    else
+      return pos;
+  }
+
+  private static int right(int pos, int size) {
+    if (size > 2*pos+2)
+      return 2*pos+2;
+    else
+      return pos;
   }
 
   @Override
