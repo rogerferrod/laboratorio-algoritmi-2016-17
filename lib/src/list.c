@@ -37,11 +37,14 @@ list_o list_new(void *elem) {
 
   new_list->elem = elem;
   new_list->next = NULL;
+  new_list->prev = NULL;
   return new_list;
 }
 
 void list_free(list_o *list){ /* da togliere ricorsione (stack?) */
-  node_free(*list);
+  if (!list_is_empty(list)) {
+    node_free(*list);
+  }
   return;
 }
 

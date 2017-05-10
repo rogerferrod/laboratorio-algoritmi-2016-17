@@ -112,16 +112,36 @@ static void test_listRemoveAtBottom(){
   list_remove_at(&list, 2);
 
   TEST_ASSERT_EQUAL_INT(2, *(int*)list_get_at(&list, 1));
+  TEST_ASSERT_EQUAL_INT(1, *(int*)list_get_at(&list, 0));
+
+  list_free(&list);
+}
+
+static void test_listRemoveAtPos(){
+  list_o list = list_new(new_int(3));
+  list_add(&list, new_int(2));
+  list_add(&list, new_int(1));
   
+  list_remove_at(&list, 1);
+
+  TEST_ASSERT_EQUAL_INT(1, *(int*)list_get_at(&list, 0));
+  TEST_ASSERT_EQUAL_INT(3, *(int*)list_get_at(&list, 1));
+
   list_free(&list);
 }
 
 static void test_listRemoveAtAll(){
-  list_o list = list_new(new_int(1));
-  
+  list_o list = list_new(new_int(3));
+  list_add(&list, new_int(2));
+  list_add(&list, new_int(1));
+
+  list_remove_at(&list, 2);
+  list_remove_at(&list, 1);
   list_remove_at(&list, 0);
-  TEST_ASSERT_EQUAL_INT(1, list_get_at(&list, 0) == NULL);
-  /* non ci va la free! e' un problema? */
+
+  TEST_ASSERT_EQUAL_INT_MESSAGE(1, 1, "Remove all failed");
+
+  list_free(&list);
 }
 
 static void test_listIsEmpty(){
@@ -189,6 +209,7 @@ int main() {
   RUN_TEST(test_listRemoveAt);
   RUN_TEST(test_listRemoveAtFirst);
   RUN_TEST(test_listRemoveAtBottom);
+  RUN_TEST(test_listRemoveAtPos);
   RUN_TEST(test_listRemoveAtAll);
   RUN_TEST(test_listIsEmpty);
   RUN_TEST(test_listSetAt);
