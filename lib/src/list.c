@@ -24,11 +24,9 @@ struct _node {
   struct _node *next;
 };
 
-void node_free(node_o *node);
 
-
-node_o list_new(void *elem) {
-  node_o new_list = malloc(sizeof(node_o));
+node_o* list_new(void *elem) {
+  node_o *new_list = malloc(sizeof(node_o));
   if (new_list == NULL){
     fprintf(stderr, "Not enough space for malloc\n");
     errno = ENOMEM;
@@ -41,53 +39,42 @@ node_o list_new(void *elem) {
   return new_list;
 }
 
-void list_free(node_o *list){ /* da togliere ricorsione (stack?) */
-  if (!list_is_empty(list)) {
-    node_free(*list);
+void list_free(node_o *head){ // da togliere ricorsione (stack?) 
+  if (head != NULL) {
+    if(head->next != NULL){
+      list_free(head->next);
+    }
+    free(head);
   }
   return;
 }
 
-void node_free(node_o *node){
-  if(node->next != NULL){
-    node_free(node->next);
-  }
-  free(node);
+void list_add(node_o **head, void *elem) {
+  node_o *new_node = list_new(elem);
+  new_node->next = *head;
+  new_node->prev = NULL;
+  (*head)->prev = new_node;
+  *head = new_node;
   return;
 }
 
-void list_add(node_o *list, void *elem) {
-  node_o *node = list_new(elem);
-
-  node_o *current = *list;
-  while(current->next != NULL) {
-    current = current->next;
-  }
-  node->prev = current;
-  current->next = node;
-  return;
-}
-
-void *list_get_at(node_o *list, size_t index){
+void *list_get_at(node_o *head, size_t index){
   size_t count = 0;
-  node_o *node = *list;
-  while(node != NULL && count < index){
-    node = node->next;
+  while(head != NULL && count < index){
+    head = head->next;
     ++count;
   }
-  if(node == NULL){
+  if(head == NULL){
     fprintf(stderr, "List index (%ld) out of bounds\n", index);
     errno = ENOMEM;
     exit(EXIT_FAILURE);
   }
-  
-  return node->elem;
+  return head->elem;
 }
 
-void list_insert_at(node_o *list, size_t index, void *elem){
+void list_insert_at(node_o **head, size_t index, void *elem){
   size_t count = 0;
-  node_o *current = *list;
-
+  node_o *current = *head;
   node_o *node = list_new(elem);
 
   while(current != NULL && count < index){
@@ -99,13 +86,11 @@ void list_insert_at(node_o *list, size_t index, void *elem){
     errno = ENOMEM;
     exit(EXIT_FAILURE);
   }
-
-/*
+  
   if(current->prev == NULL){
-    list_add(list, elem);
+    list_add(head, elem);
     return;
   }
-*/
 
   node->next = current;
   node->prev = current->prev;
@@ -113,7 +98,7 @@ void list_insert_at(node_o *list, size_t index, void *elem){
   current->prev = node;
   return;  
 }
-
+/*
 void list_remove_at(node_o *list, size_t index){
   size_t count = 0;
   node_o *current = *list;
@@ -129,21 +114,22 @@ void list_remove_at(node_o *list, size_t index){
   }
 
   node_remove(current);
-/*
-  if(current->prev == NULL){
-    if(current->next != NULL){
-      current->next->prev = NULL;
-    }
-    *list = current->next;
-  } else {
-    current->prev->next = current->next;
-    if(current->next != NULL){
-      current->next->prev = current->prev;
-    }
-  }
-*/
 
-  /* NB non fa la free di elem */
+
+//  if(current->prev == NULL){
+ //   if(current->next != NULL){
+ //     current->next->prev = NULL;
+ //   }
+ //   *list = current->next;
+ // } else {
+ //   current->prev->next = current->next;
+ //   if(current->next != NULL){
+ //     current->next->prev = current->prev;
+ //   }
+ // }
+
+
+  // NB non fa la free di elem 
   //free(current);
   return;  
 }
@@ -180,51 +166,36 @@ void list_set_at(node_o *list, size_t index, void *elem){
   current->elem = elem;  
   return;  
 }
+*/
 
-int list_size(node_o *list){
+int list_size(node_o *head){
   size_t size = 0;
-  while(list != NULL){
-    list = list->next;
+  while(head != NULL){
+    head = head->next;
     ++size;
   }
-  
   return size;
 }
 
-int list_contains(node_o *list, void *elem, ListCompare compare){
+int list_contains(node_o *head, void *elem, ListCompare compare){
   int boolean = 0;
-  while(lsit != NULL && boolean != 1){
-    if(compare(list->elem, elem) == 0){
+  while(head != NULL && boolean != 1){
+    if(compare(head->elem, elem) == 0){
       boolean = 1;
     }
-    list = list->next;
+    head = head->next;
   }
-  
   return boolean;
 }
-/*
-void* list_search(list_o *list, void *elem, ListCompare compare){
-  node_o *current = *list;
-  while(current != NULL){
-    if(compare(current->elem, elem) == 0){
-      return current->elem;
+
+void* list_search(node_o *head, void *elem, ListCompare compare){
+  while(head != NULL){
+    if(compare(head->elem, elem) == 0){
+      return head->elem;
     }
-    current = current->next;
+    head = head->next;
   }
   return NULL;
-}
-*/
-void* list_search(node_o *list, void *elem, ListCompare compare){
-  size_t count = 0;
-  while(current != NULL){
-    if(compare(list->elem, elem) == 0){
-      break;
-    }
-    list = list->next;
-    count++;
-  }
-  if(list == NULL) return NULL;
-  return list_get_at(list, count);
 }
 
 

@@ -20,7 +20,8 @@
 
 
 /* Definition  */
-typedef struct _node* node_o;
+//typedef struct _node* node_o;
+typedef struct _node node_o;
 
 /* Definition of the array's compare function */
 typedef int (*ListCompare)(void*, void*);
@@ -28,16 +29,16 @@ typedef int (*ListCompare)(void*, void*);
 
 
 /*  */
-extern node_o list_new(void *elem);
+extern node_o* list_new(void *elem);
 
 /* Deallocate a list */
-extern void list_free(node_o *list);
+extern void list_free(node_o *head);
 
-extern void list_add(node_o *list, void *elem);
+extern void list_add(node_o **list, void *elem);
 
 extern void *list_get_at(node_o *list, size_t index);
 
-extern void list_insert_at(node_o *list, size_t index, void *elem);
+extern void list_insert_at(node_o **list, size_t index, void *elem);
 
 extern void list_remove_at(node_o *list, size_t index);
 
