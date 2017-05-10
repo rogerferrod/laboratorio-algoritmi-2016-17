@@ -178,16 +178,16 @@ int list_size(list_o *list){
 }
 
 int list_contains(list_o *list, void *elem, ListCompare compare){
-  int bool = 0;
+  int boolean = 0;
   node_o *current = *list;
-  while(current != NULL && bool != 1){
+  while(current != NULL && boolean != 1){
     if(compare(current->elem, elem) == 0){
-      bool = 1;
+      boolean = 1;
     }
     current = current->next;
   }
   
-  return bool;
+  return boolean;
 }
 /*
 void* list_search(list_o *list, void *elem, ListCompare compare){
