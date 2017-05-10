@@ -13,12 +13,16 @@
 #include "unity_internals.h"
 #include "hash.h"
 
-static int compare_str(char *x, char *y){
-  if(x == NULL || y == NULL){
+static int compare_str(void *x, void *y){
+  /*if(x == NULL || y == NULL){
     fprintf(stderr, "Null in compare_str!");
     exit(EXIT_FAILURE);
-  }
-  return strcmp(x, y);
+    }*/
+  printf("before-comp %s %s\n", x, y);
+  strcmp(x,y);
+  printf("after-comp %s %s\n", x, y);
+  return 0;
+  //return strcmp(x, y);
 }
 
 static size_t hash(void* key) {
@@ -55,8 +59,8 @@ static void test_hashtableSearchSimple(){
   hashtable_o *table = hashtable_new(10, hash);
   hashtable_insert(table, "hello");
   char* found = (char*)hashtable_search(table, "hello", compare_str);
-  //TEST_ASSERT_EQUAL_INT(0, strcmp("hello", found));
   printf("found %s\n", (char*)found);
+  //TEST_ASSERT_EQUAL_INT(0, strcmp("hello", found));
   hashtable_free(table); //  <-- possibile causa dell'errore, perchè?
 }
 

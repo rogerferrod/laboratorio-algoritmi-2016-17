@@ -31,7 +31,7 @@
 
 /* Implementation of the opaque type */
 typedef struct _myHashArray {
-  list_o **array;           /* generic array */
+  list_o **array;           /* generic array */  /* statico */
   size_t size;              /* size of the array */
   size_t capacity;          /* capacity of the array */
 }array_h;
@@ -75,6 +75,7 @@ void hashtable_free(hashtable_o *table){
   for(size_t i = 0; i < array_capacity(table->T); ++i){
     list_o *list = array_at(table->T, i);
     if(list != NULL){
+      printf("list to free %s\n", list_get_at(list,0));
       list_free(list); // <--- il problema è qui
       array_insert_at(table->T, i, NULL);
     }
@@ -87,7 +88,15 @@ void hashtable_free(hashtable_o *table){
 void* hashtable_search(hashtable_o *table, void *key, HashCompare compare){
   size_t index = table->hash(key);
   list_o *list = array_at(table->T, index);
-  return (list != NULL)? list_search(list, key, compare) : NULL;
+  if(list == NULL)return NULL;
+  printf("search-list[0] = %s\n", list_get_at(list, 0));
+  //printf("test compare %d\n",compare("ciao", "ciao"));
+  return list_get_at(list, 0);
+  //return list_search(list, key, compare);
+  //void *elem = list_search(list, key, compare);
+  //printf("search and found %s\n", elem);
+  return NULL;
+  //return (list != NULL)? list_search(list, key, compare) : NULL;
 }
 
 void hashtable_insert(hashtable_o *table, void *key){ /* controllare se non esiste già! */
@@ -155,18 +164,6 @@ list_o* array_at(array_h* array, size_t index) { //NB puo restituire null!
 }
 
 void array_insert_at(array_h* array, size_t index, list_o* list) {
-  if(index >= array->capacity){
-    array->capacity *= REALLOC_FACTOR;
-    array->array = realloc(array->array, array->capacity*sizeof(void*));
-    if(array->array == NULL){
-      fprintf(stderr, "Not enough memory for realloc\n");
-      errno = ENOMEM;
-      exit(EXIT_FAILURE);
-    }
-    for(size_t i = array->size; i < array->capacity; ++i){
-      array->array[i] = NULL;
-    }
-  }
   array->array[index] = list;
   if(index >= array->size){
     array->size++;

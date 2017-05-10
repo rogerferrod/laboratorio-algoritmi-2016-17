@@ -186,7 +186,7 @@ int list_contains(list_o *list, void *elem, ListCompare compare){
   
   return bool;
 }
-
+/*
 void* list_search(list_o *list, void *elem, ListCompare compare){
   node_o *current = *list;
   while(current != NULL){
@@ -196,6 +196,20 @@ void* list_search(list_o *list, void *elem, ListCompare compare){
     current = current->next;
   }
   return NULL;
+}
+*/
+void* list_search(list_o *list, void *elem, ListCompare compare){
+  size_t count = 0;
+  node_o *current = *list;
+  while(current != NULL){
+    if(compare(current->elem, elem) == 0){
+      break;
+    }
+    current = current->next;
+    count++;
+  }
+  if(current == NULL)return NULL;
+  return list_get_at(list, count);
 }
 
 
