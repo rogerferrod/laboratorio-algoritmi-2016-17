@@ -18,11 +18,7 @@ static int compare_str(void *x, void *y){
     fprintf(stderr, "Null in compare_str!");
     exit(EXIT_FAILURE);
     }*/
-  printf("before-comp %s %s\n", x, y);
-  strcmp(x,y);
-  printf("after-comp %s %s\n", x, y);
-  return 0;
-  //return strcmp(x, y);
+  return strcmp(x, y);
 }
 
 static size_t hash(void* key) {

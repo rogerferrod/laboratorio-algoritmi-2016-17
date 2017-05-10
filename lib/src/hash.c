@@ -31,7 +31,7 @@
 
 /* Implementation of the opaque type */
 typedef struct _myHashArray {
-  list_o **array;           /* generic array */  /* statico */
+  node_o **array;           /* generic array */  /* statico */
   size_t size;              /* size of the array */
   size_t capacity;          /* capacity of the array */
 }array_h;
@@ -54,9 +54,9 @@ size_t array_size(array_h*);
 size_t array_capacity(array_h*);
 
 /* Return a pointer to the element in the specified position */
-list_o* array_at(array_h*, size_t);
+node_o* array_at(array_h*, size_t);
 
-void array_insert_at(array_h*, size_t, list_o*);
+void array_insert_at(array_h*, size_t, node_o*);
 
 hashtable_o* hashtable_new(size_t capacity, hash_fnc hash) {
   hashtable_o *table = malloc(sizeof(hashtable_o));
@@ -73,9 +73,9 @@ hashtable_o* hashtable_new(size_t capacity, hash_fnc hash) {
 
 void hashtable_free(hashtable_o *table){
   for(size_t i = 0; i < array_capacity(table->T); ++i){
-    list_o *list = array_at(table->T, i);
+    node_o *list = array_at(table->T, i);
     if(list != NULL){
-      printf("list to free %s\n", list_get_at(list,0));
+      printf("list to free %s\n", list_get_at(list, 0));
       list_free(list); // <--- il problema è qui
       array_insert_at(table->T, i, NULL);
     }
@@ -87,31 +87,32 @@ void hashtable_free(hashtable_o *table){
 
 void* hashtable_search(hashtable_o *table, void *key, HashCompare compare){
   size_t index = table->hash(key);
-  list_o *list = array_at(table->T, index);
-  if(list == NULL)return NULL;
+  node_o *list = array_at(table->T, index);
+  if(list == NULL)return NULL; // list è NULL?!?
   printf("search-list[0] = %s\n", list_get_at(list, 0));
+  /*
   //printf("test compare %d\n",compare("ciao", "ciao"));
   return list_get_at(list, 0);
   //return list_search(list, key, compare);
   //void *elem = list_search(list, key, compare);
   //printf("search and found %s\n", elem);
   return NULL;
+  */
+  return (list != NULL)? list_get_at(list, 0) : NULL;
   //return (list != NULL)? list_search(list, key, compare) : NULL;
 }
 
 void hashtable_insert(hashtable_o *table, void *key){ /* controllare se non esiste già! */
   size_t index = table->hash(key);
-  list_o *list = array_at(table->T, index);
+  node_o *list = array_at(table->T, index);
   if(list == NULL){
-    list_o llist = list_new(key);
-    list = &llist;
-    array_insert_at(table->T, index, list);
+    list = list_new(key);
   }
   else {
-    list_add(list, key);
+    list_add(&list, key);
   }
   table->size++;
-  printf("list-insert[0] %s\n", (char*)list_get_at(list, 0));
+  printf("list-insert[0] %s\n", (char*)list_get_at(list, 0)); //si vede da furoi?
   return;
 }
 
@@ -125,7 +126,7 @@ void hashtable_insert(hashtable_o *table, void *key){ /* controllare se non esis
 array_h* array_new(size_t capacity) {
   array_h* new_array = (array_h*)malloc(sizeof(array_h));
   if (new_array != NULL){
-    new_array->array = (list_o**)malloc(sizeof(void*)*capacity);
+    new_array->array = (node_o**)malloc(sizeof(void*)*capacity);
     if (new_array->array != NULL) {
       new_array->size = 0;
       new_array->capacity = capacity;
@@ -154,7 +155,7 @@ size_t array_capacity(array_h* array){
   return array->capacity;
 }
 
-list_o* array_at(array_h* array, size_t index) { //NB puo restituire null!
+node_o* array_at(array_h* array, size_t index) { //NB puo restituire null!
   if(index > array->capacity) {
     fprintf(stderr, "Array index (%ld) out of bounds (0:%ld)\n", index, array->capacity);
     errno = ENOMEM;
@@ -163,7 +164,7 @@ list_o* array_at(array_h* array, size_t index) { //NB puo restituire null!
   return array->array[index];
 }
 
-void array_insert_at(array_h* array, size_t index, list_o* list) {
+void array_insert_at(array_h* array, size_t index, node_o* list) {
   array->array[index] = list;
   if(index >= array->size){
     array->size++;
