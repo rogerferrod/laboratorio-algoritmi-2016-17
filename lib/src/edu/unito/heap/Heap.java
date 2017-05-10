@@ -75,7 +75,7 @@ public class Heap<T> {
   }
 
   /**
-   * Check if heap is a maxHeap.
+   * Check if heap is a minHeap.
    *
    * Iterative version.
    *
@@ -108,7 +108,7 @@ public class Heap<T> {
   }
 
   /**
-   * Check if heap is a maxHeap.
+   * Check if heap is a minHeap.
    *
    * Recursive version.
    *
@@ -142,7 +142,7 @@ public class Heap<T> {
   /**
    * Returns the position of the left child of the node in position <code>pos</code>.
    *
-   * @param pos THe node position.
+   * @param pos The node position.
    * @param size The size of the heap.
    * @return The left child position or <code>pos</code> if the node haven't a left child.
    */
