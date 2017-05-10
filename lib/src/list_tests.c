@@ -28,26 +28,26 @@ static int* new_int(int value) {
 }
 
 static void test_listNew(){
-  list_o list = list_new(new_int(55));
+  node_o list = list_new(new_int(55));
   TEST_ASSERT_EQUAL_INT_MESSAGE(1, 1, "New list failed");
   free(list);
 }
 
 static void test_listAdd(){
-  list_o list = list_new(new_int(55));
+  node_o list = list_new(new_int(55));
   list_add(&list, new_int(2));
   TEST_ASSERT_EQUAL_INT_MESSAGE(1, 1, "Add list failed");
   list_free(&list);
 }
 
 static void test_listGetAtFirst(){
-  list_o list = list_new(new_int(1));
+  node_o list = list_new(new_int(1));
   TEST_ASSERT_EQUAL_INT(1, *(int*)list_get_at(&list, 0));
   list_free(&list);
 }
 
 static void test_listGetAt(){
-  list_o list = list_new(new_int(1));
+  node_o list = list_new(new_int(1));
   list_add(&list, new_int(2));
   TEST_ASSERT_EQUAL_INT(2, *(int*)list_get_at(&list, 0));
   TEST_ASSERT_EQUAL_INT(1, *(int*)list_get_at(&list, 1));
@@ -55,7 +55,7 @@ static void test_listGetAt(){
 }
 
 static void test_listInsertAt(){
-  list_o list = list_new(new_int(1));
+  node_o list = list_new(new_int(1));
   list_add(&list, new_int(2));
   list_add(&list, new_int(4));
   list_add(&list, new_int(5));
@@ -69,7 +69,7 @@ static void test_listInsertAt(){
 }
 
 static void test_listInsertAtFirst(){
-  list_o list = list_new(new_int(3));
+  node_o list = list_new(new_int(3));
   list_add(&list, new_int(2));
   
   list_insert_at(&list, 0, new_int(1));
@@ -81,7 +81,7 @@ static void test_listInsertAtFirst(){
 }
 
 static void test_listRemoveAt(){
-  list_o list = list_new(new_int(3));
+  node_o list = list_new(new_int(3));
   list_add(&list, new_int(2));
   list_add(&list, new_int(1));
   
@@ -94,7 +94,7 @@ static void test_listRemoveAt(){
 }
 
 static void test_listRemoveAtFirst(){
-  list_o list = list_new(new_int(1));
+  node_o list = list_new(new_int(1));
   list_add(&list, new_int(2));
   
   list_remove_at(&list, 0);
@@ -105,7 +105,7 @@ static void test_listRemoveAtFirst(){
 }
 
 static void test_listRemoveAtBottom(){
-  list_o list = list_new(new_int(3));
+  node_o list = list_new(new_int(3));
   list_add(&list, new_int(2));
   list_add(&list, new_int(1));
   
@@ -118,7 +118,7 @@ static void test_listRemoveAtBottom(){
 }
 
 static void test_listRemoveAtPos(){
-  list_o list = list_new(new_int(3));
+  node_o list = list_new(new_int(3));
   list_add(&list, new_int(2));
   list_add(&list, new_int(1));
   
@@ -131,7 +131,7 @@ static void test_listRemoveAtPos(){
 }
 
 static void test_listRemoveAtAll(){
-  list_o list = list_new(new_int(3));
+  node_o list = list_new(new_int(3));
   list_add(&list, new_int(2));
   list_add(&list, new_int(1));
 
@@ -145,14 +145,14 @@ static void test_listRemoveAtAll(){
 }
 
 static void test_listIsEmpty(){
-  list_o list = list_new(new_int(3));
+  node_o list = list_new(new_int(3));
   TEST_ASSERT_EQUAL_INT(0, list_is_empty(&list));
   list_remove_at(&list, 0);
   TEST_ASSERT_EQUAL_INT(1, list_is_empty(&list));
 }
 
 static void test_listSetAt(){
-  list_o list = list_new(new_int(2));
+  node_o list = list_new(new_int(2));
   list_add(&list, new_int(3));
   list_set_at(&list, 0, new_int(1));
   TEST_ASSERT_EQUAL_INT(1, *(int*)list_get_at(&list, 0));
@@ -160,7 +160,7 @@ static void test_listSetAt(){
 }
 
 static void test_listSize(){
-  list_o list = list_new(new_int(3));
+  node_o list = list_new(new_int(3));
   list_add(&list, new_int(2));
   list_add(&list, new_int(1));
   TEST_ASSERT_EQUAL_INT(3, list_size(&list));
@@ -168,7 +168,7 @@ static void test_listSize(){
 }
 
 static void test_listContains(){
-  list_o list = list_new(new_int(3));
+  node_o list = list_new(new_int(3));
   list_add(&list, new_int(2));
   list_add(&list, new_int(1));
   TEST_ASSERT_EQUAL_INT(1, list_contains(&list, new_int(2), compare_int_ptr));
@@ -177,13 +177,13 @@ static void test_listContains(){
 }
 
 static void test_listSearchOne(){
-  list_o list = list_new(new_int(3));
+  node_o list = list_new(new_int(3));
   TEST_ASSERT_EQUAL_INT(3, *(int*)list_search(&list, new_int(3), compare_int_ptr));
   list_free(&list);
 }
 
 static void test_listSearch(){
-  list_o list = list_new(new_int(3));
+  node_o list = list_new(new_int(3));
   list_add(&list, new_int(2));
   list_add(&list, new_int(1));
   TEST_ASSERT_EQUAL_INT(2, *(int*)list_search(&list, new_int(2), compare_int_ptr));
@@ -192,7 +192,7 @@ static void test_listSearch(){
 }
 
 static void test_listFree(){
-  list_o list = list_new(new_int(3));
+  node_o list = list_new(new_int(3));
   list_add(&list, new_int(4));
   list_free(&list);
   TEST_ASSERT_EQUAL_INT_MESSAGE(1, 1, "Free list failed");
