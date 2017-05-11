@@ -111,7 +111,6 @@ void list_remove_at(node_o **head, size_t index){
   node_o *current = *head;
 
   while(current != NULL && count < index){
-    printf("non entra qui\n");
     current = current->next;
     ++count;
   }
@@ -122,12 +121,9 @@ void list_remove_at(node_o **head, size_t index){
   }
 
   if (index == 0) {
-    printf("index = 0: rimuovo in testa.\n");
     *head = current->next;
-    printf("quasi eliminato dalla testa.\n");
     if (*head != NULL) {
       (*head)->prev = NULL;
-      printf("eliminato dalla testa.\n");
     }
   }
   node_remove(current);

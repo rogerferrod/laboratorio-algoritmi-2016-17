@@ -182,10 +182,7 @@ static void test_listRemoveAtAll(){
   list_remove_at(&list, 2);
   list_remove_at(&list, 1);
   TEST_ASSERT_EQUAL_INT(1, *(int*)list_get_at(list, 0));
-  printf("fino a qui ok\n");
   list_remove_at(&list, 0);
-  printf("fino a qui ok 2\n");
-
   TEST_ASSERT_EQUAL_INT_MESSAGE(1, 1, "Remove all failed");
 
   //list_free(list);

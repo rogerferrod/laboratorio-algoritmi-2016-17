@@ -41,7 +41,14 @@ struct _myHashtable {
   array_h *T;           /* generic dynamic array */
   hash_fnc hash;
   size_t size;
+  KeyCompare key_compare;
 };
+
+typedef struct _myHashEntry{
+  void *key;
+  void *value;
+  /* +hash code? */
+}hash_entry;
 
 /* Return a newly allocated array */
 array_h* array_new(size_t);
@@ -58,7 +65,7 @@ node_o* array_at(array_h*, size_t);
 
 void array_insert_at(array_h*, size_t, node_o*);
 
-hashtable_o* hashtable_new(size_t capacity, hash_fnc hash) {
+hashtable_o* hashtable_new(size_t capacity, hash_fnc hash, KeyCompare compare) {
   hashtable_o *table = malloc(sizeof(hashtable_o));
   if(table == NULL){
     fprintf(stderr, "Not enough space for malloc\n");
@@ -68,6 +75,7 @@ hashtable_o* hashtable_new(size_t capacity, hash_fnc hash) {
   table->T = array_new(capacity);
   table->hash = hash;
   table->size = 0;
+  table->key_compare = compare;
   return table;
 }
 
@@ -75,6 +83,9 @@ void hashtable_free(hashtable_o *table){
   for(size_t i = 0; i < array_capacity(table->T); ++i){
     node_o *list = array_at(table->T, i);
     if(list != NULL){
+      for(size_t j = 0; j < list_size(list); ++j){
+	free(list_get_at(list, j));
+      }
       list_free(list);
     }
   }
@@ -83,26 +94,65 @@ void hashtable_free(hashtable_o *table){
   return;
 }
 
-void* hashtable_search(hashtable_o *table, void *key, HashCompare compare){
+void* hashtable_search(hashtable_o *table, void *key){
   size_t index = table->hash(key);
   node_o *list = array_at(table->T, index);
-  return (list != NULL)? list_search(list, key, compare) : NULL;
+  hash_entry *entry = NULL;
+  if(list == NULL){
+    return NULL;
+  }
+  for(size_t i = 0; i < list_size(list); ++i){
+    entry = list_get_at(list, i);
+    if(table->key_compare(key, entry->key) == 0){
+      return entry->value;
+    }
+  }
+  return NULL;
 }
 
-void hashtable_insert(hashtable_o *table, void *key){ /* controllare se non esiste già! */
+void hashtable_insert(hashtable_o *table, void *key, void *value){ /*controllare se non esiste già? */
   size_t index = table->hash(key);
   node_o *list = array_at(table->T, index);
+  hash_entry *entry = (hash_entry*)malloc(sizeof(hash_entry));
+  entry->key = key;
+  entry->value = value;
+
   if(list == NULL){
-    list = list_new(key);
+    list = list_new(entry);
     array_insert_at(table->T, index, list);
   }
   else {
-    list_add(&list, key);
-    array_insert_at(table->T, index, list);
+    list_add(&list, entry);
+    array_insert_at(table->T, index, list);  //perchè serve?
   }
   table->size++;
   return;
 }
+
+
+void hashtable_remove(hashtable_o *table, void *key){
+  size_t index = table->hash(key);
+  node_o *list = array_at(table->T, index);
+  hash_entry *entry;
+  if(list == NULL){
+    return;
+  }
+  if(list_size(list) == 1){ /* se c'è solo quell elemento */
+    list_free(list);
+    array_insert_at(table->T, index, NULL);
+    return;
+  }
+  for(size_t i = 0; i < list_size(list); ++i){
+    entry = list_get_at(list, i);
+    if(table->key_compare(key, entry->key) == 0){
+      free(entry);
+      list_remove_at(&list, i);
+      break;
+    }
+  }
+  return;
+}
+
 
 
 
