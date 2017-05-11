@@ -54,22 +54,31 @@ static void test_hashtableSearchNotFound(){
 static void test_hashtableSearchSimple(){
   hashtable_o *table = hashtable_new(10, hash);
   hashtable_insert(table, "hello");
-  char* found = (char*)hashtable_search(table, "hello", compare_str);
-  //printf("found %s\n", (char*)found);
-  TEST_ASSERT_EQUAL_INT(0, strcmp("hello", found));
+  TEST_ASSERT_EQUAL_INT(0, strcmp("hello", (char*)hashtable_search(table, "hello", compare_str)));
   hashtable_free(table);
 }
 
 static void test_hashtableSearchChaining(){
   hashtable_o *table = hashtable_new(10, hash);
   hashtable_insert(table, "hello");
-  hashtable_insert(table, "house") /* collision */;
-  char* found1 = (char*)hashtable_search(table, "hello", compare_str);
-  char* found2 = (char*)hashtable_search(table, "house", compare_str);
-  printf("found1 %s\n", (char*)found1);
-  printf("found2 %s\n", (char*)found2);
-  TEST_ASSERT_EQUAL_INT(0, strcmp("hello", found1));
-  TEST_ASSERT_EQUAL_INT(0, strcmp("house", found2)); 
+  hashtable_insert(table, "house"); /* collision */
+  hashtable_insert(table, "mouse"); /* collision */
+  TEST_ASSERT_EQUAL_INT(0, strcmp("hello", (char*)hashtable_search(table, "hello", compare_str)));
+  TEST_ASSERT_EQUAL_INT(0, strcmp("house", (char*)hashtable_search(table, "house", compare_str)));
+  TEST_ASSERT_EQUAL_INT(0, strcmp("mouse", (char*)hashtable_search(table, "mouse", compare_str)));
+  hashtable_free(table);
+}
+
+static void test_hashtableSearch(){
+  hashtable_o *table = hashtable_new(10, hash);
+  hashtable_insert(table, "hello");
+  hashtable_insert(table, "house"); /* collision */
+  hashtable_insert(table, "bye");
+  hashtable_insert(table, "hi");
+  TEST_ASSERT_EQUAL_INT(0, strcmp("hello", (char*)hashtable_search(table, "hello", compare_str)));
+  TEST_ASSERT_EQUAL_INT(0, strcmp("house", (char*)hashtable_search(table, "house", compare_str)));
+  TEST_ASSERT_EQUAL_INT(0, strcmp("bye", (char*)hashtable_search(table, "bye", compare_str)));
+  TEST_ASSERT_EQUAL_INT(0, strcmp("hi", (char*)hashtable_search(table, "hi", compare_str)));
   hashtable_free(table);
 }
 
@@ -90,6 +99,7 @@ int main() {
   RUN_TEST(test_hashtableSearchNotFound);
   RUN_TEST(test_hashtableSearchSimple);
   RUN_TEST(test_hashtableSearchChaining);
+  RUN_TEST(test_hashtableSearch);
 
 
   //RUN_TEST(test_hashtableInsertDuplicate);

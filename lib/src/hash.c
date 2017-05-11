@@ -75,9 +75,7 @@ void hashtable_free(hashtable_o *table){
   for(size_t i = 0; i < array_capacity(table->T); ++i){
     node_o *list = array_at(table->T, i);
     if(list != NULL){
-      printf("list to free %s\n", list_get_at(list, 0));
-      list_free(list); // <--- il problema è qui
-      array_insert_at(table->T, i, NULL);
+      list_free(list);
     }
   }
   array_free(table->T);
@@ -88,10 +86,6 @@ void hashtable_free(hashtable_o *table){
 void* hashtable_search(hashtable_o *table, void *key, HashCompare compare){
   size_t index = table->hash(key);
   node_o *list = array_at(table->T, index);
-  printf("list size-search %d\n", list_size(list));
-  for(size_t i = 0; i < list_size(list); i++){
-    printf("list-search[%d] %s\n", i, (char*)list_get_at(list, i));
-  }
   return (list != NULL)? list_search(list, key, compare) : NULL;
 }
 
@@ -103,10 +97,9 @@ void hashtable_insert(hashtable_o *table, void *key){ /* controllare se non esis
     array_insert_at(table->T, index, list);
   }
   else {
-    list_add(&list, key); //non sembra funzionare!
+    list_add(&list, key);
+    array_insert_at(table->T, index, list);
   }
-  printf("list size-insert %d\n", list_size(list)); //dovrebbero dare lo stesso risultato
-  printf("list size-insert2 %d\n", list_size(array_at(table->T, index)));
   table->size++;
   return;
 }
