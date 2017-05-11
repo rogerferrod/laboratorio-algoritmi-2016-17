@@ -24,6 +24,7 @@ struct _node {
   struct _node *next;
 };
 
+void node_remove(node_o *node);
 
 node_o* list_new(void *elem) {
   node_o *new_list = malloc(sizeof(node_o));
@@ -73,6 +74,11 @@ void *list_get_at(node_o *head, size_t index){
 }
 
 void list_insert_at(node_o **head, size_t index, void *elem){
+  if (index == 0) {
+    list_add(head, elem);
+    return;
+  }
+
   size_t count = 0;
   node_o *current = *head;
   node_o *node = list_new(elem);
@@ -88,7 +94,8 @@ void list_insert_at(node_o **head, size_t index, void *elem){
   }
   
   if(current->prev == NULL){
-    list_add(head, elem);
+    printf("Non dovrei main leggere questa riga.\n");
+    //list_add(head, elem);
     return;
   }
 
@@ -98,12 +105,13 @@ void list_insert_at(node_o **head, size_t index, void *elem){
   current->prev = node;
   return;  
 }
-/*
-void list_remove_at(node_o *list, size_t index){
+
+void list_remove_at(node_o **head, size_t index){
   size_t count = 0;
-  node_o *current = *list;
+  node_o *current = *head;
 
   while(current != NULL && count < index){
+    printf("non entra qui\n");
     current = current->next;
     ++count;
   }
@@ -113,37 +121,31 @@ void list_remove_at(node_o *list, size_t index){
     exit(EXIT_FAILURE);
   }
 
+  if (index == 0) {
+    printf("index = 0: rimuovo in testa.\n");
+    *head = current->next;
+    printf("quasi eliminato dalla testa.\n");
+    (*head)->prev = NULL;
+    printf("eliminato dalla testa.\n");
+  }
   node_remove(current);
 
-
-//  if(current->prev == NULL){
- //   if(current->next != NULL){
- //     current->next->prev = NULL;
- //   }
- //   *list = current->next;
- // } else {
- //   current->prev->next = current->next;
- //   if(current->next != NULL){
- //     current->next->prev = current->prev;
- //   }
- // }
-
-
-  // NB non fa la free di elem 
-  //free(current);
-  return;  
+  return;
 }
 
-void node_remove(node_o* node) {
+void node_remove(node_o *node) {
   if (node->prev != NULL) {
     node->prev->next = node->next;
   }
   if (node->next != NULL) {
     node->next->prev = node->prev;
   }
+  node->next = NULL;
+  node->prev = NULL;
+  //free(node->elem);
   free(node);
 }
-
+/*
 int list_is_empty(node_o *list){
   //printf("List is empty: %d\n", list == NULL);
   return list == NULL;

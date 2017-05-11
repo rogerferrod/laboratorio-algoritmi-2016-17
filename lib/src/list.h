@@ -34,13 +34,18 @@ extern node_o* list_new(void *elem);
 /* Deallocate a list */
 extern void list_free(node_o *head);
 
+/**
+ * Aggiunge all'inizio della lista
+ * @param list
+ * @param elem
+ */
 extern void list_add(node_o **list, void *elem);
 
 extern void *list_get_at(node_o *list, size_t index);
 
 extern void list_insert_at(node_o **list, size_t index, void *elem);
 
-extern void list_remove_at(node_o *list, size_t index);
+extern void list_remove_at(node_o **list, size_t index);
 
 extern int list_is_empty(node_o *list);
 
