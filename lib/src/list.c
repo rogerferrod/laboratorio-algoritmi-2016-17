@@ -125,10 +125,10 @@ void list_remove_at(node_o **head, size_t index){
     printf("index = 0: rimuovo in testa.\n");
     *head = current->next;
     printf("quasi eliminato dalla testa.\n");
-    if (*head != NULL) {
-      (*head)->prev = NULL;
-      printf("eliminato dalla testa.\n");
-   }
+    if (*head != NULL) {
+      (*head)->prev = NULL;
+      printf("eliminato dalla testa.\n");
+    }
   }
   node_remove(current);
 
