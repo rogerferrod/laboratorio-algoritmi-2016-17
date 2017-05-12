@@ -33,7 +33,6 @@ extern array_o* array_new(size_t capacity);
 extern void array_free(array_o* array);
 
 /* Return the size of an array */
-
 extern size_t array_size(array_o* array);
 
 /* Return the capacity of an array */
@@ -53,3 +52,6 @@ extern void array_delete(array_o* array, size_t position);
 
 /* Swap two element in the specified positions  */
 extern void array_swap(array_o* array, size_t position_a, size_t position_b);
+
+/* Set element in specified position */
+extern void array_set(array_o* array,size_t position, void* element);

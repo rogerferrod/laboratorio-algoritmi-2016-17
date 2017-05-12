@@ -141,3 +141,15 @@ void array_swap(array_o* array, size_t position_a, size_t position_b){
   array->array[position_b] = temp;
   return;
 }
+
+void array_set(array_o* array,size_t position, void* element){
+	ASSERT_PARAMETERS_NOT_NULL(array);
+
+  if(position >= array->size ) {
+    fprintf(stderr, "Array index (%ld) out of bounds (0:%ld)\n", position, array->size);
+    errno = ENOMEM;
+    exit(EXIT_FAILURE);
+  }
+
+	array->array[position] = element;
+}

@@ -105,7 +105,7 @@ void hashtable_free(hashtable_o *table){
 
 void* hashtable_search(hashtable_o *table, void *key){
   ASSERT_PARAMETERS_NOT_NULL(table);
-  size_t index = table->hash(key);
+  size_t index = table->hash(key) % array_h_capacity(table->T);
   node_o *list = array_h_at(table->T, index);
   hash_entry *entry = NULL;
   if(list == NULL){
@@ -122,9 +122,13 @@ void* hashtable_search(hashtable_o *table, void *key){
 
 void hashtable_insert(hashtable_o *table, void *key, void *value){ /*controllare se non esiste già? */
   ASSERT_PARAMETERS_NOT_NULL(table);
-  size_t index = table->hash(key);
+	ASSERT_PARAMETERS_NOT_NULL(key);
+	ASSERT_PARAMETERS_NOT_NULL(value);
+
+  size_t index = table->hash(key)% array_h_capacity(table->T);
   node_o *list = array_h_at(table->T, index);
   hash_entry *entry = (hash_entry*)malloc(sizeof(hash_entry));
+
   entry->key = key;
   entry->value = value;
 
@@ -141,7 +145,7 @@ void hashtable_insert(hashtable_o *table, void *key, void *value){ /*controllare
 
 void hashtable_remove(hashtable_o *table, void *key){
   ASSERT_PARAMETERS_NOT_NULL(table);
-  size_t index = table->hash(key);
+  size_t index = table->hash(key) % array_h_capacity(table->T);
   node_o *list = array_h_at(table->T, index);
   hash_entry *entry;
   if(list == NULL){

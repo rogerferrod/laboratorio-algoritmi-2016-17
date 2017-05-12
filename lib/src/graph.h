@@ -18,6 +18,9 @@
 #include <stddef.h>
 #include "hash.h"
 
+#define ORIENTED 0x00
+#define NO_ORIENTED 0x01 
+
 
 /* Definition of the graph's opaque type */
 typedef struct _myGraph graph_o;
