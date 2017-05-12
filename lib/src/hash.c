@@ -119,12 +119,10 @@ void hashtable_insert(hashtable_o *table, void *key, void *value){ /*controllare
 
   if(list == NULL){
     list = list_new(entry);
-    array_insert_at(table->T, index, list);
-  }
-  else {
+  } else {
     list_add(&list, entry);
-    array_insert_at(table->T, index, list);  //perchè serve?
   }
+  array_insert_at(table->T, index, list);
   table->size++;
   return;
 }
@@ -145,8 +143,11 @@ void hashtable_remove(hashtable_o *table, void *key){
   for(size_t i = 0; i < list_size(list); ++i){
     entry = list_get_at(list, i);
     if(table->key_compare(key, entry->key) == 0){
-      free(entry);
       list_remove_at(&list, i);
+      if (i == 0) {
+        array_insert_at(table->T, index, list);
+      }
+      free(entry);
       break;
     }
   }

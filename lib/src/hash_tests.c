@@ -114,7 +114,7 @@ static void test_hashtableRemoveFirst(){
   hashtable_insert(table, "hello", new_int(5));
   hashtable_insert(table, "mouse", new_int(6));
   hashtable_remove(table, "mouse");
-  //TEST_ASSERT(NULL == (int*)hashtable_search(table, "mouse"));
+  TEST_ASSERT(NULL == (int*)hashtable_search(table, "mouse"));
   hashtable_free(table);
 }
 
@@ -130,6 +130,6 @@ int main() {
   //RUN_TEST(test_hashtableInsertDuplicate);
   RUN_TEST(test_hashtableRemoveNoConflict);
   RUN_TEST(test_hashtableRemoveConflict);
-  //RUN_TEST(test_hashtableRemoveFirst); <--errore
+  RUN_TEST(test_hashtableRemoveFirst); //<--errore
   return UNITY_END();
 }
