@@ -43,8 +43,8 @@ build_graph: bin/graph_tests
 build_hash: bin/hash_tests
 
 # compila e esegue i test
-tests: tests_hash
-tests_all: tests_es1 tests_es2 tests_es4
+tests: tests_graph
+tests_all: tests_es1 tests_es2 tests_es3 tests_es4 tests_es5
 tests_es1: tests_array tests_sort
 tests_es2: tests_tree
 tests_es3: tests_heap
@@ -101,8 +101,8 @@ bin/set_tests: build/set_tests.o build/set.o build/unity.o $(C_COMMON_DEPS)
 bin/list_tests: build/list_tests.o build/list.o build/unity.o $(C_COMMON_DEPS)
 	$(CC) -o bin/list_tests build/list_tests.o build/list.o build/unity.o
 
-bin/graph_tests: build/graph_tests.o build/graph.o build/array.o build/list.o build/set.o build/unity.o $(C_COMMON_DEPS)
-	$(CC) -o bin/graph_tests build/graph_tests.o build/graph.o build/array.o build/list.o build/set.o build/unity.o
+bin/graph_tests: build/graph_tests.o build/graph.o build/array.o build/list.o build/set.o build/hash.o build/unity.o $(C_COMMON_DEPS)
+	$(CC) -o bin/graph_tests build/graph_tests.o build/graph.o build/array.o build/list.o build/set.o build/hash.o build/unity.o
 
 bin/hash_tests: build/hash_tests.o build/hash.o build/list.o build/unity.o $(C_COMMON_DEPS)
 	$(CC) -o bin/hash_tests build/hash_tests.o build/hash.o build/list.o build/unity.o

@@ -49,19 +49,19 @@ typedef struct _myHashEntry{
 
 
 /* Return a newly allocated array */
-array_h* array_new(size_t);
+array_h* array_h_new(size_t);
 
 /* Deallocate an array */
-void array_free(array_h*);
+void array_h_free(array_h*);
 
-size_t array_size(array_h*);
+size_t array_h_size(array_h*);
 
-size_t array_capacity(array_h*);
+size_t array_h_capacity(array_h*);
 
 /* Return a pointer to the element in the specified position */
-node_o* array_at(array_h*, size_t);
+node_o* array_h_at(array_h*, size_t);
 
-void array_insert_at(array_h*, size_t, node_o*);
+void array_h_insert_at(array_h*, size_t, node_o*);
 
 
 /* usare la memset per settare a NULL gli elementi! */
@@ -80,7 +80,7 @@ hashtable_o* hashtable_new(size_t capacity, hash_fnc hash, KeyCompare compare) {
     errno = ENOMEM;
     exit(EXIT_FAILURE);
   }
-  table->T = array_new(capacity);
+  table->T = array_h_new(capacity);
   table->hash = hash;
   table->size = 0;
   table->key_compare = compare;
@@ -89,8 +89,8 @@ hashtable_o* hashtable_new(size_t capacity, hash_fnc hash, KeyCompare compare) {
 
 void hashtable_free(hashtable_o *table){
   ASSERT_PARAMETERS_NOT_NULL(table);
-  for(size_t i = 0; i < array_capacity(table->T); ++i){
-    node_o *list = array_at(table->T, i);
+  for(size_t i = 0; i < array_h_capacity(table->T); ++i){
+    node_o *list = array_h_at(table->T, i);
     if(list != NULL){
       for(size_t j = 0; j < list_size(list); ++j){
         free(list_get_at(list, j));
@@ -98,7 +98,7 @@ void hashtable_free(hashtable_o *table){
       list_free(list);
     }
   }
-  array_free(table->T);
+  array_h_free(table->T);
   free(table);
   return;
 }
@@ -106,7 +106,7 @@ void hashtable_free(hashtable_o *table){
 void* hashtable_search(hashtable_o *table, void *key){
   ASSERT_PARAMETERS_NOT_NULL(table);
   size_t index = table->hash(key);
-  node_o *list = array_at(table->T, index);
+  node_o *list = array_h_at(table->T, index);
   hash_entry *entry = NULL;
   if(list == NULL){
     return NULL;
@@ -123,7 +123,7 @@ void* hashtable_search(hashtable_o *table, void *key){
 void hashtable_insert(hashtable_o *table, void *key, void *value){ /*controllare se non esiste già? */
   ASSERT_PARAMETERS_NOT_NULL(table);
   size_t index = table->hash(key);
-  node_o *list = array_at(table->T, index);
+  node_o *list = array_h_at(table->T, index);
   hash_entry *entry = (hash_entry*)malloc(sizeof(hash_entry));
   entry->key = key;
   entry->value = value;
@@ -133,7 +133,7 @@ void hashtable_insert(hashtable_o *table, void *key, void *value){ /*controllare
   } else {
     list_add(&list, entry);
   }
-  array_insert_at(table->T, index, list);
+  array_h_insert_at(table->T, index, list);
   table->size++;
   return;
 }
@@ -142,14 +142,14 @@ void hashtable_insert(hashtable_o *table, void *key, void *value){ /*controllare
 void hashtable_remove(hashtable_o *table, void *key){
   ASSERT_PARAMETERS_NOT_NULL(table);
   size_t index = table->hash(key);
-  node_o *list = array_at(table->T, index);
+  node_o *list = array_h_at(table->T, index);
   hash_entry *entry;
   if(list == NULL){
     return;
   }
   if(list_size(list) == 1){ /* se c'è solo quell elemento */
     list_free(list);
-    array_insert_at(table->T, index, NULL);
+    array_h_insert_at(table->T, index, NULL);
     return;
   }
   for(size_t i = 0; i < list_size(list); ++i){
@@ -157,7 +157,7 @@ void hashtable_remove(hashtable_o *table, void *key){
     if(table->key_compare(key, entry->key) == 0){
       list_remove_at(&list, i);
       if (i == 0) {
-        array_insert_at(table->T, index, list);
+        array_h_insert_at(table->T, index, list);
       }
       free(entry);
       break;
@@ -174,7 +174,7 @@ void hashtable_remove(hashtable_o *table, void *key){
 
 
 
-array_h* array_new(size_t capacity) {
+array_h* array_h_new(size_t capacity) {
   if(capacity == 0) {
     fprintf(stderr, "Invalid parameter: capacity can't be 0\n");
     errno = EINVAL;
@@ -203,7 +203,7 @@ array_h* array_new(size_t capacity) {
   return new_array;
 }
 
-void array_free(array_h* array) {
+void array_h_free(array_h* array) {
   if (array != NULL) {
     free(array->array);
   }
@@ -211,17 +211,17 @@ void array_free(array_h* array) {
   return;
 }
 
-size_t array_size(array_h* array){
+size_t array_h_size(array_h* array){
   ASSERT_PARAMETERS_NOT_NULL(array);
   return array->size;
 }
 
-size_t array_capacity(array_h* array){
+size_t array_h_capacity(array_h* array){
   ASSERT_PARAMETERS_NOT_NULL(array);
   return array->capacity;
 }
 
-node_o* array_at(array_h* array, size_t index) { //NB puo restituire null!
+node_o* array_h_at(array_h* array, size_t index) { //NB puo restituire null!
   ASSERT_PARAMETERS_NOT_NULL(array);
   if(index > array->capacity) {
     fprintf(stderr, "Array index (%d) out of bounds (0:%d)\n", (unsigned int)index, (unsigned int)array->capacity);
@@ -231,7 +231,7 @@ node_o* array_at(array_h* array, size_t index) { //NB puo restituire null!
   return array->array[index];
 }
 
-void array_insert_at(array_h* array, size_t index, node_o* list) {
+void array_h_insert_at(array_h* array, size_t index, node_o* list) {
   ASSERT_PARAMETERS_NOT_NULL(array);
   array->array[index] = list;
   if(index >= array->size){
