@@ -19,7 +19,7 @@
 #include "list.h"
 
 #define REALLOC_FACTOR   2.25 /* 1.5*(3/2) */
-#define DECREMENT_LIMIT  0.25 /* 1/4 */
+
 #define ASSERT_PARAMETERS_NOT_NULL(x) if((x) == NULL){     \
            fprintf(stderr, "Invalid parameter NULL\n");    \
            errno = EINVAL;                                 \
@@ -168,6 +168,33 @@ void hashtable_remove(hashtable_o *table, void *key){
     }
   }
   return;
+}
+
+void hashtable_expand(hashtable_o *table){
+  ASSERT_PARAMETERS_NOT_NULL(table);
+  hash_entry *entry;
+  node_o *list;
+  size_t capacity_old = array_h_capacity(table->T);
+  hashtable_o *new_table = hashtable_new(capacity_old*REALLOC_FACTOR, table->hash, table->key_compare);
+
+  for(size_t i = 0; i < capacity_old; ++i){
+    list = array_h_at(table->T, i);
+    if(list != NULL){
+      for(size_t j = 0; j < list_size(list); ++j){
+	entry = list_get_at(list, j);
+	hashtable_insert(new_table, entry->key, entry->value);
+      }
+    }
+  }
+  hashtable_free(table);
+  table = new_table;
+  
+  return;
+}
+
+size_t hashtable_size(hashtable_o *table){
+  ASSERT_PARAMETERS_NOT_NULL(table);
+  return table->size; 
 }
 
 

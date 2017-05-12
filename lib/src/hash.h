@@ -37,3 +37,7 @@ extern void hashtable_insert(hashtable_o *table, void *key, void *value);
 extern void* hashtable_search(hashtable_o *table, void *key);
 
 extern void hashtable_remove(hashtable_o *table, void *key);
+
+extern void hashtable_expand(hashtable_o *table);
+
+extern size_t hashtable_size(hashtable_o *table);

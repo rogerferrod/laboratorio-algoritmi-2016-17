@@ -46,6 +46,21 @@ static void test_hashtableInsert(){
   hashtable_free(table);
 }
 
+static void test_hashtableSizeEmpty(){
+  hashtable_o *table = hashtable_new(10, hash, compare_str);
+  TEST_ASSERT_EQUAL_INT(0, hashtable_size(table));
+  hashtable_free(table);
+}
+
+static void test_hashtableSize(){
+  hashtable_o *table = hashtable_new(10, hash, compare_str);
+  hashtable_insert(table, "hello", new_int(5));
+  hashtable_insert(table, "mouse", new_int(6));
+  hashtable_insert(table, "hi", new_int(4));
+  TEST_ASSERT_EQUAL_INT(3, hashtable_size(table));
+  hashtable_free(table);
+}
+
 static void test_hashtableSearchNotFound(){
   hashtable_o *table = hashtable_new(10, hash, compare_str);
   hashtable_insert(table, "hello", new_int(5));
@@ -118,11 +133,27 @@ static void test_hashtableRemoveFirst(){
   hashtable_free(table);
 }
 
+static void test_hashtableExpand(){
+  hashtable_o *table = hashtable_new(10, hash, compare_str);
+  hashtable_insert(table, "hello", new_int(5));
+  hashtable_insert(table, "mouse", new_int(6));
+  hashtable_insert(table, "hi", new_int(4));
+  hashtable_insert(table, "bye", new_int(1));
+  //TEST_ASSERT(NULL == (int*)hashtable_search(table, "mouse"));
+  printf("size1 %d\n", hashtable_size(table));
+  hashtable_expand(table);
+  printf("size2 %d\n", hashtable_size(table));
+  printf("table == NULL? %d\n", table == NULL);
+  hashtable_free(table); // <-- problema
+}
+
 int main() {
   UNITY_BEGIN();
   RUN_TEST(test_hashtableNew);
   RUN_TEST(test_hashtableFree);
   RUN_TEST(test_hashtableInsert);
+  RUN_TEST(test_hashtableSizeEmpty);
+  RUN_TEST(test_hashtableSize);
   RUN_TEST(test_hashtableSearchNotFound);
   RUN_TEST(test_hashtableSearchSimple);
   RUN_TEST(test_hashtableSearchChaining);
@@ -131,5 +162,6 @@ int main() {
   RUN_TEST(test_hashtableRemoveNoConflict);
   RUN_TEST(test_hashtableRemoveConflict);
   RUN_TEST(test_hashtableRemoveFirst);
+  RUN_TEST(test_hashtableExpand);
   return UNITY_END();
 }
