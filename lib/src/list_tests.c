@@ -160,20 +160,7 @@ static void test_listRemoveAtBottom(){
 
   list_free(list);
 }
-/*
-static void test_listRemoveAtPos(){
-  node_o list = list_new(new_int(3));
-  list_add(&list, new_int(2));
-  list_add(&list, new_int(1));
-  
-  list_remove_at(&list, 1);
 
-  TEST_ASSERT_EQUAL_INT(1, *(int*)list_get_at(&list, 0));
-  TEST_ASSERT_EQUAL_INT(3, *(int*)list_get_at(&list, 1));
-
-  list_free(&list);
-}
-*/
 static void test_listRemoveAtAll(){
   node_o *list = list_new(new_int(3));
   list_add(&list, new_int(2));
@@ -185,24 +172,54 @@ static void test_listRemoveAtAll(){
   list_remove_at(&list, 0);
   TEST_ASSERT_EQUAL_INT_MESSAGE(1, 1, "Remove all failed");
 
-  //list_free(list);
-}
-/*
-static void test_listIsEmpty(){
-  node_o list = list_new(new_int(3));
-  TEST_ASSERT_EQUAL_INT(0, list_is_empty(&list));
-  list_remove_at(&list, 0);
-  TEST_ASSERT_EQUAL_INT(1, list_is_empty(&list));
+  list_free(list);
 }
 
-static void test_listSetAt(){
-  node_o list = list_new(new_int(2));
-  list_add(&list, new_int(3));
-  list_set_at(&list, 0, new_int(1));
-  TEST_ASSERT_EQUAL_INT(1, *(int*)list_get_at(&list, 0));
-  list_free(&list);
+static void test_listIsEmpty(){
+  node_o *list = list_new(new_int(3));
+  TEST_ASSERT_EQUAL_INT(0, list_is_empty(list));
+  list_remove_at(&list, 0);
+  TEST_ASSERT_EQUAL_INT(1, list_is_empty(list));
+
+  list_free(list);
 }
-*/
+
+static void test_listSetAtBegin(){
+  node_o *list = list_new(new_int(3));
+  list_add(&list, new_int(2));
+  list_add(&list, new_int(1));
+
+  TEST_ASSERT_EQUAL_INT(1, *(int*)list_get_at(list, 0));
+  list_set_at(list, 0, new_int(4));
+  TEST_ASSERT_EQUAL_INT(4, *(int*)list_get_at(list, 0));
+
+  list_free(list);
+}
+
+static void test_listSetAtMiddle(){
+  node_o *list = list_new(new_int(3));
+  list_add(&list, new_int(2));
+  list_add(&list, new_int(1));
+
+  TEST_ASSERT_EQUAL_INT(2, *(int*)list_get_at(list, 1));
+  list_set_at(list, 1, new_int(4));
+  TEST_ASSERT_EQUAL_INT(4, *(int*)list_get_at(list, 1));
+
+  list_free(list);
+}
+
+static void test_listSetAtEnd(){
+  node_o *list = list_new(new_int(3));
+  list_add(&list, new_int(2));
+  list_add(&list, new_int(1));
+
+  TEST_ASSERT_EQUAL_INT(3, *(int*)list_get_at(list, 2));
+  list_set_at(list, 2, new_int(4));
+  TEST_ASSERT_EQUAL_INT(4, *(int*)list_get_at(list, 2));
+
+  list_free(list);
+}
+
 static void test_listSize(){
   node_o *list = list_new(new_int(3));
   list_add(&list, new_int(2));
@@ -257,16 +274,16 @@ int main() {
   RUN_TEST(test_listRemoveAt);
   RUN_TEST(test_listRemoveAtFirst);
   RUN_TEST(test_listRemoveAtBottom);
-  //RUN_TEST(test_listRemoveAtPos);
   RUN_TEST(test_listRemoveAtAll);
-  //RUN_TEST(test_listIsEmpty);
-  //RUN_TEST(test_listSetAt);
+  RUN_TEST(test_listIsEmpty);
+  RUN_TEST(test_listSetAtBegin);
+  RUN_TEST(test_listSetAtMiddle);
+  RUN_TEST(test_listSetAtEnd);
   RUN_TEST(test_listSize);
   RUN_TEST(test_listContains);
   RUN_TEST(test_listSearchFirst);
   RUN_TEST(test_listSearchNotFound);
   RUN_TEST(test_listSearch);
-  //RUN_TEST(test_listFreeAdd);
   return UNITY_END();
 }
 

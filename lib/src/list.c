@@ -17,6 +17,11 @@
 #include <errno.h>
 #include "list.h"
 
+#define ASSERT_PARAMETERS_NOT_NULL(x) if((x) == NULL){     \
+           fprintf(stderr, "Invalid parameter NULL\n");    \
+           errno = EINVAL;                                 \
+           exit(EXIT_FAILURE);}
+
 /* Implementation of the opaque type */
 struct _node {
   void*  elem;             /*  */
@@ -27,6 +32,7 @@ struct _node {
 void node_remove(node_o *node);
 
 node_o* list_new(void *elem) {
+  ASSERT_PARAMETERS_NOT_NULL(elem);
   node_o *new_list = malloc(sizeof(node_o));
   if (new_list == NULL){
     fprintf(stderr, "Not enough space for malloc\n");
@@ -51,6 +57,7 @@ void list_free(node_o *head){ // da togliere ricorsione (stack?)
 }
 
 void list_add(node_o **head, void *elem) {
+  ASSERT_PARAMETERS_NOT_NULL(elem);
   node_o *new_node = list_new(elem);
   new_node->next = *head;
   new_node->prev = NULL;
@@ -66,7 +73,7 @@ void *list_get_at(node_o *head, size_t index){
     ++count;
   }
   if(head == NULL){
-    fprintf(stderr, "List index (%ld) out of bounds\n", index);
+    fprintf(stderr, "List index (%d) out of bounds\n", (unsigned int)index);
     errno = ENOMEM;
     exit(EXIT_FAILURE);
   }
@@ -88,7 +95,7 @@ void list_insert_at(node_o **head, size_t index, void *elem){
     ++count;
   }
   if(current == NULL){
-    fprintf(stderr, "List index (%ld) out of bounds\n", index);
+    fprintf(stderr, "List index (%d) out of bounds\n", (unsigned int)index);
     errno = ENOMEM;
     exit(EXIT_FAILURE);
   }
@@ -115,7 +122,7 @@ void list_remove_at(node_o **head, size_t index){
     ++count;
   }
   if(current == NULL){
-    fprintf(stderr, "List index (%ld) out of bounds\n", index);
+    fprintf(stderr, "List index (%d) out of bounds\n", (unsigned int)index);
     errno = ENOMEM;
     exit(EXIT_FAILURE);
   }
@@ -143,22 +150,23 @@ void node_remove(node_o *node) {
   //free(node->elem);
   free(node);
 }
-/*
+
 int list_is_empty(node_o *list){
-  //printf("List is empty: %d\n", list == NULL);
   return list == NULL;
 }
 
 void list_set_at(node_o *list, size_t index, void *elem){
+  ASSERT_PARAMETERS_NOT_NULL(list);
+  ASSERT_PARAMETERS_NOT_NULL(elem);
   size_t count = 0;
-  node_o *current = *list;
+  node_o *current = list;
 
   while(current != NULL && count < index){
     current = current->next;
     ++count;
   }
   if(current == NULL){
-    fprintf(stderr, "List index (%ld) out of bounds\n", index);
+    fprintf(stderr, "List index (%d) out of bounds\n", (unsigned int)index);
     errno = ENOMEM;
     exit(EXIT_FAILURE);
   }
@@ -166,7 +174,6 @@ void list_set_at(node_o *list, size_t index, void *elem){
   current->elem = elem;  
   return;  
 }
-*/
 
 int list_size(node_o *head){
   size_t size = 0;
