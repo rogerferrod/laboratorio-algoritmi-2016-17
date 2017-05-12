@@ -130,6 +130,6 @@ int main() {
   //RUN_TEST(test_hashtableInsertDuplicate);
   RUN_TEST(test_hashtableRemoveNoConflict);
   RUN_TEST(test_hashtableRemoveConflict);
-  RUN_TEST(test_hashtableRemoveFirst); //<--errore
+  RUN_TEST(test_hashtableRemoveFirst);
   return UNITY_END();
 }

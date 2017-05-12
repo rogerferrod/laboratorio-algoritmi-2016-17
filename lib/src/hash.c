@@ -20,9 +20,6 @@
 
 #define REALLOC_FACTOR   2.25 /* 1.5*(3/2) */
 #define DECREMENT_LIMIT  0.25 /* 1/4 */
-
-/* usare la memset per settare a NULL gli elementi! */
-
 #define ASSERT_PARAMETERS_NOT_NULL(x) if((x) == NULL){     \
            fprintf(stderr, "Invalid parameter NULL\n");    \
            errno = EINVAL;                                 \
@@ -50,6 +47,7 @@ typedef struct _myHashEntry{
   /* +hash code? */
 }hash_entry;
 
+
 /* Return a newly allocated array */
 array_h* array_new(size_t);
 
@@ -65,7 +63,17 @@ node_o* array_at(array_h*, size_t);
 
 void array_insert_at(array_h*, size_t, node_o*);
 
+
+/* usare la memset per settare a NULL gli elementi! */
 hashtable_o* hashtable_new(size_t capacity, hash_fnc hash, KeyCompare compare) {
+  if(capacity == 0) {
+    fprintf(stderr, "Invalid parameter: capacity can't be 0\n");
+    errno = EINVAL;
+    exit(EXIT_FAILURE);
+  }
+  ASSERT_PARAMETERS_NOT_NULL(hash);
+  ASSERT_PARAMETERS_NOT_NULL(compare);
+
   hashtable_o *table = malloc(sizeof(hashtable_o));
   if(table == NULL){
     fprintf(stderr, "Not enough space for malloc\n");
@@ -80,11 +88,12 @@ hashtable_o* hashtable_new(size_t capacity, hash_fnc hash, KeyCompare compare) {
 }
 
 void hashtable_free(hashtable_o *table){
+  ASSERT_PARAMETERS_NOT_NULL(table);
   for(size_t i = 0; i < array_capacity(table->T); ++i){
     node_o *list = array_at(table->T, i);
     if(list != NULL){
       for(size_t j = 0; j < list_size(list); ++j){
-	free(list_get_at(list, j));
+        free(list_get_at(list, j));
       }
       list_free(list);
     }
@@ -95,6 +104,7 @@ void hashtable_free(hashtable_o *table){
 }
 
 void* hashtable_search(hashtable_o *table, void *key){
+  ASSERT_PARAMETERS_NOT_NULL(table);
   size_t index = table->hash(key);
   node_o *list = array_at(table->T, index);
   hash_entry *entry = NULL;
@@ -111,6 +121,7 @@ void* hashtable_search(hashtable_o *table, void *key){
 }
 
 void hashtable_insert(hashtable_o *table, void *key, void *value){ /*controllare se non esiste già? */
+  ASSERT_PARAMETERS_NOT_NULL(table);
   size_t index = table->hash(key);
   node_o *list = array_at(table->T, index);
   hash_entry *entry = (hash_entry*)malloc(sizeof(hash_entry));
@@ -129,6 +140,7 @@ void hashtable_insert(hashtable_o *table, void *key, void *value){ /*controllare
 
 
 void hashtable_remove(hashtable_o *table, void *key){
+  ASSERT_PARAMETERS_NOT_NULL(table);
   size_t index = table->hash(key);
   node_o *list = array_at(table->T, index);
   hash_entry *entry;
@@ -163,40 +175,56 @@ void hashtable_remove(hashtable_o *table, void *key){
 
 
 array_h* array_new(size_t capacity) {
-  array_h* new_array = (array_h*)malloc(sizeof(array_h));
-  if (new_array != NULL){
-    new_array->array = (node_o**)malloc(sizeof(void*)*capacity);
-    if (new_array->array != NULL) {
-      new_array->size = 0;
-      new_array->capacity = capacity;
-      for(size_t i = 0; i < capacity; ++i){
-	new_array->array[i] = NULL;
-      }
-      return new_array;
-    }
+  if(capacity == 0) {
+    fprintf(stderr, "Invalid parameter: capacity can't be 0\n");
+    errno = EINVAL;
+    exit(EXIT_FAILURE);
   }
-  fprintf(stderr, "Not enough space for malloc\n");
-  errno = ENOMEM;
-  exit(EXIT_FAILURE);
+
+  array_h* new_array = (array_h*)malloc(sizeof(array_h));
+  if (new_array == NULL){
+    fprintf(stderr, "Not enough space for malloc\n");
+    errno = ENOMEM;
+    exit(EXIT_FAILURE);
+  }
+
+  new_array->array = (node_o**)malloc(sizeof(void*)*capacity);
+  if (new_array->array == NULL){
+    fprintf(stderr, "Not enough space for malloc\n");
+    errno = ENOMEM;
+    exit(EXIT_FAILURE);
+  }
+
+  new_array->size = 0;
+  new_array->capacity = capacity;
+  for(size_t i = 0; i < capacity; ++i){
+    new_array->array[i] = NULL;
+  }
+  return new_array;
 }
 
 void array_free(array_h* array) {
-  free(array->array);
+  if (array != NULL) {
+    free(array->array);
+  }
   free(array);
   return;
 }
 
 size_t array_size(array_h* array){
+  ASSERT_PARAMETERS_NOT_NULL(array);
   return array->size;
 }
 
 size_t array_capacity(array_h* array){
+  ASSERT_PARAMETERS_NOT_NULL(array);
   return array->capacity;
 }
 
 node_o* array_at(array_h* array, size_t index) { //NB puo restituire null!
+  ASSERT_PARAMETERS_NOT_NULL(array);
   if(index > array->capacity) {
-    fprintf(stderr, "Array index (%ld) out of bounds (0:%ld)\n", index, array->capacity);
+    fprintf(stderr, "Array index (%d) out of bounds (0:%d)\n", (unsigned int)index, (unsigned int)array->capacity);
     errno = ENOMEM;
     exit(EXIT_FAILURE);
   }
@@ -204,6 +232,7 @@ node_o* array_at(array_h* array, size_t index) { //NB puo restituire null!
 }
 
 void array_insert_at(array_h* array, size_t index, node_o* list) {
+  ASSERT_PARAMETERS_NOT_NULL(array);
   array->array[index] = list;
   if(index >= array->size){
     array->size++;
