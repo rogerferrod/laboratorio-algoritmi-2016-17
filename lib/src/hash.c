@@ -198,8 +198,8 @@ void hashtable_expand(hashtable_o **table){
     list = array_h_at(old_table->T, i);
     if(list != NULL){
       for(size_t j = 0; j < list_size(list); ++j){
-	entry = list_get_at(list, j);
-	hashtable_insert(new_table, entry->key, entry->value);
+        entry = list_get_at(list, j);
+        hashtable_insert(new_table, entry->key, entry->value);
       }
     }
   }
