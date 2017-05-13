@@ -170,24 +170,24 @@ void hashtable_remove(hashtable_o *table, void *key){
   return;
 }
 
-void hashtable_expand(hashtable_o *table){
-  ASSERT_PARAMETERS_NOT_NULL(table);
+void hashtable_expand(hashtable_o **table){
+  ASSERT_PARAMETERS_NOT_NULL(*table);
   hash_entry *entry;
   node_o *list;
-  size_t capacity_old = array_h_capacity(table->T);
-  hashtable_o *new_table = hashtable_new(capacity_old*REALLOC_FACTOR, table->hash, table->key_compare);
+  size_t capacity_old = array_h_capacity((*table)->T);
+  hashtable_o *new_table = hashtable_new(capacity_old*REALLOC_FACTOR, (*table)->hash, (*table)->key_compare);
 
   for(size_t i = 0; i < capacity_old; ++i){
-    list = array_h_at(table->T, i);
+    list = array_h_at((*table)->T, i);
     if(list != NULL){
       for(size_t j = 0; j < list_size(list); ++j){
-	entry = list_get_at(list, j);
-	hashtable_insert(new_table, entry->key, entry->value);
+        entry = list_get_at(list, j);
+        hashtable_insert(new_table, entry->key, entry->value);
       }
     }
   }
-  hashtable_free(table);
-  table = new_table;
+  hashtable_free((*table));
+  *table = new_table;
   
   return;
 }
