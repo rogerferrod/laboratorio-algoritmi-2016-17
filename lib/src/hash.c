@@ -19,6 +19,7 @@
 #include "list.h"
 
 #define REALLOC_FACTOR   2.25 /* 1.5*(3/2) */
+#define MAX_LOAD_FACTOR  0.75
 
 #define ASSERT_PARAMETERS_NOT_NULL(x) if((x) == NULL){     \
            fprintf(stderr, "Invalid parameter NULL\n");    \
@@ -39,6 +40,7 @@ struct _myHashtable {
   hash_fnc hash;
   size_t size;
   KeyCompare key_compare;
+  float load_factor;
 };
 
 typedef struct _myHashEntry{
@@ -84,6 +86,7 @@ hashtable_o* hashtable_new(size_t capacity, hash_fnc hash, KeyCompare compare) {
   table->hash = hash;
   table->size = 0;
   table->key_compare = compare;
+  table->load_factor = (float)table->size / capacity;
   return table;
 }
 
@@ -122,8 +125,8 @@ void* hashtable_search(hashtable_o *table, void *key){
 
 void hashtable_insert(hashtable_o *table, void *key, void *value){ /*controllare se non esiste già? */
   ASSERT_PARAMETERS_NOT_NULL(table);
-	ASSERT_PARAMETERS_NOT_NULL(key);
-	ASSERT_PARAMETERS_NOT_NULL(value);
+  ASSERT_PARAMETERS_NOT_NULL(key);
+  ASSERT_PARAMETERS_NOT_NULL(value);
 
   size_t index = table->hash(key)% array_h_capacity(table->T);
   node_o *list = array_h_at(table->T, index);
@@ -139,46 +142,60 @@ void hashtable_insert(hashtable_o *table, void *key, void *value){ /*controllare
   }
   array_h_insert_at(table->T, index, list);
   table->size++;
+  table->load_factor = (float)table->size / array_h_capacity(table->T);
+
+  if(table->load_factor > MAX_LOAD_FACTOR){
+    hashtable_expand(&table);
+  }
   return;
 }
-
 
 void hashtable_remove(hashtable_o *table, void *key){
   ASSERT_PARAMETERS_NOT_NULL(table);
   size_t index = table->hash(key) % array_h_capacity(table->T);
   node_o *list = array_h_at(table->T, index);
   hash_entry *entry;
+  int removed = 0;
   if(list == NULL){
     return;
   }
   if(list_size(list) == 1){ /* se c'è solo quell elemento */
     list_free(list);
     array_h_insert_at(table->T, index, NULL);
-    return;
+    removed = 1;
   }
-  for(size_t i = 0; i < list_size(list); ++i){
-    entry = list_get_at(list, i);
-    if(table->key_compare(key, entry->key) == 0){
-      list_remove_at(&list, i);
-      if (i == 0) {
-        array_h_insert_at(table->T, index, list);
+  else {
+    for(size_t i = 0; i < list_size(list); ++i){
+      entry = list_get_at(list, i);
+      if(table->key_compare(key, entry->key) == 0){
+	list_remove_at(&list, i);
+	if (i == 0) {
+	  array_h_insert_at(table->T, index, list);
+	}
+	free(entry);
+	removed = 1;
+	break;
       }
-      free(entry);
-      break;
     }
+  }
+  if(removed == 1){
+    table->size--;
+    table->load_factor = (float)table->size / array_h_capacity(table->T);
   }
   return;
 }
 
-void hashtable_expand(hashtable_o *table){
+void hashtable_expand(hashtable_o **table){
   ASSERT_PARAMETERS_NOT_NULL(table);
+  hashtable_o *old_table = *table;
   hash_entry *entry;
   node_o *list;
-  size_t capacity_old = array_h_capacity(table->T);
-  hashtable_o *new_table = hashtable_new(capacity_old*REALLOC_FACTOR, table->hash, table->key_compare);
+  hashtable_o *new_table;
+  size_t capacity_old = array_h_capacity(old_table->T);
+  new_table = hashtable_new(capacity_old*REALLOC_FACTOR, old_table->hash, old_table->key_compare);
 
   for(size_t i = 0; i < capacity_old; ++i){
-    list = array_h_at(table->T, i);
+    list = array_h_at(old_table->T, i);
     if(list != NULL){
       for(size_t j = 0; j < list_size(list); ++j){
 	entry = list_get_at(list, j);
@@ -186,9 +203,9 @@ void hashtable_expand(hashtable_o *table){
       }
     }
   }
-  hashtable_free(table);
-  table = new_table;
-  
+  new_table->load_factor = (float)new_table->size / array_h_capacity(new_table->T);
+  hashtable_free(old_table);
+  *table = new_table;
   return;
 }
 
@@ -196,14 +213,6 @@ size_t hashtable_size(hashtable_o *table){
   ASSERT_PARAMETERS_NOT_NULL(table);
   return table->size; 
 }
-
-
-
-
-
-    
-
-
 
 array_h* array_h_new(size_t capacity) {
   if(capacity == 0) {

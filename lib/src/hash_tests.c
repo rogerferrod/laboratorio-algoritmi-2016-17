@@ -139,12 +139,11 @@ static void test_hashtableExpand(){
   hashtable_insert(table, "mouse", new_int(6));
   hashtable_insert(table, "hi", new_int(4));
   hashtable_insert(table, "bye", new_int(1));
-  //TEST_ASSERT(NULL == (int*)hashtable_search(table, "mouse"));
-  printf("size1 %d\n", hashtable_size(table));
-  hashtable_expand(table);
-  printf("size2 %d\n", hashtable_size(table));
-  printf("table == NULL? %d\n", table == NULL);
-  hashtable_free(table); // <-- problema
+  size_t old_size = hashtable_size(table);
+  hashtable_expand(&table);
+  TEST_ASSERT_EQUAL_INT(old_size, hashtable_size(table));
+  TEST_ASSERT_EQUAL_INT(5, *(int*)hashtable_search(table, "hello"));
+  hashtable_free(table);
 }
 
 int main() {
