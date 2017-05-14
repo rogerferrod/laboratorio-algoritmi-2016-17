@@ -126,7 +126,7 @@ void* hashtable_search(hashtable_o *table, void *key){
 void hashtable_insert(hashtable_o *table, void *key, void *value){ /*controllare se non esiste già? */
   ASSERT_PARAMETERS_NOT_NULL(table);
   ASSERT_PARAMETERS_NOT_NULL(key);
-  ASSERT_PARAMETERS_NOT_NULL(value);
+  //ASSERT_PARAMETERS_NOT_NULL(value); //può essere NULL -> aggiungere test!!!!
 
   size_t index = table->hash(key)% array_h_capacity(table->T);
   node_o *list = array_h_at(table->T, index);
