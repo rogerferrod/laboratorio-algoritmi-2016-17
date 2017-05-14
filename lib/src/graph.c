@@ -20,7 +20,7 @@
 #include "list.h"
 #include "hash.h"
 
-#define EPSILON -1
+#define NUM_EDGE 5
 
 
 #define ASSERT_PARAMETERS_NOT_NULL(x) if((x) == NULL){     \
@@ -36,7 +36,8 @@
 /* Implementation of the opaque type */
 struct _myGraph {
   hashtable_o *V;
-  hashtable_o *E;
+  hash_fnc hash;
+  KeyCompare compare;
 };
 
 /* riorganizzare gli argomenti! */
@@ -47,15 +48,14 @@ graph_o* graph_new(size_t capacity, hash_fnc hash, KeyCompare compare) {
     errno = ENOMEM;
     exit(EXIT_FAILURE);
   }
-  graph->V = hashtable_new(capacity, hash, compare);
-  graph->E = hashtable_new(capacity, hash, compare);
+  graph->hash = hash;
+  graph->compare = compare;
+  graph->V = hashtable_new(capacity, graph->hash, graph->compare);
   return graph;
 }
 
 void graph_free(graph_o *graph){
-  /* si presuppone che l'utente abbia fatto la free di elem */
-  hashtable_free(graph->V);
-  hashtable_free(graph->E);
+  hashtable_free(graph->V); //fare la free dei hash_E! (serve iteratore?)
   free(graph);
   return;
 }
@@ -65,26 +65,31 @@ size_t graph_size(graph_o *graph){
 }
 
 void graph_add(graph_o *graph, void *elem){
-  int* val = (int*) malloc(sizeof(int));
-  *val = EPSILON;
-  hashtable_insert(graph->V, elem, val);
+  hashtable_o *E = hashtable_new(NUM_EDGE, graph->hash, graph->compare);
+  hashtable_insert(graph->V, elem, E);
   return;
 }
 
-void graph_link(graph_o *graph, void *x, void *y, int weight, int bitmask){
+void graph_link(graph_o *graph, void *x, void *y, int *weight, int bitmask){
   ASSERT_PARAMETERS_NOT_NULL(graph);
   ASSERT_PARAMETERS_NOT_NULL(x);
   ASSERT_PARAMETERS_NOT_NULL(y);		
-  /* oriented */
-  hashtable_insert(graph->V, x, y);
-  hashtable_insert(graph->E, y, weight);  
 
-  if((bitmask & NO_ORIENTED) == NO_ORIENTED){
-    printf("no oriented!\n");
-    
+  hashtable_o *E = hashtable_search(graph->V, x);
+  if(E != NULL){
+    hashtable_insert(E, y, weight);
+    if((bitmask & NO_ORIENTED) == NO_ORIENTED){
+      hashtable_o *E2 = hashtable_search(graph->V, y);
+      if(E2 != NULL){
+	hashtable_insert(E2, x, weight);
+	return;
+      }
+    }
+    return;
   }
-  
-  return;
+  fprintf(stderr, "Invalid parameters: vertex not found\n");
+  errno = EINVAL;
+  exit(EXIT_FAILURE);
 }
 
 int graph_contains_vertex(graph_o *graph, void *v1){
@@ -92,13 +97,8 @@ int graph_contains_vertex(graph_o *graph, void *v1){
 }
 
 int graph_contains_edge(graph_o *graph, void *v1, void *v2){
-  void *vertex = hashtable_search(graph->V, v1);
-  if(*(int*)vertex != EPSILON){
-    void *edge = hashtable_search(graph->E, vertex);
-    printf("edge == NULL? %d\n", edge == NULL);
-    return edge != NULL;
-  }
-  return 0;
+  hashtable_o *E = hashtable_search(graph->V, v1);
+  return (hashtable_size(E) > 0)? hashtable_search(E, v2) != NULL : 0;
 }
 
 
