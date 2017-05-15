@@ -41,7 +41,7 @@ static void test_hashtableFree(){
 
 static void test_hashtableInsert(){
   hashtable_o *table = hashtable_new(10, hash, compare_str);
-  hashtable_insert(table, "hello", new_int(5));
+  hashtable_insert(&table, "hello", new_int(5));
   TEST_ASSERT_EQUAL_INT_MESSAGE(1, 1, "Insert hash table failed");
   hashtable_free(table);
 }
@@ -54,32 +54,32 @@ static void test_hashtableSizeEmpty(){
 
 static void test_hashtableSize(){
   hashtable_o *table = hashtable_new(10, hash, compare_str);
-  hashtable_insert(table, "hello", new_int(5));
-  hashtable_insert(table, "mouse", new_int(6));
-  hashtable_insert(table, "hi", new_int(4));
+  hashtable_insert(&table, "hello", new_int(5));
+  hashtable_insert(&table, "mouse", new_int(6));
+  hashtable_insert(&table, "hi", new_int(4));
   TEST_ASSERT_EQUAL_INT(3, hashtable_size(table));
   hashtable_free(table);
 }
 
 static void test_hashtableSearchNotFound(){
   hashtable_o *table = hashtable_new(10, hash, compare_str);
-  hashtable_insert(table, "hello", new_int(5));
+  hashtable_insert(&table, "hello", new_int(5));
   TEST_ASSERT(NULL == (int*)hashtable_search(table, "ciao"));
   hashtable_free(table);
 }
 
 static void test_hashtableSearchSimple(){
   hashtable_o *table = hashtable_new(10, hash, compare_str);
-  hashtable_insert(table, "hello", new_int(5));
+  hashtable_insert(&table, "hello", new_int(5));
   TEST_ASSERT_EQUAL_INT(5, *(int*)hashtable_search(table, "hello"));
   hashtable_free(table);
 }
 
 static void test_hashtableSearchChaining(){
   hashtable_o *table = hashtable_new(10, hash, compare_str);
-  hashtable_insert(table, "hello", new_int(5));
-  hashtable_insert(table, "house", new_int(6)); /* collision */
-  hashtable_insert(table, "mouse", new_int(8)); /* collision */
+  hashtable_insert(&table, "hello", new_int(5));
+  hashtable_insert(&table, "house", new_int(6)); /* collision */
+  hashtable_insert(&table, "mouse", new_int(8)); /* collision */
   TEST_ASSERT_EQUAL_INT(5, *(int*)hashtable_search(table, "hello"));
   TEST_ASSERT_EQUAL_INT(6, *(int*)hashtable_search(table, "house"));
   TEST_ASSERT_EQUAL_INT(8, *(int*)hashtable_search(table, "mouse"));
@@ -88,10 +88,10 @@ static void test_hashtableSearchChaining(){
 
 static void test_hashtableSearch(){
   hashtable_o *table = hashtable_new(10, hash, compare_str);
-  hashtable_insert(table, "hello", new_int(5));
-  hashtable_insert(table, "house", new_int(6)); /* collision */
-  hashtable_insert(table, "bye", new_int(9));
-  hashtable_insert(table, "hi", new_int(9));
+  hashtable_insert(&table, "hello", new_int(5));
+  hashtable_insert(&table, "house", new_int(6)); /* collision */
+  hashtable_insert(&table, "bye", new_int(9));
+  hashtable_insert(&table, "hi", new_int(9));
   TEST_ASSERT_EQUAL_INT(5, *(int*)hashtable_search(table, "hello"));
   TEST_ASSERT_EQUAL_INT(6, *(int*)hashtable_search(table, "house"));
   TEST_ASSERT_EQUAL_INT(9, *(int*)hashtable_search(table, "bye"));
@@ -101,15 +101,15 @@ static void test_hashtableSearch(){
 
 /*static void test_hashtableInsertDuplicate(){
   hashtable_o *table = hashtable_new(10, hash);
-  hashtable_insert(table, "hello");
-  hashtable_insert(table, "hello");
+  hashtable_insert(&table, "hello");
+  hashtable_insert(&table, "hello");
   TEST_ASSERT_EQUAL_INT_MESSAGE(1, 1, "Insert hash table failed"); /////
   hashtable_free(table);
   }*/
 
 static void test_hashtableRemoveNoConflict(){
   hashtable_o *table = hashtable_new(10, hash, compare_str);
-  hashtable_insert(table, "hello", new_int(5));
+  hashtable_insert(&table, "hello", new_int(5));
   hashtable_remove(table, "hello");
   TEST_ASSERT(NULL == (int*)hashtable_search(table, "hello"));
   hashtable_free(table);
@@ -117,8 +117,8 @@ static void test_hashtableRemoveNoConflict(){
 
 static void test_hashtableRemoveConflict(){
   hashtable_o *table = hashtable_new(10, hash, compare_str);
-  hashtable_insert(table, "hello", new_int(5));
-  hashtable_insert(table, "mouse", new_int(6));
+  hashtable_insert(&table, "hello", new_int(5));
+  hashtable_insert(&table, "mouse", new_int(6));
   hashtable_remove(table, "hello");
   TEST_ASSERT(NULL == (int*)hashtable_search(table, "hello"));
   hashtable_free(table);
@@ -126,8 +126,8 @@ static void test_hashtableRemoveConflict(){
 
 static void test_hashtableRemoveFirst(){
   hashtable_o *table = hashtable_new(10, hash, compare_str);
-  hashtable_insert(table, "hello", new_int(5));
-  hashtable_insert(table, "mouse", new_int(6));
+  hashtable_insert(&table, "hello", new_int(5));
+  hashtable_insert(&table, "mouse", new_int(6));
   hashtable_remove(table, "mouse");
   TEST_ASSERT(NULL == (int*)hashtable_search(table, "mouse"));
   hashtable_free(table);
@@ -135,14 +135,49 @@ static void test_hashtableRemoveFirst(){
 
 static void test_hashtableExpand(){
   hashtable_o *table = hashtable_new(10, hash, compare_str);
-  hashtable_insert(table, "hello", new_int(5));
-  hashtable_insert(table, "mouse", new_int(6));
-  hashtable_insert(table, "hi", new_int(4));
-  hashtable_insert(table, "bye", new_int(1));
-  size_t old_size = hashtable_size(table);
+  hashtable_insert(&table, "hello", new_int(5));
+  hashtable_insert(&table, "mouse", new_int(6));
+  hashtable_insert(&table, "hi", new_int(4));
+
+  size_t old_capacity = hashtable_capacity(table);
   hashtable_expand(&table);
-  TEST_ASSERT_EQUAL_INT(old_size, hashtable_size(table));
-  TEST_ASSERT_EQUAL_INT(5, *(int*)hashtable_search(table, "hello"));
+  TEST_ASSERT_EQUAL_INT(old_capacity*2, hashtable_capacity(table));
+
+  hashtable_free(table);
+}
+
+static void test_hashtableExpandAuto(){
+  hashtable_o *table = hashtable_new(5, hash, compare_str);
+  hashtable_insert(&table, "hello", new_int(5));
+  hashtable_insert(&table, "mouse", new_int(6));
+  hashtable_insert(&table, "hi", new_int(4));
+
+  size_t old_capacity = hashtable_capacity(table);
+  hashtable_insert(&table, "bye", new_int(1));
+
+  TEST_ASSERT_EQUAL_INT(old_capacity*2, hashtable_capacity(table));
+
+  hashtable_free(table);
+}
+
+static void test_hashtableExpandMultiple(){
+  hashtable_o *table = hashtable_new(5, hash, compare_str);
+  hashtable_insert(&table, "hello", new_int(5));
+  hashtable_insert(&table, "mouse", new_int(6));
+  hashtable_insert(&table, "hi", new_int(4));
+
+  size_t old_capacity = hashtable_capacity(table);
+  hashtable_insert(&table, "bye", new_int(1));
+  TEST_ASSERT_EQUAL_INT(old_capacity*2, hashtable_capacity(table));
+
+  hashtable_insert(&table, "bye", new_int(1));
+  hashtable_insert(&table, "bye", new_int(1));
+  hashtable_insert(&table, "bye", new_int(1));
+
+  old_capacity = hashtable_capacity(table);
+  hashtable_insert(&table, "bye", new_int(1));
+  TEST_ASSERT_EQUAL_INT(old_capacity*2, hashtable_capacity(table));
+
   hashtable_free(table);
 }
 
@@ -162,5 +197,7 @@ int main() {
   RUN_TEST(test_hashtableRemoveConflict);
   RUN_TEST(test_hashtableRemoveFirst);
   RUN_TEST(test_hashtableExpand);
+  RUN_TEST(test_hashtableExpandAuto);
+  RUN_TEST(test_hashtableExpandMultiple);
   return UNITY_END();
 }

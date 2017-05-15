@@ -20,7 +20,7 @@
 #include "list.h"
 #include "hash.h"
 
-#define NUM_EDGE 5
+#define EDGE_CAPACITY 5
 
 
 #define ASSERT_PARAMETERS_NOT_NULL(x) if((x) == NULL){     \
@@ -65,7 +65,7 @@ size_t graph_size(graph_o *graph){
 }
 
 void graph_add(graph_o *graph, void *elem){
-  hashtable_o *E = hashtable_new(NUM_EDGE, graph->hash, graph->compare);
+  hashtable_o *E = hashtable_new(EDGE_CAPACITY, graph->hash, graph->compare);
   hashtable_insert(graph->V, elem, E);
   return;
 }

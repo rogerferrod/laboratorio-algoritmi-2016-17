@@ -18,7 +18,6 @@
 #include "hash.h"
 #include "list.h"
 
-#define REALLOC_FACTOR   2.25 /* 1.5*(3/2) */
 #define MAX_LOAD_FACTOR  0.75
 
 #define ASSERT_PARAMETERS_NOT_NULL(x) if((x) == NULL){     \
@@ -123,13 +122,13 @@ void* hashtable_search(hashtable_o *table, void *key){
   return NULL;
 }
 
-void hashtable_insert(hashtable_o *table, void *key, void *value){ /*controllare se non esiste già? */
+void hashtable_insert(hashtable_o **table, void *key, void *value){ /*controllare se non esiste già? */
   ASSERT_PARAMETERS_NOT_NULL(table);
   ASSERT_PARAMETERS_NOT_NULL(key);
-  //ASSERT_PARAMETERS_NOT_NULL(value); //può essere NULL -> aggiungere test!!!!
+  ASSERT_PARAMETERS_NOT_NULL(value); //può essere NULL -> aggiungere test!!!!
 
-  size_t index = table->hash(key)% array_h_capacity(table->T);
-  node_o *list = array_h_at(table->T, index);
+  size_t index = (*table)->hash(key)% array_h_capacity((*table)->T);
+  node_o *list = array_h_at((*table)->T, index);
   hash_entry *entry = (hash_entry*)malloc(sizeof(hash_entry));
 
   entry->key = key;
@@ -140,12 +139,12 @@ void hashtable_insert(hashtable_o *table, void *key, void *value){ /*controllare
   } else {
     list_add(&list, entry);
   }
-  array_h_insert_at(table->T, index, list);
-  table->size++;
-  table->load_factor = (float)table->size / array_h_capacity(table->T);
+  array_h_insert_at((*table)->T, index, list);
+  (*table)->size++;
+  (*table)->load_factor = (float)(*table)->size / array_h_capacity((*table)->T);
 
-  if(table->load_factor > MAX_LOAD_FACTOR){
-    hashtable_expand(&table);
+  if((*table)->load_factor > MAX_LOAD_FACTOR){
+    hashtable_expand(table);
   }
   return;
 }
@@ -192,14 +191,14 @@ void hashtable_expand(hashtable_o **table){
   node_o *list;
   hashtable_o *new_table;
   size_t capacity_old = array_h_capacity(old_table->T);
-  new_table = hashtable_new(capacity_old*REALLOC_FACTOR, old_table->hash, old_table->key_compare);
+  new_table = hashtable_new(capacity_old << 1, old_table->hash, old_table->key_compare);
 
   for(size_t i = 0; i < capacity_old; ++i){
     list = array_h_at(old_table->T, i);
     if(list != NULL){
       for(size_t j = 0; j < list_size(list); ++j){
         entry = list_get_at(list, j);
-        hashtable_insert(new_table, entry->key, entry->value);
+        hashtable_insert(&new_table, entry->key, entry->value);
       }
     }
   }
@@ -212,6 +211,11 @@ void hashtable_expand(hashtable_o **table){
 size_t hashtable_size(hashtable_o *table){
   ASSERT_PARAMETERS_NOT_NULL(table);
   return table->size; 
+}
+
+size_t hashtable_capacity(hashtable_o *table){
+  ASSERT_PARAMETERS_NOT_NULL(table);
+  return array_h_capacity(table->T);
 }
 
 array_h* array_h_new(size_t capacity) {
