@@ -57,23 +57,58 @@ static void test_graphAdd(){
   graph_free(graph);
 }
 
-static void test_graphGet(){
+static void test_graphLinkSimpleOriented(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
-	graph_get(graph,"A");
-	TEST_ASSERT_EQUAL_INT_MESSAGE(1, 1, "GraphGet failed");
-	TEST_ASSERT(NULL==graph_get(graph,"B"));
+  graph_add(graph, "B");
+  graph_link(graph, "A", "B", new_int(0), ORIENTED);
+  TEST_ASSERT_EQUAL_INT_MESSAGE(1, 1, "Link graph failed");
   graph_free(graph);
 }
 
-static void test_graphLinkSimpleOriented(){
-	graph_o *graph = graph_new(5, djb2a, compare_str);
+static void test_graphLinkSimpleNoOriented(){
+  graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
-	graph_add(graph, "B");
-	graph_link(graph,"A","B",0,ORIENTED);
-	printf("ciao\n");
+  graph_add(graph, "B");
+  graph_link(graph, "A", "B", new_int(0), NO_ORIENTED);
+  TEST_ASSERT_EQUAL_INT_MESSAGE(1, 1, "Link graph failed");
+  graph_free(graph);
+}
 
-	graph_free(graph);
+static void test_graphContainsVertex(){
+  graph_o *graph = graph_new(5, djb2a, compare_str);
+  graph_add(graph, "A");
+  TEST_ASSERT_EQUAL_INT(1, graph_contains_vertex(graph, "A"));
+  graph_free(graph);
+}
+
+static void test_graphContainsEdge(){
+  graph_o *graph = graph_new(5, djb2a, compare_str);
+  graph_add(graph, "A");
+  graph_add(graph, "B");
+  graph_link(graph, "A", "B", new_int(0), ORIENTED);
+  TEST_ASSERT_EQUAL_INT(1, graph_contains_edge(graph, "A", "B"));
+  graph_free(graph);
+}
+
+static void test_graphNotContainsEdge(){
+  graph_o *graph = graph_new(5, djb2a, compare_str);
+  graph_add(graph, "A");
+  graph_add(graph, "B");
+  graph_link(graph, "A", "B", new_int(0), ORIENTED);
+  TEST_ASSERT_EQUAL_INT(0, graph_contains_edge(graph, "A", "A"));
+  graph_free(graph);
+}
+
+static void test_graphMultipleEdge(){
+  graph_o *graph = graph_new(5, djb2a, compare_str);
+  graph_add(graph, "A");
+  graph_add(graph, "B");
+  graph_add(graph, "C");
+  //graph_add(graph, "D"); // <-- ERRORE: il problema è nella hash expand...
+  // con capacity a 50 invece di 5 non ci sono problemi
+  
+  graph_free(graph);
 }
 
 
@@ -84,8 +119,12 @@ int main() {
   RUN_TEST(test_graphFree);
   RUN_TEST(test_graphSizeEmpty);
   RUN_TEST(test_graphAdd);
-	RUN_TEST(test_graphGet);
-	RUN_TEST(test_graphLinkSimpleOriented);
+  RUN_TEST(test_graphLinkSimpleOriented);
+  RUN_TEST(test_graphLinkSimpleNoOriented);
+  RUN_TEST(test_graphContainsVertex);
+  RUN_TEST(test_graphContainsEdge);
+  RUN_TEST(test_graphNotContainsEdge);
+  RUN_TEST(test_graphMultipleEdge);
   return UNITY_END();
 }
 

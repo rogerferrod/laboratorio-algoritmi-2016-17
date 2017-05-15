@@ -20,6 +20,8 @@
 #include "list.h"
 #include "hash.h"
 
+#define EDGE_CAPACITY 5
+
 
 #define ASSERT_PARAMETERS_NOT_NULL(x) if((x) == NULL){     \
            fprintf(stderr, "Invalid parameter NULL\n");    \
@@ -33,17 +35,10 @@
 
 /* Implementation of the opaque type */
 struct _myGraph {
-  array_o *V;             /* generic dynamic array */
-  hashtable_o *hash_map;
+  hashtable_o *V;
+  hash_fnc hash;
+  KeyCompare compare;
 };
-
-typedef struct _myVertex {
-  void *elem;
-  void *adj;
-} vertex_o;
-
-vertex_o *vertex_new(graph_o *graph, size_t index, void *elem);
-vertex_o *graph_get(graph_o *graph, void *elem);
 
 /* riorganizzare gli argomenti! */
 graph_o* graph_new(size_t capacity, hash_fnc hash, KeyCompare compare) {
@@ -53,91 +48,53 @@ graph_o* graph_new(size_t capacity, hash_fnc hash, KeyCompare compare) {
     errno = ENOMEM;
     exit(EXIT_FAILURE);
   }
-  graph->V = array_new(capacity);
-  graph->hash_map = hashtable_new(capacity, hash, compare);
+  graph->hash = hash;
+  graph->compare = compare;
+  graph->V = hashtable_new(capacity, graph->hash, graph->compare);
   return graph;
 }
 
-vertex_o *vertex_new(graph_o *graph, size_t index, void *elem){
-  vertex_o *vertex = malloc(sizeof(vertex_o));
-  vertex->elem = elem;
-  vertex->adj = NULL;
-  return vertex;
-}
-
 void graph_free(graph_o *graph){
-  /* si presuppone che l'utente abbia fatto la free di elem */
-  for(size_t i = 0; i < array_size(graph->V); ++i){
-    vertex_o *vertex = array_at(graph->V, i);
-    if(vertex->adj != NULL){
-      list_free(vertex->adj);
-    }
-    free(vertex);
-  }
-  array_free(graph->V);
+  hashtable_free(graph->V); //fare la free dei hash_E! (serve iteratore?)
   free(graph);
   return;
 }
 
 size_t graph_size(graph_o *graph){
-  return array_size(graph->V);
+  return hashtable_size(graph->V);
 }
 
 void graph_add(graph_o *graph, void *elem){
-  vertex_o *vertex = vertex_new(graph, array_size(graph->V), elem);
-	size_t *index = (size_t*) malloc(sizeof(size_t));//TODO : da fare la free
-  *index = array_size(graph->V);
-  array_insert(graph->V, vertex);
-  hashtable_insert(graph->hash_map, elem, index);
+  hashtable_o *E = hashtable_new(EDGE_CAPACITY, graph->hash, graph->compare);
+  hashtable_insert(graph->V, elem, E);
   return;
 }
 
-vertex_o *graph_get(graph_o *graph, void *elem){
-	void* found = hashtable_search(graph->hash_map, elem);
-	if (found == NULL){
-		return NULL;
-	}
-	size_t index = *(size_t*)found;
-	return array_at(graph->V,index);
+void graph_link(graph_o *graph, void *x, void *y, int *weight, int bitmask){
+  ASSERT_PARAMETERS_NOT_NULL(graph);
+  ASSERT_PARAMETERS_NOT_NULL(x);
+  ASSERT_PARAMETERS_NOT_NULL(y);
 
-}
-
-//void graph_build_arch
-
-void graph_link(graph_o *graph, void *x, void *y, int weight, int bitmask){
-	ASSERT_PARAMETERS_NOT_NULL(graph);
-	ASSERT_PARAMETERS_NOT_NULL(x);
-	ASSERT_PARAMETERS_NOT_NULL(y);
-	node_o *list;
-			
-	printf("oriented!\n");
-	vertex_o *vertex_a = graph_get(graph, x);
-	vertex_o *vertex_b = graph_get(graph, y);
-	ASSERT_NOT_NULL(vertex_a);
-	ASSERT_NOT_NULL(vertex_b);
-
-	void* found = hashtable_search(graph->hash_map, vertex_a->elem);
-	ASSERT_NOT_NULL(found);
-
-	size_t index = *(size_t*)found;
-	vertex_o *vertex = array_at(graph->V,index);
-	
-	if(vertex == NULL){
-		list = list_new(vertex_b);
-	} else {
-		list_add(&list, vertex_b);
-	}
-	array_set(graph->V, index, list);
-	
-
-	if((bitmask & NO_ORIENTED) == NO_ORIENTED){
-    printf("no oriented!\n");
-		
+  hashtable_o *E = hashtable_search(graph->V, x);
+  if(E == NULL){
+    fprintf(stderr, "Invalid parameters: vertex not found\n");
+    errno = EINVAL;
+    exit(EXIT_FAILURE);
   }
-  
-  return;
+  hashtable_insert(E, y, weight);
+  if((bitmask & NO_ORIENTED) == NO_ORIENTED){
+    graph_link(graph, y, x, ORIENTED);
+  }
 }
 
+int graph_contains_vertex(graph_o *graph, void *v1){
+  return hashtable_search(graph->V, v1) != NULL;
+}
+
+int graph_contains_edge(graph_o *graph, void *v1, void *v2){
+  hashtable_o *E = hashtable_search(graph->V, v1);
+  return (hashtable_size(E) > 0)? hashtable_search(E, v2) != NULL : 0;
+}
 
 
 
