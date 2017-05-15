@@ -73,23 +73,18 @@ void graph_add(graph_o *graph, void *elem){
 void graph_link(graph_o *graph, void *x, void *y, int *weight, int bitmask){
   ASSERT_PARAMETERS_NOT_NULL(graph);
   ASSERT_PARAMETERS_NOT_NULL(x);
-  ASSERT_PARAMETERS_NOT_NULL(y);		
+  ASSERT_PARAMETERS_NOT_NULL(y);
 
   hashtable_o *E = hashtable_search(graph->V, x);
-  if(E != NULL){
-    hashtable_insert(E, y, weight);
-    if((bitmask & NO_ORIENTED) == NO_ORIENTED){
-      hashtable_o *E2 = hashtable_search(graph->V, y);
-      if(E2 != NULL){
-	hashtable_insert(E2, x, weight);
-	return;
-      }
-    }
-    return;
+  if(E == NULL){
+    fprintf(stderr, "Invalid parameters: vertex not found\n");
+    errno = EINVAL;
+    exit(EXIT_FAILURE);
   }
-  fprintf(stderr, "Invalid parameters: vertex not found\n");
-  errno = EINVAL;
-  exit(EXIT_FAILURE);
+  hashtable_insert(E, y, weight);
+  if((bitmask & NO_ORIENTED) == NO_ORIENTED){
+    graph_link(graph, y, x, ORIENTED);
+  }
 }
 
 int graph_contains_vertex(graph_o *graph, void *v1){
