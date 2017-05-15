@@ -273,6 +273,11 @@ node_o* array_h_at(array_h* array, size_t index) { //NB puo restituire null!
 
 void array_h_insert_at(array_h* array, size_t index, node_o* list) {
   ASSERT_PARAMETERS_NOT_NULL(array);
+  if(index > array->capacity) {
+    fprintf(stderr, "Array index (%d) out of bounds (0:%d)\n", (unsigned int)index, (unsigned int)array->capacity);
+    errno = ENOMEM;
+    exit(EXIT_FAILURE);
+  }
   array->array[index] = list;
   if(index >= array->size){
     array->size++;
