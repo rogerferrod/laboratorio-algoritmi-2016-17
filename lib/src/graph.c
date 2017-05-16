@@ -66,34 +66,34 @@ size_t graph_size(graph_o *graph){
 
 void graph_add(graph_o *graph, void *elem){
   hashtable_o *E = hashtable_new(EDGE_CAPACITY, graph->hash, graph->compare);
-  hashtable_insert(graph->V, elem, E);
+  hashtable_insert(&(graph->V), elem, E);
   return;
 }
 
-void graph_link(graph_o *graph, void *x, void *y, int *weight, int bitmask){
+void graph_link(graph_o *graph, void *x, void *y, float *weight, int bitmask){
   ASSERT_PARAMETERS_NOT_NULL(graph);
   ASSERT_PARAMETERS_NOT_NULL(x);
   ASSERT_PARAMETERS_NOT_NULL(y);
 
-  hashtable_o *E = hashtable_search(graph->V, x);
+  hashtable_o *E = hashtable_find(graph->V, x);
   if(E == NULL){
     fprintf(stderr, "Invalid parameters: vertex not found\n");
     errno = EINVAL;
     exit(EXIT_FAILURE);
   }
-  hashtable_insert(E, y, weight);
+  hashtable_insert(&E, y, weight);
   if((bitmask & NO_ORIENTED) == NO_ORIENTED){
-    graph_link(graph, y, x, ORIENTED);
+    graph_link(graph, y, x, weight, ORIENTED);
   }
 }
 
 int graph_contains_vertex(graph_o *graph, void *v1){
-  return hashtable_search(graph->V, v1) != NULL;
+  return hashtable_find(graph->V, v1) != NULL;
 }
 
 int graph_contains_edge(graph_o *graph, void *v1, void *v2){
-  hashtable_o *E = hashtable_search(graph->V, v1);
-  return (hashtable_size(E) > 0)? hashtable_search(E, v2) != NULL : 0;
+  hashtable_o *E = hashtable_find(graph->V, v1);
+  return (hashtable_size(E) > 0)? hashtable_find(E, v2) != NULL : 0;
 }
 
 

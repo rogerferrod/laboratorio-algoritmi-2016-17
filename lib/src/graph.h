@@ -39,7 +39,7 @@ extern size_t graph_size(graph_o *graph);
 
 extern void graph_add(graph_o *graph, void *elem);
 
-extern void graph_link(graph_o *graph, void *x, void *y, int *weight, int bitmask);
+extern void graph_link(graph_o *graph, void *x, void *y, float *weight, int bitmask);
 
 extern int graph_contains_vertex(graph_o *graph, void *v1);
 
