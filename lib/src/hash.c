@@ -28,14 +28,14 @@
 
 /* Implementation of the opaque type */
 typedef struct _myHashArray {
-  node_o **array;           /* generic array */  /* statico */
+  node_o **array;           /* array */
   size_t size;              /* size of the array */
   size_t capacity;          /* capacity of the array */
 }array_h;
 
 /* Implementation of the opaque type */
 struct _myHashtable {
-  array_h *T;           /* generic dynamic array */
+  array_h *T;           /* generic static array */
   hash_fnc hash;
   size_t size;
   KeyCompare key_compare;
@@ -45,7 +45,6 @@ struct _myHashtable {
 typedef struct _myHashEntry{
   void *key;
   void *value;
-  /* +hash code? */
 }hash_entry;
 
 
@@ -55,17 +54,20 @@ array_h* array_h_new(size_t);
 /* Deallocate an array */
 void array_h_free(array_h*);
 
+/* Returns array's length */
 size_t array_h_size(array_h*);
 
+/* Returns the array's capacity */
 size_t array_h_capacity(array_h*);
 
 /* Return a pointer to the element in the specified position */
 node_o* array_h_at(array_h*, size_t);
 
+/* Inserts element in the specified position with replacement */
 void array_h_insert_at(array_h*, size_t, node_o*);
 
 
-/* usare la memset per settare a NULL gli elementi! */
+
 hashtable_o* hashtable_new(size_t capacity, hash_fnc hash, KeyCompare compare) {
   if(capacity == 0) {
     fprintf(stderr, "Invalid parameter: capacity can't be 0\n");
@@ -105,7 +107,7 @@ void hashtable_free(hashtable_o *table){
   return;
 }
 
-void* hashtable_search(hashtable_o *table, void *key){
+void* hashtable_find(hashtable_o *table, void *key){
   ASSERT_PARAMETERS_NOT_NULL(table);
   size_t index = table->hash(key) % array_h_capacity(table->T);
   node_o *list = array_h_at(table->T, index);
@@ -122,10 +124,10 @@ void* hashtable_search(hashtable_o *table, void *key){
   return NULL;
 }
 
-void hashtable_insert(hashtable_o **table, void *key, void *value){ /*controllare se non esiste già? */
+void hashtable_insert(hashtable_o **table, void *key, void *value){
   ASSERT_PARAMETERS_NOT_NULL(table);
   ASSERT_PARAMETERS_NOT_NULL(key);
-  ASSERT_PARAMETERS_NOT_NULL(value); //può essere NULL -> aggiungere test!!!!
+  ASSERT_PARAMETERS_NOT_NULL(value);
 
   size_t index = (*table)->hash(key)% array_h_capacity((*table)->T);
   node_o *list = array_h_at((*table)->T, index);
@@ -218,6 +220,82 @@ size_t hashtable_capacity(hashtable_o *table){
   return array_h_capacity(table->T);
 }
 
+/* REMEMBER: iter è doppio puntatore */
+void hashtable_iter_init(hashtable_o *table, iterator *iter){
+  ASSERT_PARAMETERS_NOT_NULL(table);
+  node_o *list;
+  hash_entry *entry;
+
+  for(size_t i = 0; i < array_h_capacity(table->T); ++i){
+    list = array_h_at(table->T, i);
+    if(list != NULL){
+      entry = list_get_at(list, 0);
+      if(entry == NULL){
+	printf("ERRORE entry?\n");
+	exit(EXIT_FAILURE);
+      }
+      *iter = entry; /* iter punta a entry */
+      return;
+    }
+  }
+  
+  fprintf(stderr, "No such element\n");
+  errno = EPERM;
+  exit(EXIT_FAILURE);
+}
+
+int hashtable_iter_hasNext(hashtable_o *table, iterator *iter){
+  ASSERT_PARAMETERS_NOT_NULL(table);
+  return *iter != NULL;
+}
+
+void hashtable_iter_next(hashtable_o *table, iterator *iter, void **key, void **value){
+  ASSERT_PARAMETERS_NOT_NULL(table);
+  if(*iter == NULL){
+    fprintf(stderr, "No such element\n");
+    errno = EPERM;
+    exit(EXIT_FAILURE);
+  }
+  node_o *list;
+  hash_entry *entry = *iter;
+  
+  *key = entry->key;  //e' possibile copiare  valori?
+  *value = entry->value; //invece di passare un puntatore che è modificabile?
+
+  /* si sposta al successivo */
+  size_t index = table->hash(*key)% array_h_capacity(table->T);
+  list = array_h_at(table->T, index);
+  for(size_t i = 0; i < list_size(list); ++i){
+    entry = list_get_at(list, i);
+    if(table->key_compare(*key, entry->key) == 0){ /* ritrovato il punto esatto */
+      if(++i < list_size(list)){ /* se ha un next nella stessa lista */
+	entry = list_get_at(list, i);
+	*iter = entry;
+	return;
+      }
+    }
+  }
+
+  /* se non e' nella lista riprovo sull'array */
+  for(size_t i = index + 1; i < array_h_capacity(table->T); ++i){
+    list = array_h_at(table->T, i);
+    if(list != NULL){
+      entry = list_get_at(list, 0);
+      *iter = entry;
+      return;
+    }
+  }
+
+  /* no next */
+  *iter = NULL;
+  return;
+}
+
+/*
+ * Implementation of
+ * static array for table T
+ * 
+ */
 array_h* array_h_new(size_t capacity) {
   if(capacity == 0) {
     fprintf(stderr, "Invalid parameter: capacity can't be 0\n");
@@ -242,7 +320,7 @@ array_h* array_h_new(size_t capacity) {
   new_array->size = 0;
   new_array->capacity = capacity;
   for(size_t i = 0; i < capacity; ++i){
-    new_array->array[i] = NULL;
+    new_array->array[i] = NULL;  // usare memset
   }
   return new_array;
 }
