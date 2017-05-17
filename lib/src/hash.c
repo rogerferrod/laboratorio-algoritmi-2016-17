@@ -124,7 +124,9 @@ void* hashtable_find(hashtable_o *table, void *key){
   return NULL;
 }
 
-void hashtable_insert(hashtable_o **table, void *key, void *value){
+/* Insert or Replace*/
+
+void hashtable_put(hashtable_o **table, void *key, void *value){
   ASSERT_PARAMETERS_NOT_NULL(table);
   ASSERT_PARAMETERS_NOT_NULL(key);
   ASSERT_PARAMETERS_NOT_NULL(value);
@@ -151,12 +153,40 @@ void hashtable_insert(hashtable_o **table, void *key, void *value){
   return;
 }
 
+void hashtable_insert(hashtable_o **table, void *key, void *value){
+  ASSERT_PARAMETERS_NOT_NULL(table);
+  ASSERT_PARAMETERS_NOT_NULL(key);
+  ASSERT_PARAMETERS_NOT_NULL(value);
+
+	if(hashtable_contains(*table,key)){
+		fprintf(stderr, "Key already exits\n");
+		errno = EPERM;                    
+		exit(EXIT_FAILURE);
+	}
+  hashtable_put(table,key,value);
+  return;
+}
+
+void hashtable_replace(hashtable_o **table, void *key, void *value){
+  ASSERT_PARAMETERS_NOT_NULL(table);
+  ASSERT_PARAMETERS_NOT_NULL(key);
+  ASSERT_PARAMETERS_NOT_NULL(value);
+
+  if(hashtable_contains(*table,key) == 1){
+		fprintf(stderr, "Key does not exits\n");
+		errno = EPERM;                    
+		exit(EXIT_FAILURE);
+	}
+  hashtable_put(table,key,value);
+  return;
+}
+
 void hashtable_remove(hashtable_o *table, void *key){
   ASSERT_PARAMETERS_NOT_NULL(table);
   size_t index = table->hash(key) % array_h_capacity(table->T);
   node_o *list = array_h_at(table->T, index);
   hash_entry *entry;
-  int removed = 0;
+  size_t removed = 0;
   if(list == NULL){
     return;
   }
@@ -289,6 +319,11 @@ void hashtable_iter_next(hashtable_o *table, iterator *iter, void **key, void **
   /* no next */
   *iter = NULL;
   return;
+}
+
+int hashtable_contains(hashtable_o *table,void *key){
+
+	return hashtable_find(table,key) != NULL;
 }
 
 /*
