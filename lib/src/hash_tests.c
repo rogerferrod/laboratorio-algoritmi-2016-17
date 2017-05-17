@@ -204,9 +204,11 @@ static void test_hashtableIteratorNextFirst(){
   iterator *iter = (iterator*)malloc(sizeof(iterator));
   hashtable_iter_init(table, &iter);
 
-  char *key = new_int(0);
+  char *key = (char*)malloc(10*sizeof(char));
   int *value = new_int(0);
   hashtable_iter_next(table, &iter, &key, &value);
+  printf("key %s\n", key);
+  printf("value %d\n", *(int*)value);
   TEST_ASSERT_EQUAL_INT(0, strcmp("mouse", key)); /* mouse */
   TEST_ASSERT_EQUAL_INT(6, *(int*)value); /* mouse */
   TEST_ASSERT(NULL != iter);
@@ -223,7 +225,7 @@ static void test_hashtableIteratorNextMultiple(){
   iterator *iter = (iterator*)malloc(sizeof(iterator));
   hashtable_iter_init(table, &iter);
 
-  char *key = new_int(0);
+  char *key = (char*)malloc(10*sizeof(char));
   int *value = new_int(0);
   hashtable_iter_next(table, &iter, &key, &value);
   TEST_ASSERT_EQUAL_INT(6, *(int*)value); /* mouse */
@@ -248,7 +250,7 @@ static void test_hashtableIteratorHasNext(){
 
   iterator *iter = (iterator*)malloc(sizeof(iterator));
   hashtable_iter_init(table, &iter);
-  char *key = new_int(0);
+  char *key = (char*)malloc(10*sizeof(char));
   int *value = new_int(0);
 
   TEST_ASSERT_EQUAL_INT(1, hashtable_iter_hasNext(table, &iter));
