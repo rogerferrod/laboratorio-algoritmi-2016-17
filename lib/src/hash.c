@@ -152,7 +152,7 @@ void hashtable_put(hashtable_o **table, void *key, void *value){
   }
   return;
 }
-
+/*
 void hashtable_insert(hashtable_o **table, void *key, void *value){
   ASSERT_PARAMETERS_NOT_NULL(table);
   ASSERT_PARAMETERS_NOT_NULL(key);
@@ -180,7 +180,7 @@ void hashtable_replace(hashtable_o **table, void *key, void *value){
   hashtable_put(table,key,value);
   return;
 }
-
+*/
 void hashtable_remove(hashtable_o *table, void *key){
   ASSERT_PARAMETERS_NOT_NULL(table);
   size_t index = table->hash(key) % array_h_capacity(table->T);
@@ -230,7 +230,7 @@ void hashtable_expand(hashtable_o **table){
     if(list != NULL){
       for(size_t j = 0; j < list_size(list); ++j){
         entry = list_get_at(list, j);
-        hashtable_insert(&new_table, entry->key, entry->value);
+        hashtable_put(&new_table, entry->key, entry->value);
       }
     }
   }
