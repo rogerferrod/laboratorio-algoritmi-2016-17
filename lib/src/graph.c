@@ -97,23 +97,57 @@ int graph_contains_edge(graph_o *graph, void *v1, void *v2){
   return (hashtable_size(E) > 0)? hashtable_find(E, v2) != NULL : 0;
 }
 
-void graph_vertex_iter_init(graph_o *graph, vertexIterator *iter) {
+void graph_vertex_iter_init(graph_o *graph, graphIterator *iter) {
   ASSERT_PARAMETERS_NOT_NULL(graph);
-
   hashtable_iter_init(graph->V, iter);
   return;
 }
 
-int graph_vertex_iter_hasNext(graph_o *graph, vertexIterator *iter) {
+int graph_vertex_iter_hasNext(graph_o *graph, graphIterator *iter) {
   ASSERT_PARAMETERS_NOT_NULL(graph);
   return hashtable_iter_hasNext(graph->V, iter);
 }
 
-void graph_vertex_iter_next(graph_o *graph, vertexIterator *iter, void **elem, void **adj) {
+void graph_vertex_iter_next(graph_o *graph, graphIterator *iter, void **elem, void **adj) {
   ASSERT_PARAMETERS_NOT_NULL(graph);
   hashtable_iter_next(graph->V, iter, elem, adj);
   return;
 }
+
+void graph_edge_iter_init(graph_o *graph, void *elem, graphIterator *iter){
+  ASSERT_PARAMETERS_NOT_NULL(graph);
+  hashtable_o *E = hashtable_find(graph->V, elem);
+  if(E == NULL){
+    fprintf(stderr, "Invalid parameters: vertex not found\n");
+    errno = EINVAL;
+    exit(EXIT_FAILURE);
+  }
+  hashtable_iter_init(E, iter);
+  return;
+}
+
+int graph_edge_iter_hasNext(graph_o *graph, void *elem, graphIterator *iter){
+  ASSERT_PARAMETERS_NOT_NULL(graph);
+  hashtable_o *E = hashtable_find(graph->V, elem);
+  if(E == NULL){
+    fprintf(stderr, "Invalid parameters: vertex not found\n");
+    errno = EINVAL;
+    exit(EXIT_FAILURE);
+  }
+  return hashtable_iter_hasNext(E, iter);
+}
+
+void graph_edge_iter_next(graph_o *graph, void *elem, graphIterator *iter, void **adj_elem, float **weight){
+  ASSERT_PARAMETERS_NOT_NULL(graph);
+  hashtable_o *E = hashtable_find(graph->V, elem);
+  if(E == NULL){
+    fprintf(stderr, "Invalid parameters: vertex not found\n");
+    errno = EINVAL;
+    exit(EXIT_FAILURE);
+  }
+  hashtable_iter_next(E, iter, adj_elem, weight);
+}
+
 
 
 

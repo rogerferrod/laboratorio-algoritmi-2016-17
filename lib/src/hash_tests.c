@@ -202,7 +202,7 @@ static void test_hashtableIteratorNextFirst(){
   hashtable_iter_next(table, iter, &key, &value);
   TEST_ASSERT_EQUAL_INT(0, strcmp("mouse", key)); /* mouse */
   TEST_ASSERT_EQUAL_INT(6, *(int*)value); /* mouse */
-  TEST_ASSERT(NULL != iter);
+  TEST_ASSERT(NULL != *iter);
 
   hashtable_free(table);
 	free(iter);
@@ -231,7 +231,7 @@ static void test_hashtableIteratorNextMultiple(){
   TEST_ASSERT(NULL == *iter);
 
   hashtable_free(table);
-	free(iter);
+  free(iter);
 }
 
 static void test_hashtableIteratorHasNext(){
@@ -257,7 +257,7 @@ static void test_hashtableIteratorHasNext(){
   TEST_ASSERT_EQUAL_INT(0, hashtable_iter_hasNext(table, iter));
   
   hashtable_free(table);
-	free(iter);
+  free(iter);
 }
 
 static void test_hashtableIterator(){
@@ -265,7 +265,7 @@ static void test_hashtableIterator(){
   hashtable_put(&table, "hello", new_int(5));
   hashtable_put(&table, "mouse", new_int(6));
   hashtable_put(&table, "hi", new_int(4));
-	hashtable_put(&table, "bye", new_int(3));
+  hashtable_put(&table, "bye", new_int(3));
 
   iterator *iter = (iterator*)malloc(sizeof(iterator));
   hashtable_iter_init(table, iter);
