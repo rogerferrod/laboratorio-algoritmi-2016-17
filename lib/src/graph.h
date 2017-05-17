@@ -28,6 +28,7 @@ typedef struct _myGraph graph_o;
 /* Definition of the graph's compare function */
 typedef int (*GraphCompare)(void*, void*);
 
+typedef struct _myHashEntry* vertexIterator;
 
 
 /* Return a newly allocated graph */
@@ -39,9 +40,15 @@ extern size_t graph_size(graph_o *graph);
 
 extern void graph_add(graph_o *graph, void *elem);
 
-extern void graph_link(graph_o *graph, void *x, void *y, float *weight, int bitmask);
+extern void graph_connect(graph_o *graph, void *x, void *y, float *weight, int bitmask);
 
 extern int graph_contains_vertex(graph_o *graph, void *v1);
 
 extern int graph_contains_edge(graph_o *graph, void *v1, void *v2);
+
+extern void graph_vertex_iter_init(graph_o *graph, vertexIterator *iter);
+
+extern int graph_vertex_iter_hasNext(graph_o *graph, vertexIterator *iter);
+
+extern void graph_vertex_iter_next(graph_o *graph, vertexIterator *iter, void **elem, void **adj);
 

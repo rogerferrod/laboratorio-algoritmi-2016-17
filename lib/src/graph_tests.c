@@ -12,6 +12,7 @@
 #include "unity.h"
 #include "unity_internals.h"
 #include "graph.h"
+#include "hash.h"
 
 static int compare_str(void *x, void *y){
   return strcmp(x, y);
@@ -63,20 +64,20 @@ static void test_graphAdd(){
   graph_free(graph);
 }
 
-static void test_graphLinkSimpleOriented(){
+static void test_graphConnectSimpleOriented(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
   graph_add(graph, "B");
-  graph_link(graph, "A", "B", new_float(0.0), ORIENTED);
+  graph_connect(graph, "A", "B", new_float(0.0), ORIENTED);
   TEST_ASSERT_EQUAL_INT_MESSAGE(1, 1, "Link graph failed");
   graph_free(graph);
 }
 
-static void test_graphLinkSimpleNoOriented(){
+static void test_graphConnectSimpleNoOriented(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
   graph_add(graph, "B");
-  graph_link(graph, "A", "B", new_float(0.0), NO_ORIENTED);
+  graph_connect(graph, "A", "B", new_float(0.0), NO_ORIENTED);
   TEST_ASSERT_EQUAL_INT_MESSAGE(1, 1, "Link graph failed");
   graph_free(graph);
 }
@@ -92,7 +93,7 @@ static void test_graphContainsEdge(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
   graph_add(graph, "B");
-  graph_link(graph, "A", "B", new_float(0.0), ORIENTED);
+  graph_connect(graph, "A", "B", new_float(0.0), ORIENTED);
   TEST_ASSERT_EQUAL_INT(1, graph_contains_edge(graph, "A", "B"));
   graph_free(graph);
 }
@@ -101,7 +102,7 @@ static void test_graphNotContainsEdge(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
   graph_add(graph, "B");
-  graph_link(graph, "A", "B", new_float(0.0), ORIENTED);
+  graph_connect(graph, "A", "B", new_float(0.0), ORIENTED);
   TEST_ASSERT_EQUAL_INT(0, graph_contains_edge(graph, "A", "A"));
   graph_free(graph);
 }
@@ -113,10 +114,10 @@ static void test_graphMultipleEdge(){
   graph_add(graph, "C");
   graph_add(graph, "D");
   graph_add(graph, "E");
-  graph_link(graph, "A", "B", new_float(0.0), ORIENTED);
-  graph_link(graph, "A", "C", new_float(0.0), ORIENTED);
-  graph_link(graph, "A", "D", new_float(0.0), ORIENTED);
-  graph_link(graph, "B", "D", new_float(0.0), ORIENTED);
+  graph_connect(graph, "A", "B", new_float(0.0), ORIENTED);
+  graph_connect(graph, "A", "C", new_float(0.0), ORIENTED);
+  graph_connect(graph, "A", "D", new_float(0.0), ORIENTED);
+  graph_connect(graph, "B", "D", new_float(0.0), ORIENTED);
   TEST_ASSERT_EQUAL_INT(1, graph_contains_edge(graph, "A", "B"));
   TEST_ASSERT_EQUAL_INT(1, graph_contains_edge(graph, "A", "C"));
   TEST_ASSERT_EQUAL_INT(1, graph_contains_edge(graph, "A", "D"));
@@ -124,11 +125,11 @@ static void test_graphMultipleEdge(){
   graph_free(graph);
 }
 
-static void test_graphLinkNoOriented(){
+static void test_graphConnectNoOriented(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
   graph_add(graph, "B");
-  graph_link(graph, "A", "B", new_float(0.0), NO_ORIENTED);
+  graph_connect(graph, "A", "B", new_float(0.0), NO_ORIENTED);
   TEST_ASSERT_EQUAL_INT(1, graph_contains_edge(graph, "A", "B"));
   TEST_ASSERT_EQUAL_INT(1, graph_contains_edge(graph, "B", "A"));
   graph_free(graph);
@@ -141,13 +142,13 @@ int main() {
   RUN_TEST(test_graphFree);
   RUN_TEST(test_graphSizeEmpty);
   RUN_TEST(test_graphAdd);
-  RUN_TEST(test_graphLinkSimpleOriented);
-  RUN_TEST(test_graphLinkSimpleNoOriented);
+  RUN_TEST(test_graphConnectSimpleOriented);
+  RUN_TEST(test_graphConnectSimpleNoOriented);
   RUN_TEST(test_graphContainsVertex);
   RUN_TEST(test_graphContainsEdge);
   RUN_TEST(test_graphNotContainsEdge);
   RUN_TEST(test_graphMultipleEdge);
-  RUN_TEST(test_graphLinkNoOriented);
+  RUN_TEST(test_graphConnectNoOriented);
   return UNITY_END();
 }
 

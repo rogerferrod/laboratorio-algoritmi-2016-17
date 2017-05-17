@@ -15,10 +15,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
-#include "graph.h"
 #include "array.h"
 #include "list.h"
 #include "hash.h"
+#include "graph.h"
 
 #define EDGE_CAPACITY 5
 
@@ -39,6 +39,7 @@ struct _myGraph {
   hash_fnc hash;
   KeyCompare compare;
 };
+
 
 /* riorganizzare gli argomenti! */
 graph_o* graph_new(size_t capacity, hash_fnc hash, KeyCompare compare) {
@@ -66,11 +67,11 @@ size_t graph_size(graph_o *graph){
 
 void graph_add(graph_o *graph, void *elem){
   hashtable_o *E = hashtable_new(EDGE_CAPACITY, graph->hash, graph->compare);
-  hashtable_insert(&(graph->V), elem, E);
+  hashtable_put(&(graph->V), elem, E);
   return;
 }
 
-void graph_link(graph_o *graph, void *x, void *y, float *weight, int bitmask){
+void graph_connect(graph_o *graph, void *x, void *y, float *weight, int bitmask){
   ASSERT_PARAMETERS_NOT_NULL(graph);
   ASSERT_PARAMETERS_NOT_NULL(x);
   ASSERT_PARAMETERS_NOT_NULL(y);
@@ -81,9 +82,9 @@ void graph_link(graph_o *graph, void *x, void *y, float *weight, int bitmask){
     errno = EINVAL;
     exit(EXIT_FAILURE);
   }
-  hashtable_insert(&E, y, weight);
+  hashtable_put(&E, y, weight);
   if((bitmask & NO_ORIENTED) == NO_ORIENTED){
-    graph_link(graph, y, x, weight, ORIENTED);
+    graph_connect(graph, y, x, weight, ORIENTED);
   }
 }
 
@@ -94,6 +95,24 @@ int graph_contains_vertex(graph_o *graph, void *v1){
 int graph_contains_edge(graph_o *graph, void *v1, void *v2){
   hashtable_o *E = hashtable_find(graph->V, v1);
   return (hashtable_size(E) > 0)? hashtable_find(E, v2) != NULL : 0;
+}
+
+void graph_vertex_iter_init(graph_o *graph, vertexIterator *iter) {
+  ASSERT_PARAMETERS_NOT_NULL(graph);
+
+  hashtable_iter_init(graph->V, iter);
+  return;
+}
+
+int graph_vertex_iter_hasNext(graph_o *graph, vertexIterator *iter) {
+  ASSERT_PARAMETERS_NOT_NULL(graph);
+  return hashtable_iter_hasNext(graph->V, iter);
+}
+
+void graph_vertex_iter_next(graph_o *graph, vertexIterator *iter, void **elem, void **adj) {
+  ASSERT_PARAMETERS_NOT_NULL(graph);
+  hashtable_iter_next(graph->V, iter, elem, adj);
+  return;
 }
 
 
