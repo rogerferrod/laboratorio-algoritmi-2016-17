@@ -188,7 +188,7 @@ static void test_hashtableIteratorInit(){
   hashtable_insert(&table, "hi", new_int(4));
 
   iterator *iter = (iterator*)malloc(sizeof(iterator));
-  hashtable_iter_init(table, &iter);
+  hashtable_iter_init(table, iter);
 
   TEST_ASSERT(NULL != iter);
 
@@ -202,12 +202,12 @@ static void test_hashtableIteratorNextFirst(){
   hashtable_insert(&table, "hi", new_int(4));
 
   iterator *iter = (iterator*)malloc(sizeof(iterator));
-  hashtable_iter_init(table, &iter);
+  hashtable_iter_init(table, iter);
 
-  char *key = (char*)malloc(10*sizeof(char));
-  int *value = new_int(0);
-  hashtable_iter_next(table, &iter, &key, &value);
-  printf("key %s\n", key);
+  void *key = (char*)malloc(10*sizeof(char));
+  void *value = new_int(0);
+  hashtable_iter_next(table, iter, &key, &value);
+  printf("key %s\n",(char*) key);
   printf("value %d\n", *(int*)value);
   TEST_ASSERT_EQUAL_INT(0, strcmp("mouse", key)); /* mouse */
   TEST_ASSERT_EQUAL_INT(6, *(int*)value); /* mouse */
@@ -223,20 +223,20 @@ static void test_hashtableIteratorNextMultiple(){
   hashtable_insert(&table, "hi", new_int(4));
 
   iterator *iter = (iterator*)malloc(sizeof(iterator));
-  hashtable_iter_init(table, &iter);
+  hashtable_iter_init(table, iter);
 
-  char *key = (char*)malloc(10*sizeof(char));
-  int *value = new_int(0);
-  hashtable_iter_next(table, &iter, &key, &value);
+  void *key = (char*)malloc(10*sizeof(char));
+  void *value = new_int(0);
+  hashtable_iter_next(table, iter, &key, &value);
   TEST_ASSERT_EQUAL_INT(6, *(int*)value); /* mouse */
 
-  hashtable_iter_next(table, &iter, &key, &value);
+  hashtable_iter_next(table, iter, &key, &value);
   TEST_ASSERT_EQUAL_INT(5, *(int*)value); /* house */
 
-  hashtable_iter_next(table, &iter, &key, &value);
+  hashtable_iter_next(table, iter, &key, &value);
   TEST_ASSERT_EQUAL_INT(4, *(int*)value); /* hi */
 
-  TEST_ASSERT(NULL == iter);
+  TEST_ASSERT(NULL == *iter);
 
   hashtable_free(table);
 }
@@ -249,19 +249,19 @@ static void test_hashtableIteratorHasNext(){
   hashtable_insert(&table, "bye", new_int(2));
 
   iterator *iter = (iterator*)malloc(sizeof(iterator));
-  hashtable_iter_init(table, &iter);
-  char *key = (char*)malloc(10*sizeof(char));
-  int *value = new_int(0);
+  hashtable_iter_init(table, iter);
+  void *key = (char*)malloc(10*sizeof(char));
+  void *value = new_int(0);
 
-  TEST_ASSERT_EQUAL_INT(1, hashtable_iter_hasNext(table, &iter));
-  hashtable_iter_next(table, &iter, &key, &value);
-  TEST_ASSERT_EQUAL_INT(1, hashtable_iter_hasNext(table, &iter));
-  hashtable_iter_next(table, &iter, &key, &value);
-  TEST_ASSERT_EQUAL_INT(1, hashtable_iter_hasNext(table, &iter));
-  hashtable_iter_next(table, &iter, &key, &value);
-  TEST_ASSERT_EQUAL_INT(1, hashtable_iter_hasNext(table, &iter));
-  hashtable_iter_next(table, &iter, &key, &value);
-  TEST_ASSERT_EQUAL_INT(0, hashtable_iter_hasNext(table, &iter));
+  TEST_ASSERT_EQUAL_INT(1, hashtable_iter_hasNext(table, iter));
+  hashtable_iter_next(table, iter, &key, &value);
+  TEST_ASSERT_EQUAL_INT(1, hashtable_iter_hasNext(table, iter));
+  hashtable_iter_next(table, iter, &key, &value);
+  TEST_ASSERT_EQUAL_INT(1, hashtable_iter_hasNext(table, iter));
+  hashtable_iter_next(table, iter, &key, &value);
+  TEST_ASSERT_EQUAL_INT(1, hashtable_iter_hasNext(table, iter));
+  hashtable_iter_next(table, iter, &key, &value);
+  TEST_ASSERT_EQUAL_INT(0, hashtable_iter_hasNext(table, iter));
   
   hashtable_free(table);
 }
