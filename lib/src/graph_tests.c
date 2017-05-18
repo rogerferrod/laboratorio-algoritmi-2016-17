@@ -101,14 +101,14 @@ static void test_graphSizeOriented(){
   graph_free(graph);
 }
 
-static void test_graphSizeNonOriented(){
+static void test_graphSizeNotOriented(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
   graph_add(graph, "B");
   graph_add(graph, "C");
   graph_connect(graph, "A", "B", new_float(0.0), NO_ORIENTED);
   graph_connect(graph, "A", "C", new_float(0.0), NO_ORIENTED);
-  TEST_ASSERT_EQUAL_INT(2, graph_size(graph));
+  TEST_ASSERT_EQUAL_INT(4, graph_size(graph));
   graph_free(graph);
 }
 
@@ -195,13 +195,13 @@ static void test_graphVertexIteratorInit(){
   graph_add(graph, "A");
   graph_add(graph, "B");
   graph_connect(graph, "A", "B", new_float(0.0), NO_ORIENTED); // prova senza 
-  graphIterator *viter = (graphIterator*)malloc(sizeof(graphIterator));
-  graph_vertex_iter_init(graph, viter);
+  graphIterator *vertex_iter = (graphIterator*)malloc(sizeof(graphIterator));
+  graph_vertex_iter_init(graph, vertex_iter);
 
-  TEST_ASSERT(NULL != *viter);
+  TEST_ASSERT(NULL != *vertex_iter);
 
   graph_free(graph);
-  free(viter);
+  free(vertex_iter);
 }
 
 static void test_graphVertexIterator(){
@@ -211,20 +211,20 @@ static void test_graphVertexIterator(){
   graph_add(graph, "C");
   graph_add(graph, "D");
  
-  graphIterator *viter = (graphIterator*)malloc(sizeof(graphIterator));
-  graph_vertex_iter_init(graph, viter);
+  graphIterator *vertex_iter = (graphIterator*)malloc(sizeof(graphIterator));
+  graph_vertex_iter_init(graph, vertex_iter);
 
-  void *elem = (char*)malloc(10*sizeof(char)); /* nome vertice */
+  void *elem = NULL;//(char*)malloc(10*sizeof(char)); /* nome vertice */
   void *adj = NULL; /* hashtable E */
-  while(graph_vertex_iter_hasNext(graph, viter)){
-    graph_vertex_iter_next(graph, viter, &elem, &adj);
+  while(graph_vertex_iter_hasNext(graph, vertex_iter)){
+    graph_vertex_iter_next(graph, vertex_iter, &elem, &adj);
     printf("elem %s \n", (char*)elem);
   }
   
-  TEST_ASSERT(NULL == *viter);
+  TEST_ASSERT(NULL == *vertex_iter);
 
   graph_free(graph);
-  free(viter);
+  free(vertex_iter);
 }
 
 static void test_graphEdgeIteratorInit(){
@@ -236,13 +236,13 @@ static void test_graphEdgeIteratorInit(){
   graph_connect(graph, "A", "B", new_float(0.0), NO_ORIENTED);
   graph_connect(graph, "A", "C", new_float(0.0), NO_ORIENTED);
   graph_connect(graph, "A", "D", new_float(0.0), NO_ORIENTED);
-  graphIterator *eiter = (graphIterator*)malloc(sizeof(graphIterator));
-  graph_edge_iter_init(graph, "A", eiter);
+  graphIterator *edge_iter = (graphIterator*)malloc(sizeof(graphIterator));
+  graph_edge_iter_init(graph, "A", edge_iter);
 
-  TEST_ASSERT(NULL != *eiter);
+  TEST_ASSERT(NULL != *edge_iter);
 
   graph_free(graph);
-  free(eiter);
+  free(edge_iter);
 }
 
 static void test_graphEdgeIterator(){
@@ -254,21 +254,21 @@ static void test_graphEdgeIterator(){
   graph_connect(graph, "A", "B", new_float(2.9), NO_ORIENTED);
   graph_connect(graph, "A", "C", new_float(5.3), NO_ORIENTED);
   graph_connect(graph, "A", "D", new_float(1.6), NO_ORIENTED);
-  graphIterator *eiter = (graphIterator*)malloc(sizeof(graphIterator));
-  graph_edge_iter_init(graph, "A", eiter);
-  void *adj = (char*)malloc(10*sizeof(char));
+  graphIterator *edge_iter = (graphIterator*)malloc(sizeof(graphIterator));
+  graph_edge_iter_init(graph, "A", edge_iter);
+  void *adj = NULL;//(char*)malloc(10*sizeof(char));
   float *weight;
 
-  //prova l- hasNext su B o qualcos altro di non initializzato
-  while(graph_edge_iter_hasNext(graph, "A", eiter)){
-    graph_edge_iter_next(graph, "A", eiter, &adj, &weight);
+  //prova l- hasNext su B o qualcos altro di non inizializzato
+  while(graph_edge_iter_hasNext(graph, "A", edge_iter)){
+    graph_edge_iter_next(graph, "A", edge_iter, &adj, &weight);
     printf("edge(%s-%f) \n", (char*)adj, *(float*)weight);
   }
 
-  TEST_ASSERT(NULL == *eiter);
+  TEST_ASSERT(NULL == *edge_iter);
 
   graph_free(graph);
-  free(eiter);
+  free(edge_iter);
 }
 
 int main() {
@@ -280,7 +280,7 @@ int main() {
   RUN_TEST(test_graphSizeEmpty);
   RUN_TEST(test_graphSizeNoLinks);
   RUN_TEST(test_graphSizeOriented);
-  RUN_TEST(test_graphSizeNonOriented);
+  RUN_TEST(test_graphSizeNotOriented);
   RUN_TEST(test_graphAdd);
   RUN_TEST(test_graphConnectSimpleOriented);
   RUN_TEST(test_graphConnectSimpleNoOriented);
