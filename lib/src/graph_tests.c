@@ -53,16 +53,16 @@ static void test_graphFree(){
   TEST_ASSERT_EQUAL_INT_MESSAGE(1, 1, "Free graph failed");
 }
 
-static void test_graphSizeEmpty(){
+static void test_graphOrderEmpty(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
-  TEST_ASSERT_EQUAL_INT(0, graph_size(graph));
+  TEST_ASSERT_EQUAL_INT(0, graph_order(graph));
   graph_free(graph);
 }
 
 static void test_graphAdd(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
-  TEST_ASSERT_EQUAL_INT(1, graph_size(graph));
+  TEST_ASSERT_EQUAL_INT(1, graph_order(graph));
   graph_free(graph);
 }
 
@@ -222,7 +222,7 @@ int main() {
   UNITY_BEGIN();
   RUN_TEST(test_graphNew);
   RUN_TEST(test_graphFree);
-  RUN_TEST(test_graphSizeEmpty);
+  RUN_TEST(test_graphOrderEmpty);
   RUN_TEST(test_graphAdd);
   RUN_TEST(test_graphConnectSimpleOriented);
   RUN_TEST(test_graphConnectSimpleNoOriented);

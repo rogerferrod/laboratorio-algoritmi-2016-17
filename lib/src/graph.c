@@ -56,16 +56,19 @@ graph_o* graph_new(size_t capacity, hash_fnc hash, KeyCompare compare) {
 }
 
 void graph_free(graph_o *graph){
+  ASSERT_PARAMETERS_NOT_NULL(graph);
   hashtable_free(graph->V); //fare la free dei hash_E! (serve iteratore?)
   free(graph);
   return;
 }
 
-size_t graph_size(graph_o *graph){
+size_t graph_order(graph_o *graph){
+  ASSERT_PARAMETERS_NOT_NULL(graph);
   return hashtable_size(graph->V);
 }
 
 void graph_add(graph_o *graph, void *elem){
+  ASSERT_PARAMETERS_NOT_NULL(graph);
   hashtable_o *E = hashtable_new(EDGE_CAPACITY, graph->hash, graph->compare);
   hashtable_put(&(graph->V), elem, E);
   return;
@@ -89,10 +92,12 @@ void graph_connect(graph_o *graph, void *x, void *y, float *weight, int bitmask)
 }
 
 int graph_contains_vertex(graph_o *graph, void *v1){
+  ASSERT_PARAMETERS_NOT_NULL(graph);
   return hashtable_find(graph->V, v1) != NULL;
 }
 
 int graph_contains_edge(graph_o *graph, void *v1, void *v2){
+  ASSERT_PARAMETERS_NOT_NULL(graph);
   hashtable_o *E = hashtable_find(graph->V, v1);
   return (hashtable_size(E) > 0)? hashtable_find(E, v2) != NULL : 0;
 }
