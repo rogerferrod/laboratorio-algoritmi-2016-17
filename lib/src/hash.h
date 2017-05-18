@@ -35,11 +35,11 @@ extern hashtable_o* hashtable_new(size_t capacity, hash_fnc hash, KeyCompare com
 extern void hashtable_free(hashtable_o *hashtable);
 
 extern void hashtable_put(hashtable_o **table, void *key, void *value);
-/*
-extern void hashtable_insert(hashtable_o **table, void *key, void *value);
 
-extern void hashtable_replace(hashtable_o **table, void *key, void *value);
-*/
+//extern void hashtable_insert(hashtable_o **table, void *key, void *value);
+
+//extern void hashtable_replace(hashtable_o **table, void *key, void *value);
+
 extern void* hashtable_find(hashtable_o *table, void *key);
 
 extern void hashtable_remove(hashtable_o *table, void *key);

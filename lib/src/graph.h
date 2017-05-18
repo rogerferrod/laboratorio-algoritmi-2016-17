@@ -44,9 +44,11 @@ extern void graph_add(graph_o *graph, void *elem);
 
 extern void graph_connect(graph_o *graph, void *x, void *y, float *weight, int bitmask);
 
-extern int graph_contains_vertex(graph_o *graph, void *v1);
+extern int graph_contains_vertex(graph_o *graph, void *v);
 
 extern int graph_contains_edge(graph_o *graph, void *v1, void *v2);
+
+extern size_t graph_vertex_degree(graph_o *graph, void *v);
 
 /* Vertex iterator */
 extern void graph_vertex_iter_init(graph_o *graph, graphIterator *iter);

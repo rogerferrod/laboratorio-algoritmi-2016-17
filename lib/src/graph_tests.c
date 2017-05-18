@@ -190,6 +190,44 @@ static void test_graphConnectNoOriented(){
   graph_free(graph);
 }
 
+static void test_graphVertexDegreeEmpty() {
+  //size_t graph_vertex_degree(graph_o *graph, void *v) {
+  graph_o *graph = graph_new(5, djb2a, compare_str);
+  graph_add(graph, "A");
+  TEST_ASSERT_EQUAL_INT(0, graph_vertex_degree(graph, "A"));
+  graph_free(graph);
+}
+
+static void test_graphVertexDegreeOriented() {
+  graph_o *graph = graph_new(5, djb2a, compare_str);
+  graph_add(graph, "A");
+  graph_add(graph, "B");
+  graph_add(graph, "C");
+  graph_add(graph, "D");
+  graph_connect(graph, "A", "B", new_float(0.0), ORIENTED);
+  graph_connect(graph, "A", "C", new_float(0.0), ORIENTED);
+  graph_connect(graph, "A", "D", new_float(0.0), ORIENTED);
+  TEST_ASSERT_EQUAL_INT(3, graph_vertex_degree(graph, "A"));
+  TEST_ASSERT_EQUAL_INT(0, graph_vertex_degree(graph, "B"));
+  TEST_ASSERT_EQUAL_INT(0, graph_vertex_degree(graph, "C"));
+  graph_free(graph);
+}
+
+static void test_graphVertexDegreeNotOriented() {
+  graph_o *graph = graph_new(5, djb2a, compare_str);
+  graph_add(graph, "A");
+  graph_add(graph, "B");
+  graph_add(graph, "C");
+  graph_add(graph, "D");
+  graph_connect(graph, "A", "B", new_float(0.0), NO_ORIENTED);
+  graph_connect(graph, "A", "C", new_float(0.0), NO_ORIENTED);
+  graph_connect(graph, "A", "D", new_float(0.0), NO_ORIENTED);
+  TEST_ASSERT_EQUAL_INT(3, graph_vertex_degree(graph, "A"));
+  TEST_ASSERT_EQUAL_INT(1, graph_vertex_degree(graph, "B"));
+  TEST_ASSERT_EQUAL_INT(1, graph_vertex_degree(graph, "C"));
+  graph_free(graph);
+}
+
 static void test_graphVertexIteratorInit(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
@@ -289,6 +327,9 @@ int main() {
   RUN_TEST(test_graphNotContainsEdge);
   RUN_TEST(test_graphMultipleEdge);
   RUN_TEST(test_graphConnectNoOriented);
+  RUN_TEST(test_graphVertexDegreeEmpty);
+  RUN_TEST(test_graphVertexDegreeOriented);
+  RUN_TEST(test_graphVertexDegreeNotOriented);
   RUN_TEST(test_graphVertexIteratorInit);
   RUN_TEST(test_graphVertexIterator);
   RUN_TEST(test_graphEdgeIteratorInit);

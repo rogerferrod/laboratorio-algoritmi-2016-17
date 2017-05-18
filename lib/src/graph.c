@@ -114,9 +114,9 @@ void graph_connect(graph_o *graph, void *x, void *y, float *weight, int bitmask)
   }
 }
 
-int graph_contains_vertex(graph_o *graph, void *v1){
+int graph_contains_vertex(graph_o *graph, void *v){
   ASSERT_PARAMETERS_NOT_NULL(graph);
-  return hashtable_find(graph->V, v1) != NULL;
+  return hashtable_find(graph->V, v) != NULL;
 }
 
 int graph_contains_edge(graph_o *graph, void *v1, void *v2){
@@ -125,6 +125,12 @@ int graph_contains_edge(graph_o *graph, void *v1, void *v2){
   return (hashtable_size(E) > 0)? hashtable_find(E, v2) != NULL : 0;
 }
 
+size_t graph_vertex_degree(graph_o *graph, void *v) {
+  ASSERT_PARAMETERS_NOT_NULL(graph);
+  hashtable_o *E = hashtable_find(graph->V, v);
+  ASSERT_NOT_NULL(E);
+  return hashtable_size(E);
+}
 void graph_vertex_iter_init(graph_o *graph, graphIterator *iter) {
   ASSERT_PARAMETERS_NOT_NULL(graph);
   hashtable_iter_init(graph->V, (iterator*)iter);
