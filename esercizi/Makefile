@@ -1,6 +1,6 @@
 CC = gcc
 # Parametri per l'esercizio 1
-COUNT = 1000	# Parametro anche per l'esercizio 2
+COUNT = 1000	# Parametro anche per l'esercizio 2 e il 5
 ALG = qsort
 FIELD = field1
 ORDER = ascending
@@ -19,7 +19,7 @@ JAVA_COMPILE_PARAMS = -d bin/ -Xlint:all -Xdiags:verbose
 # Lista dei target da eseguire sempre
 all: compile
 
-compile: compile_es1
+compile: compile_es5
 
 #compile es1 and its libs
 compile_es1:
@@ -30,13 +30,19 @@ compile_es2:
 	$(MAKE) -C ../lib build_es2
 	javac -cp ../lib/bin/Tree.jar src/esercizio2.java -d bin
 
+compile_es5:
+	$(MAKE) -C ../lib build_es5
+	$(MAKE) bin/esercizio5
+
 #  compila e esegue l'esercizio2
-exec: exec_es2
+exec: exec_es5
 
 exec_es1: compile_es1
 	bin/esercizio1 data/records.csv ${COUNT} ${ALG} ${FIELD} ${ORDER}
 exec_es2: compile_es2
 	java -cp bin:../lib/bin/Tree.jar esercizio2 ${CSV} ${COUNT}
+exec_es5: compile_es5
+	bin/esercizio5 data/italian_dist_graph.csv ${COUNT}
 
 # regola per compilare un .c in un .o
 # viene applicata ogni volta che una dipendenza richiede di compilare un file in
@@ -50,10 +56,13 @@ build/%.o: src/%.c $(COMMON_DEPS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 bin/esercizio1: build/esercizio1.o $(COMMON_DEPS)
-	$(CC) -o bin/esercizio1  build/esercizio1.o ../lib/build/array.o ../lib/build/sort.o
+	$(CC) -o bin/esercizio1 build/esercizio1.o ../lib/build/array.o ../lib/build/sort.o
 
 bin/esercizio2: src/esercizio2.java
 	javac $(JAVA_COMPILE_PARAMS) src/esercizio2.java
+
+bin/esercizio5: build/esercizio5.o $(COMMON_DEPS)
+	$(CC) -o bin/esercizio5 build/esercizio5.o ../lib/build/graph.o ../lib/build/hash.o ../lib/build/list.o
 
 clean:
 	rm -f build/* bin/*
