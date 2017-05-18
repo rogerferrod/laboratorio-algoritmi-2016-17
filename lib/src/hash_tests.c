@@ -61,6 +61,22 @@ static void test_hashtableSize(){
   hashtable_free(table);
 }
 
+static void test_hashtableSizeUpdate(){
+  hashtable_o *table = hashtable_new(10, hash, compare_str);
+  hashtable_put(&table, "hello", new_int(5));
+  hashtable_put(&table, "mouse", new_int(6));
+  hashtable_put(&table, "hi", new_int(4));
+
+  TEST_ASSERT_EQUAL_INT(3, hashtable_size(table));
+
+  hashtable_put(&table, "mouse", new_int(17));
+  TEST_ASSERT_EQUAL_INT(3, hashtable_size(table));
+
+  hashtable_put(&table, "hi", new_int(7));
+  TEST_ASSERT_EQUAL_INT(3, hashtable_size(table));
+  hashtable_free(table);
+}
+
 static void test_hashtableFindNotFound(){
   hashtable_o *table = hashtable_new(10, hash, compare_str);
   hashtable_put(&table, "hello", new_int(5));
@@ -162,12 +178,12 @@ static void test_hashtableExpandMultiple(){
   hashtable_put(&table, "bye", new_int(1));
   TEST_ASSERT_EQUAL_INT(old_capacity*2, hashtable_capacity(table));
 
-  hashtable_put(&table, "bye", new_int(1));
-  hashtable_put(&table, "bye", new_int(1));
-  hashtable_put(&table, "bye", new_int(1));
+  hashtable_put(&table, "other", new_int(1));
+  hashtable_put(&table, "boh", new_int(1));
+  hashtable_put(&table, "idk", new_int(1));
 
   old_capacity = hashtable_capacity(table);
-  hashtable_put(&table, "bye", new_int(1));
+  hashtable_put(&table, "ciao", new_int(1));
   TEST_ASSERT_EQUAL_INT(old_capacity*2, hashtable_capacity(table));
 
   hashtable_free(table);
@@ -305,6 +321,7 @@ int main() {
   RUN_TEST(test_hashtablePut);
   RUN_TEST(test_hashtableSizeEmpty);
   RUN_TEST(test_hashtableSize);
+  RUN_TEST(test_hashtableSizeUpdate);
   RUN_TEST(test_hashtableFindNotFound);
   RUN_TEST(test_hashtableFindSimple);
   RUN_TEST(test_hashtableFindChaining);

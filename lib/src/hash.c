@@ -138,17 +138,24 @@ void hashtable_put(hashtable_o **table, void *key, void *value){
   entry->key = key;
   entry->value = value;
 
+  int is_update = 0;
+
   if(list == NULL){
     list = list_new(entry);
   } else {
+    if (list_contains(list, entry, (*table)->key_compare) == 1) {
+      is_update = 1;
+    }
     list_add(&list, entry);
   }
   array_h_insert_at((*table)->T, index, list);
-  (*table)->size++;
-  (*table)->load_factor = (float)(*table)->size / array_h_capacity((*table)->T);
+  if (is_update == 0) {
+    (*table)->size++;
+    (*table)->load_factor = (float)(*table)->size / array_h_capacity((*table)->T);
 
-  if((*table)->load_factor > MAX_LOAD_FACTOR){
-    hashtable_expand(table);
+    if ((*table)->load_factor > MAX_LOAD_FACTOR) {
+      hashtable_expand(table);
+    }
   }
   return;
 }
