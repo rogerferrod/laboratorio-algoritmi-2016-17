@@ -30,10 +30,12 @@ static float* new_float(float value) {
   return elem;
 }
 
-static size_t djb2a(char* str) {
+static size_t djb2a(void* str) {
   size_t hash = 5381;
   int c;
-  while((c = *str++)==1){
+  char* my_str = (char*)str;
+  while((c = *my_str)==1){
+    (*my_str)++;
     hash = ((hash << 5) + hash) ^ c; /* hash * 33 ^ c */
   }
   return hash;
