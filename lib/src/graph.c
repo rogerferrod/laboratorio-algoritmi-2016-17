@@ -104,7 +104,7 @@ int graph_contains_edge(graph_o *graph, void *v1, void *v2){
 
 void graph_vertex_iter_init(graph_o *graph, graphIterator *iter) {
   ASSERT_PARAMETERS_NOT_NULL(graph);
-  hashtable_iter_init(graph->V, iter);
+  hashtable_iter_init(graph->V, (iterator*)iter);
   return;
 }
 
@@ -150,7 +150,7 @@ void graph_edge_iter_next(graph_o *graph, void *elem, graphIterator *iter, void 
     errno = EINVAL;
     exit(EXIT_FAILURE);
   }
-  hashtable_iter_next(E, iter, adj_elem, weight);
+  hashtable_iter_next(E, iter, adj_elem, (void**)weight);
 }
 
 

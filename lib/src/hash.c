@@ -268,8 +268,8 @@ void hashtable_iter_init(hashtable_o *table, iterator *iter){
     if(list != NULL){
       entry = list_get_at(list, 0);
       if(entry == NULL){
-	printf("ERRORE entry?\n");
-	exit(EXIT_FAILURE);
+        printf("ERRORE entry?\n");
+        exit(EXIT_FAILURE);
       }
       *iter = entry; /* iter punta a entry */
       return;
