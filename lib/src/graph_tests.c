@@ -18,11 +18,13 @@ static int compare_str(void *x, void *y){
   return strcmp(x, y);
 }
 
+/*
 static int* new_int(int value) {
   int* elem = (int*) malloc(sizeof(int));
   *elem = value;
   return elem;
 }
+*/
 
 static float* new_float(float value) {
   float* elem = (float*) malloc(sizeof(float));
@@ -30,6 +32,11 @@ static float* new_float(float value) {
   return elem;
 }
 
+/**
+ * Hash function
+ * @param str char* String to be hashed
+ * @return hash
+ */
 static size_t djb2a(void* str) {
   size_t hash = 5381;
   int c;
@@ -56,6 +63,52 @@ static void test_graphFree(){
 static void test_graphOrderEmpty(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   TEST_ASSERT_EQUAL_INT(0, graph_order(graph));
+  graph_free(graph);
+}
+
+static void test_graphOrder(){
+  graph_o *graph = graph_new(5, djb2a, compare_str);
+  graph_add(graph, "A");
+  graph_add(graph, "B");
+  graph_add(graph, "C");
+  TEST_ASSERT_EQUAL_INT(3, graph_order(graph));
+  graph_free(graph);
+}
+
+static void test_graphSizeEmpty(){
+  graph_o *graph = graph_new(5, djb2a, compare_str);
+  TEST_ASSERT_EQUAL_INT(0, graph_size(graph));
+  graph_free(graph);
+}
+
+static void test_graphSizeNoLinks(){
+  graph_o *graph = graph_new(5, djb2a, compare_str);
+  graph_add(graph, "A");
+  graph_add(graph, "B");
+  graph_add(graph, "C");
+  TEST_ASSERT_EQUAL_INT(0, graph_size(graph));
+  graph_free(graph);
+}
+
+static void test_graphSizeOriented(){
+  graph_o *graph = graph_new(5, djb2a, compare_str);
+  graph_add(graph, "A");
+  graph_add(graph, "B");
+  graph_add(graph, "C");
+  graph_connect(graph, "A", "B", new_float(0.0), ORIENTED);
+  graph_connect(graph, "A", "C", new_float(0.0), ORIENTED);
+  TEST_ASSERT_EQUAL_INT(2, graph_size(graph));
+  graph_free(graph);
+}
+
+static void test_graphSizeNonOriented(){
+  graph_o *graph = graph_new(5, djb2a, compare_str);
+  graph_add(graph, "A");
+  graph_add(graph, "B");
+  graph_add(graph, "C");
+  graph_connect(graph, "A", "B", new_float(0.0), NO_ORIENTED);
+  graph_connect(graph, "A", "C", new_float(0.0), NO_ORIENTED);
+  TEST_ASSERT_EQUAL_INT(2, graph_size(graph));
   graph_free(graph);
 }
 
@@ -165,7 +218,7 @@ static void test_graphVertexIterator(){
   void *adj = NULL; /* hashtable E */
   while(graph_vertex_iter_hasNext(graph, viter)){
     graph_vertex_iter_next(graph, viter, &elem, &adj);
-    printf("elem %s \n", elem);
+    printf("elem %s \n", (char*)elem);
   }
   
   TEST_ASSERT(NULL == *viter);
@@ -209,7 +262,7 @@ static void test_graphEdgeIterator(){
   //prova l- hasNext su B o qualcos altro di non initializzato
   while(graph_edge_iter_hasNext(graph, "A", eiter)){
     graph_edge_iter_next(graph, "A", eiter, &adj, &weight);
-    printf("edge(%s-%f) \n", adj, *(float*)weight);
+    printf("edge(%s-%f) \n", (char*)adj, *(float*)weight);
   }
 
   TEST_ASSERT(NULL == *eiter);
@@ -223,6 +276,11 @@ int main() {
   RUN_TEST(test_graphNew);
   RUN_TEST(test_graphFree);
   RUN_TEST(test_graphOrderEmpty);
+  RUN_TEST(test_graphOrder);
+  RUN_TEST(test_graphSizeEmpty);
+  RUN_TEST(test_graphSizeNoLinks);
+  RUN_TEST(test_graphSizeOriented);
+  RUN_TEST(test_graphSizeNonOriented);
   RUN_TEST(test_graphAdd);
   RUN_TEST(test_graphConnectSimpleOriented);
   RUN_TEST(test_graphConnectSimpleNoOriented);

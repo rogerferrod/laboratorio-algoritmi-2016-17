@@ -5,8 +5,8 @@
  *  Date: 11-04-2017
  *
  */
- 
- 
+
+
 /*
  * Implements an abstracted graph
  *
@@ -35,9 +35,9 @@
 
 /* Implementation of the opaque type */
 struct _myGraph {
-  hashtable_o *V;
-  hash_fnc hash;
-  KeyCompare compare;
+    hashtable_o *V;
+    hash_fnc hash;
+    KeyCompare compare;
 };
 
 
@@ -65,6 +65,29 @@ void graph_free(graph_o *graph){
 size_t graph_order(graph_o *graph){
   ASSERT_PARAMETERS_NOT_NULL(graph);
   return hashtable_size(graph->V);
+}
+
+size_t graph_size(graph_o *graph){
+  ASSERT_PARAMETERS_NOT_NULL(graph);
+  if (graph_order(graph) == 0) {
+    return 0;
+  }
+
+  size_t size = 0;
+  graphIterator *iter = (graphIterator*)malloc(sizeof(graphIterator));
+  graph_vertex_iter_init(graph, iter);
+
+  void *elem = NULL; //(void*)malloc(10*sizeof(void*)); /* nome vertice */
+  void *adj = NULL; /* hashtable E */
+
+  while(graph_vertex_iter_hasNext(graph, iter)){
+    graph_vertex_iter_next(graph, iter, &elem, &adj);
+    size += hashtable_size(adj);
+  }
+
+  free(iter);
+
+  return size;
 }
 
 void graph_add(graph_o *graph, void *elem){
