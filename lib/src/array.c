@@ -75,7 +75,7 @@ void* array_at(array_o* array, size_t position) {
   ASSERT_PARAMETERS_NOT_NULL(array);  
 
   if(position >= array->size ) {
-    fprintf(stderr, "Array index (%ld) out of bounds (0:%ld)\n", position, array->size);
+    fprintf(stderr, "Array index (%d) out of bounds (0:%d)\n", (unsigned int)position, (unsigned int)array->size);
     errno = ENOMEM;
     exit(EXIT_FAILURE);
   }
@@ -103,7 +103,7 @@ void array_delete(array_o* array, size_t position) {
   ASSERT_PARAMETERS_NOT_NULL(array);
 
   if(position >= array->size ) {
-    fprintf(stderr, "Array index (%ld) out of bounds (0:%ld)\n", position, array->size);
+    fprintf(stderr, "Array index (%d) out of bounds (0:%d)\n", (unsigned int)position, (unsigned int)array->size);
     errno = ENOMEM;
     exit(EXIT_FAILURE);
   }
@@ -131,7 +131,7 @@ void array_swap(array_o* array, size_t position_a, size_t position_b){
   ASSERT_PARAMETERS_NOT_NULL(array);
   
   if(position_a >= array->size || position_b>= array->size){
-    fprintf(stderr, "Array index out of bounds (0:%ld)\n", array->size);
+    fprintf(stderr, "Array index out of bounds (0:%d)\n", (unsigned int)array->size);
     errno = ENOMEM;
     exit(EXIT_FAILURE);
   }
@@ -146,7 +146,7 @@ void array_set(array_o* array,size_t position, void* element){
 	ASSERT_PARAMETERS_NOT_NULL(array);
 
   if(position >= array->size ) {
-    fprintf(stderr, "Array index (%ld) out of bounds (0:%ld)\n", position, array->size);
+    fprintf(stderr, "Array index (%d) out of bounds (0:%d)\n", (unsigned int)position, (unsigned int)array->size);
     errno = ENOMEM;
     exit(EXIT_FAILURE);
   }
