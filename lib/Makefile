@@ -110,10 +110,8 @@ bin/graph_tests: build/graph_tests.o build/graph.o build/array.o build/list.o bu
 bin/hash_tests: build/hash_tests.o build/hash.o build/list.o build/unity.o $(C_COMMON_DEPS)
 	$(CC) -o bin/hash_tests build/hash_tests.o build/hash.o build/list.o build/unity.o
 
-bin/kruskal_tests: build/kruskal_tests.o build/kruskal.o build/graph.o build/array.o build/list.o build/set.o build/hash.o build/unity.o $(C_COMMON_DEPS)
-	$(CC) -o bin/kruskal_tests build/kruskal_tests.o build/kruskal.o build/graph.o build/array.o build/list.o build/set.o build/hash.o build/unity.o
-
-
+bin/kruskal_tests: build/kruskal_tests.o build/kruskal.o build/graph.o build/array.o build/list.o build/set.o build/hash.o build/sort.o build/unity.o $(C_COMMON_DEPS)
+	$(CC) -o bin/kruskal_tests build/kruskal_tests.o build/kruskal.o build/graph.o build/array.o build/list.o build/set.o build/hash.o build/sort.o build/unity.o
 
 
 clean:

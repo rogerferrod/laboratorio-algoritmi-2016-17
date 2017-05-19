@@ -55,11 +55,24 @@ static void test_kruskal(){
   graph_add(graph, "D");
   graph_add(graph, "E");
   graph_add(graph, "F");
-  graph_connect(graph, "A", "B", new_double(0.6), ORIENTED);
-  graph_connect(graph, "A", "C", new_double(2.4), ORIENTED);
-  graph_connect(graph, "A", "D", new_double(5.6), ORIENTED);
-  graph_connect(graph, "B", "E", new_double(3.2), ORIENTED);
-  graph_connect(graph, "D", "F", new_double(8.4), ORIENTED);
+  graph_add(graph, "G");
+  graph_connect(graph, "A", "B", new_double(15), ORIENTED);
+  graph_connect(graph, "A", "D", new_double(7), ORIENTED);
+  graph_connect(graph, "A", "F", new_double(1), ORIENTED);
+
+  graph_connect(graph, "B", "C", new_double(20), ORIENTED);
+  graph_connect(graph, "B", "D", new_double(12), ORIENTED);
+
+  graph_connect(graph, "C", "E", new_double(6), ORIENTED);
+  graph_connect(graph, "C", "G", new_double(3), ORIENTED);
+
+  graph_connect(graph, "D", "E", new_double(11), ORIENTED);
+  graph_connect(graph, "D", "F", new_double(7), ORIENTED);
+
+  graph_connect(graph, "E", "G", new_double(4), ORIENTED);
+
+  graph_connect(graph, "F", "G", new_double(10), ORIENTED);
+
   kruskal(graph);
   graph_free(graph);
 }
