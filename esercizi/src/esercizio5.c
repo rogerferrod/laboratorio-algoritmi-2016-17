@@ -22,6 +22,7 @@
 //#include "../../lib/src/array.h"
 //#include "../../lib/src/sort.h"
 #include "../../lib/src/graph.h"
+#include "../../lib/src/hash.h"
 
 #define MAX_VERTEX 1000000
 #define BUFFER_LENGTH  100  //la linea più lunga del file è di 88 caratteri
@@ -153,6 +154,7 @@ static record *record_load(char *buffer){
 */
 
 static size_t djb2a(void* str) {
+  return (size_t)strlen((char*)str);
   size_t hash = 5381;
   int c;
   char* my_str = (char*)str;
@@ -164,6 +166,11 @@ static size_t djb2a(void* str) {
 }
 static int compare_str(void *x, void *y){
   return strcmp(x, y);
+}
+static int* new_int(int value) {
+  int* elem = (int*) malloc(sizeof(int));
+  *elem = value;
+  return elem;
 }
 
 static graph_o *graph_load(char *path, int max_record_read) {
@@ -191,23 +198,59 @@ static graph_o *graph_load(char *path, int max_record_read) {
     exit(EXIT_FAILURE);
   }
 
+  hashtable_o * hashtable = hashtable_new(max_record_read, djb2a, compare_str);
+
+  char **field1 = malloc(buff_size* sizeof(char*));
+  char **field2 = malloc(buff_size* sizeof(char*));
+  char **raw_field3 = malloc(buff_size* sizeof(char*));
+  double *field3 = malloc(sizeof(double));
+
   count = 0;
   while (count < max_record_read && fgets(buffer, buff_size, file) != NULL) {
-    char *field1 = strtok(buffer, ",");
-    char *field2 = strtok(NULL, ",");
-    char *raw_field3 = strtok(NULL, ",");
+    *field1 = strtok(buffer, ",");
+    *field2 = strtok(NULL, ",");
+    *raw_field3 = strtok(NULL, ",");
 
-    float *field3 = malloc(sizeof(float));
-    *field3 = atof(raw_field3);
+    //*field3 = strtod(*raw_field3, NULL);
+    *field3 = atof(*raw_field3);
 
-    graph_add(graph, field1);
-    graph_add(graph, field2);
-    graph_connect(graph, field1, field2, field3, NO_ORIENTED);
+    printf("_field1: %s\n", *field1);
+    printf("_field2: %s\n", *field2);
+    printf("_field3: %lf\n\n", *field3);
 
+    graph_add(graph, *field1);
+    graph_add(graph, *field2);
+    graph_connect(graph, *field1, *field2, field3, NO_ORIENTED);
+
+    hashtable_put(&hashtable, *field1, field3);
+    hashtable_put(&hashtable, *field2, field3);
+/*
+    if (count % 50 == 0) {
+      printf("%d - %s, %s, %s(%.12lf)\n", count, field1, field2, raw_field3, *field3);
+    }
+*/
     count++;
-    printf("%d\n", count);
   }
 
+  printf("Hashtable size: %ld\n", (unsigned long)hashtable_size(hashtable));
+  printf("-------------------\n");
+  iterator *iter = hashtable_iter_init(hashtable);
+
+  void *key = malloc(buff_size*sizeof(char*));
+  void *value = malloc(buff_size*sizeof(double*));
+
+  size_t i = 0;
+  while(hashtable_iter_hasNext(hashtable,iter)){
+    hashtable_iter_next(hashtable, iter, &key, &value);
+    printf("-%s, %lf\n", (char*)key, *(double*)value);
+    if (++i > 10) break;
+  }
+
+  free(iter);
+
+  printf("-------------------\n");
+
+  hashtable_free(hashtable);
   free(buffer);
   fclose(file);
   return graph;
@@ -314,23 +357,31 @@ int main(int argc, char *argv[]) {
   TIMER_STOP(timer);
 
   TIMER_START(timer);
-  fprintf(stdout, "graph_size: %u\n", (unsigned int) graph_size(graph));
-  TIMER_STOP(timer);
-
-  TIMER_START(timer);
   fprintf(stdout, "graph_order: %u\n", (unsigned int) graph_order(graph));
   TIMER_STOP(timer);
 
+
+/*
+  TIMER_START(timer);
+  fprintf(stdout, "graph_size: %u\n", (unsigned int) graph_size(graph));
+  TIMER_STOP(timer);
+*/
+/*
   sleep(1);
-
-  /* Kruskal */
+*/
+/*
+  // Kruskal
   //kruskal(graph);
-
-  /* Print array */
+*/
+/*
+  //Print array
   //array_print(array, PRINT_RATE);
+*/
 
   /* Free graph */
+  TIMER_START(timer);
   graph_free(graph);
+  TIMER_STOP(timer);
 
   return 0;
 }
