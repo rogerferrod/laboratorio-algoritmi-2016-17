@@ -15,12 +15,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
-#include "hash.h"
 #include "set.h"
+#include "list.h"
+#include "hash.h"
 #include "graph.h"
 #include "kruskal.h"
-
-#include "list.h"
 
 
 #define ASSERT_PARAMETERS_NOT_NULL(x) if((x) == NULL){     \

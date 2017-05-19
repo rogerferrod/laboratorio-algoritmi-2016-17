@@ -9,7 +9,6 @@
 
 #include <stdlib.h>
 #include "unity.h"
-#include "unity_internals.h"
 #include "array.h"
 #include "sort.h"
 

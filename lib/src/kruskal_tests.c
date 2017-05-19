@@ -10,7 +10,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "unity.h"
-#include "unity_internals.h"
 #include "graph.h"
 #include "kruskal.h"
 

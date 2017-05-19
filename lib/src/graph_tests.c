@@ -10,9 +10,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "unity.h"
-#include "unity_internals.h"
-#include "graph.h"
 #include "hash.h"
+#include "graph.h"
 
 static int compare_str(void *x, void *y){
   return strcmp(x, y);

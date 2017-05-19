@@ -9,7 +9,6 @@
 
 #include <stdlib.h>
 #include "unity.h"
-#include "unity_internals.h"
 #include "list.h"
 
 /* fare la free dei new_int! */

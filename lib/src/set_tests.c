@@ -9,7 +9,6 @@
 
 #include <stdlib.h>
 #include "unity.h"
-#include "unity_internals.h"
 #include "set.h"
 
 static int* new_int(int value) {
