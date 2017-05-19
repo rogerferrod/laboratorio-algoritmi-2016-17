@@ -97,7 +97,7 @@ void graph_add(graph_o *graph, void *elem){
   return;
 }
 
-void graph_connect(graph_o *graph, void *x, void *y, float *weight, int bitmask){
+void graph_connect(graph_o *graph, void *x, void *y, double *weight, int bitmask){
   ASSERT_PARAMETERS_NOT_NULL(graph);
   ASSERT_PARAMETERS_NOT_NULL(x);
   ASSERT_PARAMETERS_NOT_NULL(y);
@@ -171,7 +171,7 @@ int graph_edge_iter_hasNext(graph_o *graph, void *elem, graphIterator *iter){
   return hashtable_iter_hasNext(E, iter);
 }
 
-void graph_edge_iter_next(graph_o *graph, void *elem, graphIterator *iter, void **adj_elem, float **weight){
+void graph_edge_iter_next(graph_o *graph, void *elem, graphIterator *iter, void **adj_elem, double **weight){
   ASSERT_PARAMETERS_NOT_NULL(graph);
   hashtable_o *E = hashtable_find(graph->V, elem);
   if(E == NULL){

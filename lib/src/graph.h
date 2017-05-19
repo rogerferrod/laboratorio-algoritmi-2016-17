@@ -42,7 +42,7 @@ extern size_t graph_size(graph_o *graph);
 
 extern void graph_add(graph_o *graph, void *elem);
 
-extern void graph_connect(graph_o *graph, void *x, void *y, float *weight, int bitmask);
+extern void graph_connect(graph_o *graph, void *x, void *y, double *weight, int bitmask);
 
 extern int graph_contains_vertex(graph_o *graph, void *v);
 
@@ -62,5 +62,5 @@ extern void graph_edge_iter_init(graph_o *graph, void *elem, graphIterator *iter
 
 extern int graph_edge_iter_hasNext(graph_o *graph, void *elem, graphIterator *iter);
 
-extern void graph_edge_iter_next(graph_o *graph, void *elem, graphIterator *iter, void **adj_elem, float **weight);
+extern void graph_edge_iter_next(graph_o *graph, void *elem, graphIterator *iter, void **adj_elem, double **weight);
 

@@ -26,8 +26,8 @@ static int* new_int(int value) {
 }
 */
 
-static float* new_float(float value) {
-  float* elem = (float*) malloc(sizeof(float));
+static double* new_double(double value) {
+  double* elem = (double*) malloc(sizeof(double));
   *elem = value;
   return elem;
 }
@@ -95,8 +95,8 @@ static void test_graphSizeOriented(){
   graph_add(graph, "A");
   graph_add(graph, "B");
   graph_add(graph, "C");
-  graph_connect(graph, "A", "B", new_float(0.0), ORIENTED);
-  graph_connect(graph, "A", "C", new_float(0.0), ORIENTED);
+  graph_connect(graph, "A", "B", new_double(0.0), ORIENTED);
+  graph_connect(graph, "A", "C", new_double(0.0), ORIENTED);
   TEST_ASSERT_EQUAL_INT(2, graph_size(graph));
   graph_free(graph);
 }
@@ -106,8 +106,8 @@ static void test_graphSizeNotOriented(){
   graph_add(graph, "A");
   graph_add(graph, "B");
   graph_add(graph, "C");
-  graph_connect(graph, "A", "B", new_float(0.0), NO_ORIENTED);
-  graph_connect(graph, "A", "C", new_float(0.0), NO_ORIENTED);
+  graph_connect(graph, "A", "B", new_double(0.0), NO_ORIENTED);
+  graph_connect(graph, "A", "C", new_double(0.0), NO_ORIENTED);
   TEST_ASSERT_EQUAL_INT(4, graph_size(graph));
   graph_free(graph);
 }
@@ -123,7 +123,7 @@ static void test_graphConnectSimpleOriented(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
   graph_add(graph, "B");
-  graph_connect(graph, "A", "B", new_float(0.0), ORIENTED);
+  graph_connect(graph, "A", "B", new_double(0.0), ORIENTED);
   TEST_ASSERT_EQUAL_INT_MESSAGE(1, 1, "Link graph failed");
   graph_free(graph);
 }
@@ -132,7 +132,7 @@ static void test_graphConnectSimpleNoOriented(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
   graph_add(graph, "B");
-  graph_connect(graph, "A", "B", new_float(0.0), NO_ORIENTED);
+  graph_connect(graph, "A", "B", new_double(0.0), NO_ORIENTED);
   TEST_ASSERT_EQUAL_INT_MESSAGE(1, 1, "Link graph failed");
   graph_free(graph);
 }
@@ -148,7 +148,7 @@ static void test_graphContainsEdge(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
   graph_add(graph, "B");
-  graph_connect(graph, "A", "B", new_float(0.0), ORIENTED);
+  graph_connect(graph, "A", "B", new_double(0.0), ORIENTED);
   TEST_ASSERT_EQUAL_INT(1, graph_contains_edge(graph, "A", "B"));
   graph_free(graph);
 }
@@ -157,7 +157,7 @@ static void test_graphNotContainsEdge(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
   graph_add(graph, "B");
-  graph_connect(graph, "A", "B", new_float(0.0), ORIENTED);
+  graph_connect(graph, "A", "B", new_double(0.0), ORIENTED);
   TEST_ASSERT_EQUAL_INT(0, graph_contains_edge(graph, "A", "A"));
   graph_free(graph);
 }
@@ -169,10 +169,10 @@ static void test_graphMultipleEdge(){
   graph_add(graph, "C");
   graph_add(graph, "D");
   graph_add(graph, "E");
-  graph_connect(graph, "A", "B", new_float(0.0), ORIENTED);
-  graph_connect(graph, "A", "C", new_float(0.0), ORIENTED);
-  graph_connect(graph, "A", "D", new_float(0.0), ORIENTED);
-  graph_connect(graph, "B", "D", new_float(0.0), ORIENTED);
+  graph_connect(graph, "A", "B", new_double(0.0), ORIENTED);
+  graph_connect(graph, "A", "C", new_double(0.0), ORIENTED);
+  graph_connect(graph, "A", "D", new_double(0.0), ORIENTED);
+  graph_connect(graph, "B", "D", new_double(0.0), ORIENTED);
   TEST_ASSERT_EQUAL_INT(1, graph_contains_edge(graph, "A", "B"));
   TEST_ASSERT_EQUAL_INT(1, graph_contains_edge(graph, "A", "C"));
   TEST_ASSERT_EQUAL_INT(1, graph_contains_edge(graph, "A", "D"));
@@ -184,7 +184,7 @@ static void test_graphConnectNoOriented(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
   graph_add(graph, "B");
-  graph_connect(graph, "A", "B", new_float(0.0), NO_ORIENTED);
+  graph_connect(graph, "A", "B", new_double(0.0), NO_ORIENTED);
   TEST_ASSERT_EQUAL_INT(1, graph_contains_edge(graph, "A", "B"));
   TEST_ASSERT_EQUAL_INT(1, graph_contains_edge(graph, "B", "A"));
   graph_free(graph);
@@ -204,9 +204,9 @@ static void test_graphVertexDegreeOriented() {
   graph_add(graph, "B");
   graph_add(graph, "C");
   graph_add(graph, "D");
-  graph_connect(graph, "A", "B", new_float(0.0), ORIENTED);
-  graph_connect(graph, "A", "C", new_float(0.0), ORIENTED);
-  graph_connect(graph, "A", "D", new_float(0.0), ORIENTED);
+  graph_connect(graph, "A", "B", new_double(0.0), ORIENTED);
+  graph_connect(graph, "A", "C", new_double(0.0), ORIENTED);
+  graph_connect(graph, "A", "D", new_double(0.0), ORIENTED);
   TEST_ASSERT_EQUAL_INT(3, graph_vertex_degree(graph, "A"));
   TEST_ASSERT_EQUAL_INT(0, graph_vertex_degree(graph, "B"));
   TEST_ASSERT_EQUAL_INT(0, graph_vertex_degree(graph, "C"));
@@ -219,9 +219,9 @@ static void test_graphVertexDegreeNotOriented() {
   graph_add(graph, "B");
   graph_add(graph, "C");
   graph_add(graph, "D");
-  graph_connect(graph, "A", "B", new_float(0.0), NO_ORIENTED);
-  graph_connect(graph, "A", "C", new_float(0.0), NO_ORIENTED);
-  graph_connect(graph, "A", "D", new_float(0.0), NO_ORIENTED);
+  graph_connect(graph, "A", "B", new_double(0.0), NO_ORIENTED);
+  graph_connect(graph, "A", "C", new_double(0.0), NO_ORIENTED);
+  graph_connect(graph, "A", "D", new_double(0.0), NO_ORIENTED);
   TEST_ASSERT_EQUAL_INT(3, graph_vertex_degree(graph, "A"));
   TEST_ASSERT_EQUAL_INT(1, graph_vertex_degree(graph, "B"));
   TEST_ASSERT_EQUAL_INT(1, graph_vertex_degree(graph, "C"));
@@ -232,7 +232,7 @@ static void test_graphVertexIteratorInit(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
   graph_add(graph, "B");
-  graph_connect(graph, "A", "B", new_float(0.0), NO_ORIENTED); // prova senza 
+  graph_connect(graph, "A", "B", new_double(0.0), NO_ORIENTED); // prova senza 
   graphIterator *vertex_iter = (graphIterator*)malloc(sizeof(graphIterator));
   graph_vertex_iter_init(graph, vertex_iter);
 
@@ -271,9 +271,9 @@ static void test_graphEdgeIteratorInit(){
   graph_add(graph, "B");
   graph_add(graph, "C");
   graph_add(graph, "D");
-  graph_connect(graph, "A", "B", new_float(0.0), NO_ORIENTED);
-  graph_connect(graph, "A", "C", new_float(0.0), NO_ORIENTED);
-  graph_connect(graph, "A", "D", new_float(0.0), NO_ORIENTED);
+  graph_connect(graph, "A", "B", new_double(0.0), NO_ORIENTED);
+  graph_connect(graph, "A", "C", new_double(0.0), NO_ORIENTED);
+  graph_connect(graph, "A", "D", new_double(0.0), NO_ORIENTED);
   graphIterator *edge_iter = (graphIterator*)malloc(sizeof(graphIterator));
   graph_edge_iter_init(graph, "A", edge_iter);
 
@@ -289,18 +289,18 @@ static void test_graphEdgeIterator(){
   graph_add(graph, "B");
   graph_add(graph, "C");
   graph_add(graph, "D");
-  graph_connect(graph, "A", "B", new_float(2.9), NO_ORIENTED);
-  graph_connect(graph, "A", "C", new_float(5.3), NO_ORIENTED);
-  graph_connect(graph, "A", "D", new_float(1.6), NO_ORIENTED);
+  graph_connect(graph, "A", "B", new_double(2.9), NO_ORIENTED);
+  graph_connect(graph, "A", "C", new_double(5.3), NO_ORIENTED);
+  graph_connect(graph, "A", "D", new_double(1.6), NO_ORIENTED);
   graphIterator *edge_iter = (graphIterator*)malloc(sizeof(graphIterator));
   graph_edge_iter_init(graph, "A", edge_iter);
   void *adj = NULL;//(char*)malloc(10*sizeof(char));
-  float *weight;
+  double *weight;
 
   //prova l- hasNext su B o qualcos altro di non inizializzato
   while(graph_edge_iter_hasNext(graph, "A", edge_iter)){
     graph_edge_iter_next(graph, "A", edge_iter, &adj, &weight);
-    printf("edge(%s-%f) \n", (char*)adj, *(float*)weight);
+    printf("edge(%s-%f) \n", (char*)adj, *(double*)weight);
   }
 
   TEST_ASSERT(NULL == *edge_iter);
