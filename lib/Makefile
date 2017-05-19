@@ -15,7 +15,7 @@ JAVA_RUN_PARAMS = -cp $(JAVA_CLASS_PATH):bin/
 all: build
 
 # compila (grazie alla dipendenza) i sorgenti (crea i binari e i file .class)
-build: build_graph
+build: build_kruskal
 build_all: build_es1 build_es2 build_es4
 build_es1: build_array build_sort
 build_es2: build_tree build_treeTest build_es2_jar
@@ -25,7 +25,7 @@ build_es2_jar:
 build_es2: build_tree build_treeTest
 build_es3: build_heap build_heapTest
 build_es4: build_set
-build_es5: build_graph
+build_es5: build_graph build_kruskal
 
 build_array: bin/array_tests
 build_sort: bin/sort_tests
@@ -41,15 +41,16 @@ build_set: bin/set_tests
 build_list: bin/list_tests
 build_graph: bin/graph_tests
 build_hash: bin/hash_tests
+build_kruskal: bin/kruskal_tests
 
 # compila e esegue i test
-tests: tests_graph
+tests: tests_kruskal
 tests_all: tests_es1 tests_es2 tests_es3 tests_es4 tests_es5
 tests_es1: tests_array tests_sort
 tests_es2: tests_tree
 tests_es3: tests_heap
 tests_es4: tests_unionfind
-tests_es5: tests_graph
+tests_es5: tests_graph tests_kruskal
 
 tests_array: build_array
 	bin/array_tests
@@ -67,6 +68,8 @@ tests_graph: build_graph
 	bin/graph_tests
 tests_hash: build_hash
 	bin/hash_tests
+tests_kruskal: build_kruskal
+	bin/kruskal_tests
 
 
 docs: docs_tree docs_heap
@@ -106,6 +109,10 @@ bin/graph_tests: build/graph_tests.o build/graph.o build/array.o build/list.o bu
 
 bin/hash_tests: build/hash_tests.o build/hash.o build/list.o build/unity.o $(C_COMMON_DEPS)
 	$(CC) -o bin/hash_tests build/hash_tests.o build/hash.o build/list.o build/unity.o
+
+bin/kruskal_tests: build/kruskal_tests.o build/kruskal.o build/graph.o build/array.o build/list.o build/set.o build/hash.o build/unity.o $(C_COMMON_DEPS)
+	$(CC) -o bin/kruskal_tests build/kruskal_tests.o build/kruskal.o build/graph.o build/array.o build/list.o build/set.o build/hash.o build/unity.o
+
 
 
 
