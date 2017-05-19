@@ -65,4 +65,4 @@ bin/esercizio5: build/esercizio5.o $(COMMON_DEPS)
 	$(CC) -o bin/esercizio5 build/esercizio5.o ../lib/build/graph.o ../lib/build/hash.o ../lib/build/list.o
 
 clean:
-	rm -f build/* bin/*
+	rm -fr build/* bin/*
