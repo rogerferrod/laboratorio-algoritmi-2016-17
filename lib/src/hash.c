@@ -257,11 +257,11 @@ size_t hashtable_capacity(hashtable_o *table){
   return array_h_capacity(table->T);
 }
 
-/* REMEMBER: iter è doppio puntatore */
-void hashtable_iter_init(hashtable_o *table, iterator *iter){
+iterator *hashtable_iter_init(hashtable_o *table){
   ASSERT_PARAMETERS_NOT_NULL(table);
   node_o *list;
   hash_entry *entry;
+  iterator *iter = (iterator*)malloc(sizeof(iterator));
 
   for(size_t i = 0; i < array_h_capacity(table->T); ++i){
     list = array_h_at(table->T, i);
@@ -272,7 +272,7 @@ void hashtable_iter_init(hashtable_o *table, iterator *iter){
         exit(EXIT_FAILURE);
       }
       *iter = entry; /* iter punta a entry */
-      return;
+      return iter;
     }
   }
   

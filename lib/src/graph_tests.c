@@ -232,9 +232,8 @@ static void test_graphVertexIteratorInit(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
   graph_add(graph, "B");
-  graph_connect(graph, "A", "B", new_double(0.0), NO_ORIENTED); // prova senza 
-  graphIterator *vertex_iter = (graphIterator*)malloc(sizeof(graphIterator));
-  graph_vertex_iter_init(graph, vertex_iter);
+  graph_connect(graph, "A", "B", new_double(0.0), NO_ORIENTED); 
+  graphIterator *vertex_iter = graph_vertex_iter_init(graph);
 
   TEST_ASSERT(NULL != *vertex_iter);
 
@@ -249,17 +248,18 @@ static void test_graphVertexIterator(){
   graph_add(graph, "C");
   graph_add(graph, "D");
  
-  graphIterator *vertex_iter = (graphIterator*)malloc(sizeof(graphIterator));
-  graph_vertex_iter_init(graph, vertex_iter);
+  graphIterator *vertex_iter = graph_vertex_iter_init(graph);
+  size_t count = 0;
 
-  void *elem = NULL;//(char*)malloc(10*sizeof(char)); /* nome vertice */
-  void *adj = NULL; /* hashtable E */
+  void *elem = NULL;
+  void *adj = NULL; 
   while(graph_vertex_iter_hasNext(graph, vertex_iter)){
     graph_vertex_iter_next(graph, vertex_iter, &elem, &adj);
-    printf("elem %s \n", (char*)elem);
+    count++;
   }
   
   TEST_ASSERT(NULL == *vertex_iter);
+  TEST_ASSERT_EQUAL_INT(graph_order(graph), count);
 
   graph_free(graph);
   free(vertex_iter);
@@ -274,8 +274,7 @@ static void test_graphEdgeIteratorInit(){
   graph_connect(graph, "A", "B", new_double(0.0), NO_ORIENTED);
   graph_connect(graph, "A", "C", new_double(0.0), NO_ORIENTED);
   graph_connect(graph, "A", "D", new_double(0.0), NO_ORIENTED);
-  graphIterator *edge_iter = (graphIterator*)malloc(sizeof(graphIterator));
-  graph_edge_iter_init(graph, "A", edge_iter);
+  graphIterator *edge_iter = graph_edge_iter_init(graph, "A");
 
   TEST_ASSERT(NULL != *edge_iter);
 
@@ -292,18 +291,19 @@ static void test_graphEdgeIterator(){
   graph_connect(graph, "A", "B", new_double(2.9), NO_ORIENTED);
   graph_connect(graph, "A", "C", new_double(5.3), NO_ORIENTED);
   graph_connect(graph, "A", "D", new_double(1.6), NO_ORIENTED);
-  graphIterator *edge_iter = (graphIterator*)malloc(sizeof(graphIterator));
-  graph_edge_iter_init(graph, "A", edge_iter);
-  void *adj = NULL;//(char*)malloc(10*sizeof(char));
+  graphIterator *edge_iter = graph_edge_iter_init(graph, "A");
+  void *adj = NULL;
   double *weight;
+  size_t count = 0;
 
   //prova l- hasNext su B o qualcos altro di non inizializzato
   while(graph_edge_iter_hasNext(graph, "A", edge_iter)){
     graph_edge_iter_next(graph, "A", edge_iter, &adj, &weight);
-    printf("edge(%s-%f) \n", (char*)adj, *(double*)weight);
+    count++;
   }
 
   TEST_ASSERT(NULL == *edge_iter);
+  TEST_ASSERT_EQUAL_INT(3, count);
 
   graph_free(graph);
   free(edge_iter);

@@ -195,8 +195,7 @@ static void test_hashtableIteratorInit(){
   hashtable_put(&table, "mouse", new_int(6));
   hashtable_put(&table, "hi", new_int(4));
 
-  iterator *iter = (iterator*)malloc(sizeof(iterator));
-  hashtable_iter_init(table, iter);
+  iterator *iter = hashtable_iter_init(table);
 
   TEST_ASSERT(NULL != iter);
 
@@ -210,8 +209,7 @@ static void test_hashtableIteratorNextFirst(){
   hashtable_put(&table, "mouse", new_int(6));
   hashtable_put(&table, "hi", new_int(4));
 
-  iterator *iter = (iterator*)malloc(sizeof(iterator));
-  hashtable_iter_init(table, iter);
+  iterator *iter = hashtable_iter_init(table);
 
   void *key = (char*)malloc(10*sizeof(char));
   void *value = new_int(0);
@@ -230,8 +228,7 @@ static void test_hashtableIteratorNextMultiple(){
   hashtable_put(&table, "mouse", new_int(6));
   hashtable_put(&table, "hi", new_int(4));
 
-  iterator *iter = (iterator*)malloc(sizeof(iterator));
-  hashtable_iter_init(table, iter);
+  iterator *iter = hashtable_iter_init(table);
 
   void *key = (char*)malloc(10*sizeof(char));
   void *value = new_int(0);
@@ -257,8 +254,7 @@ static void test_hashtableIteratorHasNext(){
   hashtable_put(&table, "hi", new_int(4));
   hashtable_put(&table, "bye", new_int(2));
 
-  iterator *iter = (iterator*)malloc(sizeof(iterator));
-  hashtable_iter_init(table, iter);
+  iterator *iter = hashtable_iter_init(table);
   void *key = (char*)malloc(10*sizeof(char));
   void *value = new_int(0);
 
@@ -283,35 +279,34 @@ static void test_hashtableIterator(){
   hashtable_put(&table, "hi", new_int(4));
   hashtable_put(&table, "bye", new_int(3));
 
-  iterator *iter = (iterator*)malloc(sizeof(iterator));
-  hashtable_iter_init(table, iter);
-
-	void *key = (char*)malloc(10*sizeof(char));
+  iterator *iter = hashtable_iter_init(table);
+  
+  void *key = (char*)malloc(10*sizeof(char));
   void *value = new_int(0);
 	
-	size_t counter = 0;
+  size_t counter = 0;
 
-	while(hashtable_iter_hasNext(table,iter)){
-		hashtable_iter_next(table, iter, &key, &value);
-		counter++;
-	} 
+  while(hashtable_iter_hasNext(table,iter)){
+    hashtable_iter_next(table, iter, &key, &value);
+    counter++;
+  } 
   TEST_ASSERT_EQUAL_INT(4,counter); 
 
   hashtable_free(table);
-	free(iter);
+  free(iter);
 }
 
 static void test_hashtableContains(){
-	hashtable_o *table = hashtable_new(5, hash, compare_str);
+  hashtable_o *table = hashtable_new(5, hash, compare_str);
   hashtable_put(&table, "hello", new_int(5));
   hashtable_put(&table, "mouse", new_int(6));
   hashtable_put(&table, "hi", new_int(4));
-	hashtable_put(&table, "bye", new_int(3));
+  hashtable_put(&table, "bye", new_int(3));
 
-	TEST_ASSERT_EQUAL_INT(1,hashtable_contains(table,"mouse")); 
-	TEST_ASSERT_EQUAL_INT(0,hashtable_contains(table,"roger")); 
-
-	hashtable_free(table);
+  TEST_ASSERT_EQUAL_INT(1,hashtable_contains(table,"mouse")); 
+  TEST_ASSERT_EQUAL_INT(0,hashtable_contains(table,"roger")); 
+  
+  hashtable_free(table);
 }
 
 int main() {
@@ -336,7 +331,7 @@ int main() {
   RUN_TEST(test_hashtableIteratorNextFirst);
   RUN_TEST(test_hashtableIteratorNextMultiple);
   RUN_TEST(test_hashtableIteratorHasNext);
-	RUN_TEST(test_hashtableIterator);
-	RUN_TEST(test_hashtableContains);
+  RUN_TEST(test_hashtableIterator);
+  RUN_TEST(test_hashtableContains);
   return UNITY_END();
 }

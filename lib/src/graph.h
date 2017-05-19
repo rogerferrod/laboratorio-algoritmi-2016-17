@@ -36,8 +36,10 @@ extern graph_o* graph_new(size_t capacity, hash_fnc hash, KeyCompare compare);
 
 extern void graph_free(graph_o *graph);
 
+/* |V| */
 extern size_t graph_order(graph_o *graph);
 
+/* |E| */
 extern size_t graph_size(graph_o *graph);
 
 extern void graph_add(graph_o *graph, void *elem);
@@ -51,14 +53,14 @@ extern int graph_contains_edge(graph_o *graph, void *v1, void *v2);
 extern size_t graph_vertex_degree(graph_o *graph, void *v);
 
 /* Vertex iterator */
-extern void graph_vertex_iter_init(graph_o *graph, graphIterator *iter);
+extern graphIterator *graph_vertex_iter_init(graph_o *graph);
 
 extern int graph_vertex_iter_hasNext(graph_o *graph, graphIterator *iter);
 
 extern void graph_vertex_iter_next(graph_o *graph, graphIterator *iter, void **elem, void **adj);
 
 /* Edge iterator */
-extern void graph_edge_iter_init(graph_o *graph, void *elem, graphIterator *iter);
+extern graphIterator *graph_edge_iter_init(graph_o *graph, void *elem);
 
 extern int graph_edge_iter_hasNext(graph_o *graph, void *elem, graphIterator *iter);
 

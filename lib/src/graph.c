@@ -74,8 +74,7 @@ size_t graph_size(graph_o *graph){
   }
 
   size_t size = 0;
-  graphIterator *iter = (graphIterator*)malloc(sizeof(graphIterator));
-  graph_vertex_iter_init(graph, iter);
+  graphIterator *iter = graph_vertex_iter_init(graph);
 
   void *elem = NULL; //(void*)malloc(10*sizeof(void*)); /* nome vertice */
   void *adj = NULL; /* hashtable E */
@@ -131,10 +130,10 @@ size_t graph_vertex_degree(graph_o *graph, void *v) {
   ASSERT_NOT_NULL(E);
   return hashtable_size(E);
 }
-void graph_vertex_iter_init(graph_o *graph, graphIterator *iter) {
+
+graphIterator *graph_vertex_iter_init(graph_o *graph) {
   ASSERT_PARAMETERS_NOT_NULL(graph);
-  hashtable_iter_init(graph->V, (iterator*)iter);
-  return;
+  return (graphIterator*)hashtable_iter_init(graph->V);
 }
 
 int graph_vertex_iter_hasNext(graph_o *graph, graphIterator *iter) {
@@ -148,7 +147,7 @@ void graph_vertex_iter_next(graph_o *graph, graphIterator *iter, void **elem, vo
   return;
 }
 
-void graph_edge_iter_init(graph_o *graph, void *elem, graphIterator *iter){
+graphIterator *graph_edge_iter_init(graph_o *graph, void *elem){
   ASSERT_PARAMETERS_NOT_NULL(graph);
   hashtable_o *E = hashtable_find(graph->V, elem);
   if(E == NULL){
@@ -156,8 +155,7 @@ void graph_edge_iter_init(graph_o *graph, void *elem, graphIterator *iter){
     errno = EINVAL;
     exit(EXIT_FAILURE);
   }
-  hashtable_iter_init(E, iter);
-  return;
+  return (graphIterator*)hashtable_iter_init(E);
 }
 
 int graph_edge_iter_hasNext(graph_o *graph, void *elem, graphIterator *iter){

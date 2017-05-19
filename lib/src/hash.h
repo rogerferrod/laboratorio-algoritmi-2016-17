@@ -50,7 +50,7 @@ extern size_t hashtable_size(hashtable_o *table);
 
 extern size_t hashtable_capacity(hashtable_o *table);
 
-extern void hashtable_iter_init(hashtable_o *table, iterator *iter);
+extern iterator *hashtable_iter_init(hashtable_o *table);
 
 extern int hashtable_iter_hasNext(hashtable_o *table, iterator *iter);
 
