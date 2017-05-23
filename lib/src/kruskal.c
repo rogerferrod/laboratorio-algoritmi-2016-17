@@ -34,10 +34,16 @@
            errno = EINVAL;                                 \
            exit(EXIT_FAILURE);}
 
-static int compare_double_ptr(void* elem1, void* elem2) {
-  double double1 = *(double*) elem1;
-  double double2 = *(double*) elem2;
-  return double1 - double2;
+typedef struct {
+    void *v1;
+    void *v2;
+    double weight;
+} edge;
+
+static int compare_edge_ptr(void* elem1, void* elem2) {
+  edge edge1 = *(edge*)elem1;
+  edge edge2 = *(edge*)elem2;
+  return edge1.weight - edge2.weight;
 }
 
 /*
@@ -53,8 +59,8 @@ for ∀(u, v ) ∈ E nell’ordine do
  
 */
 
-/* cosa deve ritornare? un albero? una lista?*/
-void kruskal(graph_o *graph){
+/* cosa deve ritornare? un albero? una lista? Un grafo*/
+graph_o* kruskal(graph_o *graph){
   ASSERT_PARAMETERS_NOT_NULL(graph);
   //node_o *list = NULL;
   size_t numVertex = graph_order(graph);
@@ -79,23 +85,34 @@ void kruskal(graph_o *graph){
       graphIterator* edge_iter = graph_edge_iter_init(graph, elem);
       while (graph_edge_iter_hasNext(graph, elem, edge_iter)) {
         graph_edge_iter_next(graph, elem, edge_iter, &edge_elem, &edge_weight);
-        printf("- %s, %lf\n", (char*) edge_elem, *(double*) edge_weight);
-        array_insert(array, edge_weight);
+        printf("- %s, %lf\n", (char*)edge_elem, *(double*)edge_weight);
+        edge *e = malloc(sizeof(edge));
+        e->v1 = elem;
+        e->v2 = edge_elem;
+        e->weight = *(double*)edge_weight;
+        array_insert(array, e);
       }
       free(edge_iter);
     }
     set[v_index] = make_set(elem);
     ++v_index;
   }
-  quick_sort(array, compare_double_ptr);
+  quick_sort(array, compare_edge_ptr);
   for(size_t i = 0; i<array_size(array); ++i) {
-    printf("%lf\n", *(double*)array_at(array, i));
+    edge e = *(edge*)array_at(array, i);
+    char *v1 = (char*)e.v1;
+    char *v2 = (char*)e.v2;
+    double w = e.weight;
+    printf("%s - %s - %lf\n", v1, v2, w);
   }
 
+  for (size_t i=0; i<array_size(array); ++i) {
+    free(array_at(array, i));
+  }
   array_free(array);
   free(v_iter);
   free(set);
-  return;
+  return graph_new(1, graph_get_hash_fnc(graph), graph_get_key_compare(graph));
 }
 
 

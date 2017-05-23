@@ -73,7 +73,11 @@ static void test_kruskal(){
 
   graph_connect(graph, "F", "G", new_double(10), ORIENTED);
 
-  kruskal(graph);
+  graph_o * min = kruskal(graph);
+
+  printf("min order: %ld - size: %ld\n", (unsigned long)graph_order(min), (unsigned long)graph_size(min));
+
+  graph_free(min);
   graph_free(graph);
 }
 

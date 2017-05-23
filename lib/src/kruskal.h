@@ -18,4 +18,4 @@
 #include <stddef.h>
 #include "graph.h"
 
-extern void kruskal(graph_o *graph);
+extern graph_o* kruskal(graph_o *graph);
