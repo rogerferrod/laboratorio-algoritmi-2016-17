@@ -46,16 +46,22 @@ static int compare_edge_ptr(void* elem1, void* elem2) {
   return edge1.weight - edge2.weight;
 }
 
+static double* new_double(double value) {
+  double* elem = (double*) malloc(sizeof(double));
+  *elem = value;
+  return elem;
+}
+
 /*
 MST_Kruskal(G)
 A ←∅
 for ∀v ∈ V do
-  Make_set(v )
+  Make_set(v)
 ordina gli archi in ordine non decrescente di peso
-for ∀(u, v ) ∈ E nell’ordine do
-  if Find(u)6 = Find(v ) then
-    A ← A ∪ (u, v )
-    Union(u, v )
+for ∀(u, v) ∈ E nell’ordine do
+  if Find(u) != Find(v ) then
+    A ← A ∪ (u, v)
+    Union(u, v)
  
 */
 
@@ -66,6 +72,8 @@ graph_o* kruskal(graph_o *graph){
   size_t numVertex = graph_order(graph);
   size_t numEdge = graph_size(graph);
 
+  graph_o * min = graph_new(numVertex, graph_get_hash_fnc(graph), graph_get_key_compare(graph));  //A ←∅
+
   array_o* array = array_new(numEdge);
   void *elem = NULL;
   void *adj = NULL;
@@ -75,7 +83,10 @@ graph_o* kruskal(graph_o *graph){
 
   graphIterator *v_iter = graph_vertex_iter_init(graph);
   size_t v_index = 0;
-  while(graph_vertex_iter_hasNext(graph, v_iter)){
+  while(graph_vertex_iter_hasNext(graph, v_iter)){    //for ∀v ∈ V do
+    set[v_index] = make_set(elem);    //Make_set(v)
+    ++v_index;
+
     graph_vertex_iter_next(graph, v_iter, &elem, &adj);
     printf("%s\n", (char*)elem);
 
@@ -94,17 +105,23 @@ graph_o* kruskal(graph_o *graph){
       }
       free(edge_iter);
     }
-    set[v_index] = make_set(elem);
-    ++v_index;
   }
-  quick_sort(array, compare_edge_ptr);
-  for(size_t i = 0; i<array_size(array); ++i) {
+
+  quick_sort(array, compare_edge_ptr);    //ordina gli archi in ordine non decrescente di peso
+
+  for(size_t i = 0; i<array_size(array); ++i) {   //for ∀(u, v) ∈ E nell’ordine do
     edge e = *(edge*)array_at(array, i);
-    char *v1 = (char*)e.v1;
-    char *v2 = (char*)e.v2;
-    double w = e.weight;
-    printf("%s - %s - %lf\n", v1, v2, w);
+
+    printf("%s - %s - %lf\n", (char*)e.v1, (char*)e.v2, e.weight);
+
+    if (find_set(e.v1) != find_set(e.v2)) {   //  if Find(u) != Find(v ) then
+      graph_add(min, e.v1);
+      graph_add(min, e.v2);
+      graph_connect(min, e.v1, e.v2, new_double(e.weight), ORIENTED);   //A ← A ∪ (u, v)
+      union_set(e.v1, e.v2);    //Union(u, v)
+    }
   }
+
 
   for (size_t i=0; i<array_size(array); ++i) {
     free(array_at(array, i));
@@ -112,7 +129,7 @@ graph_o* kruskal(graph_o *graph){
   array_free(array);
   free(v_iter);
   free(set);
-  return graph_new(1, graph_get_hash_fnc(graph), graph_get_key_compare(graph));
+  return min;
 }
 
 
