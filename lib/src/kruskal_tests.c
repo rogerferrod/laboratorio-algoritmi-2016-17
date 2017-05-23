@@ -73,10 +73,20 @@ static void test_kruskal(){
 
   graph_connect(graph, "F", "G", new_double(10), ORIENTED);
 
-  graph_o * min = kruskal(graph);
+  graph_o *min = kruskal(graph);
 
-  printf("min order: %ld - size: %ld\n", (unsigned long)graph_order(min), (unsigned long)graph_size(min));
-
+  printf("min\n");
+  printf("min order: %ld \n", (unsigned long)graph_order(min));
+//  printf("min size: %ld\n", (unsigned long)graph_size(min));
+/*
+  graphIterator *iter = graph_vertex_iter_init(min);
+  void *elem, *adj;
+  int i=0;
+  while (graph_vertex_iter_hasNext(min, iter)) {
+    graph_vertex_iter_next(min, iter, &elem, &adj);
+    printf("i: %ld\n", ++i);
+  }
+*/
   graph_free(min);
   graph_free(graph);
 }
@@ -87,5 +97,3 @@ int main() {
   RUN_TEST(test_kruskal);
   return UNITY_END();
 }
-
-

@@ -37,13 +37,13 @@
 typedef struct {
     void *v1;
     void *v2;
-    double weight;
+    double *weight;
 } edge;
 
 static int compare_edge_ptr(void* elem1, void* elem2) {
   edge edge1 = *(edge*)elem1;
   edge edge2 = *(edge*)elem2;
-  return edge1.weight - edge2.weight;
+  return *edge1.weight - *edge2.weight;
 }
 
 static double* new_double(double value) {
@@ -68,27 +68,27 @@ for ∀(u, v) ∈ E nell’ordine do
 /* cosa deve ritornare? un albero? una lista? Un grafo*/
 graph_o* kruskal(graph_o *graph){
   ASSERT_PARAMETERS_NOT_NULL(graph);
-  //node_o *list = NULL;
+
   size_t numVertex = graph_order(graph);
   size_t numEdge = graph_size(graph);
 
   graph_o * min = graph_new(numVertex, graph_get_hash_fnc(graph), graph_get_key_compare(graph));  //A ←∅
 
+  hashtable_o *set_dictionary = hashtable_new(numVertex, graph_get_hash_fnc(graph), graph_get_key_compare(graph));
   array_o* array = array_new(numEdge);
   void *elem = NULL;
   void *adj = NULL;
 
   printf("graph_order: %d\n", (unsigned int)graph_order(graph));
-  set_o **set = (set_o**)malloc(graph_order(graph)*sizeof(set_o*)); //array di set?
+  printf("graph_size: %d\n", (unsigned int)graph_size(graph));
 
   graphIterator *v_iter = graph_vertex_iter_init(graph);
   size_t v_index = 0;
   while(graph_vertex_iter_hasNext(graph, v_iter)){    //for ∀v ∈ V do
-    set[v_index] = make_set(elem);    //Make_set(v)
-    ++v_index;
-
     graph_vertex_iter_next(graph, v_iter, &elem, &adj);
     printf("%s\n", (char*)elem);
+
+    hashtable_put(&set_dictionary, elem, make_set(elem));
 
     if (graph_vertex_degree(graph, elem) != 0){
       void* edge_elem = NULL;
@@ -100,7 +100,7 @@ graph_o* kruskal(graph_o *graph){
         edge *e = malloc(sizeof(edge));
         e->v1 = elem;
         e->v2 = edge_elem;
-        e->weight = *(double*)edge_weight;
+        e->weight = (double*)edge_weight;
         array_insert(array, e);
       }
       free(edge_iter);
@@ -112,23 +112,30 @@ graph_o* kruskal(graph_o *graph){
   for(size_t i = 0; i<array_size(array); ++i) {   //for ∀(u, v) ∈ E nell’ordine do
     edge e = *(edge*)array_at(array, i);
 
-    printf("%s - %s - %lf\n", (char*)e.v1, (char*)e.v2, e.weight);
+    printf("%s - %s - %lf\n", (char*)e.v1, (char*)e.v2, *e.weight);
 
-    if (find_set(e.v1) != find_set(e.v2)) {   //  if Find(u) != Find(v ) then
+  }
+  printf("fine stampa\n");
+  for(size_t i = 0; i<array_size(array); ++i) {   //for ∀(u, v) ∈ E nell’ordine do
+    printf("A (%ld)\n", (unsigned long)i);
+    edge e = *(edge*)array_at(array, i);
+
+    set_o *setU = (set_o*)hashtable_find(set_dictionary, e.v1);
+    set_o *setV = (set_o*)hashtable_find(set_dictionary, e.v2);
+    if (graph_get_key_compare(graph)(find_set(setU), find_set(setV)) != 0) {  //  if Find(u) != Find(v ) then
       graph_add(min, e.v1);
       graph_add(min, e.v2);
-      graph_connect(min, e.v1, e.v2, new_double(e.weight), ORIENTED);   //A ← A ∪ (u, v)
-      union_set(e.v1, e.v2);    //Union(u, v)
+      graph_connect(min, e.v1, e.v2, e.weight, ORIENTED);   //A ← A ∪ (u, v)
+      union_set(setU, setV);    //Union(u, v)
     }
   }
-
 
   for (size_t i=0; i<array_size(array); ++i) {
     free(array_at(array, i));
   }
   array_free(array);
   free(v_iter);
-  free(set);
+  //free(set);
   return min;
 }
 
