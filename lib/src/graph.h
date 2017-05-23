@@ -52,6 +52,11 @@ extern int graph_contains_edge(graph_o *graph, void *v1, void *v2);
 
 extern size_t graph_vertex_degree(graph_o *graph, void *v);
 
+extern hash_fnc graph_get_hash_fnc(graph_o *graph);
+
+extern KeyCompare graph_get_key_compare(graph_o *graph);
+
+
 /* Vertex iterator */
 extern graphIterator *graph_vertex_iter_init(graph_o *graph);
 

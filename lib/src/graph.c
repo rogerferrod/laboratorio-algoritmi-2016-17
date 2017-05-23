@@ -131,6 +131,14 @@ size_t graph_vertex_degree(graph_o *graph, void *v) {
   return hashtable_size(E);
 }
 
+hash_fnc graph_get_hash_fnc(graph_o *graph) {
+  return graph->hash;
+}
+
+KeyCompare graph_get_key_compare(graph_o *graph) {
+  return graph->compare;
+}
+
 graphIterator *graph_vertex_iter_init(graph_o *graph) {
   ASSERT_PARAMETERS_NOT_NULL(graph);
   return (graphIterator*)hashtable_iter_init(graph->V);
