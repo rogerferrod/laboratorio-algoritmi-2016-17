@@ -56,27 +56,50 @@ static void test_kruskal(){
   graph_add(graph, "E");
   graph_add(graph, "F");
   graph_add(graph, "G");
-  graph_connect(graph, "A", "B", new_double(15), ORIENTED);
-  graph_connect(graph, "A", "D", new_double(7), ORIENTED);
-  graph_connect(graph, "A", "F", new_double(1), ORIENTED);
+  graph_connect(graph, "A", "B", new_double(15), NO_ORIENTED);
+  graph_connect(graph, "A", "D", new_double(7), NO_ORIENTED);
+  graph_connect(graph, "A", "F", new_double(1), NO_ORIENTED);
 
-  graph_connect(graph, "B", "C", new_double(20), ORIENTED);
-  graph_connect(graph, "B", "D", new_double(12), ORIENTED);
+  graph_connect(graph, "B", "C", new_double(20), NO_ORIENTED);
+  graph_connect(graph, "B", "D", new_double(12), NO_ORIENTED);
 
-  graph_connect(graph, "C", "E", new_double(6), ORIENTED);
-  graph_connect(graph, "C", "G", new_double(3), ORIENTED);
+  graph_connect(graph, "C", "E", new_double(6), NO_ORIENTED);
+  graph_connect(graph, "C", "G", new_double(3), NO_ORIENTED);
 
-  graph_connect(graph, "D", "E", new_double(11), ORIENTED);
-  graph_connect(graph, "D", "F", new_double(7), ORIENTED);
+  graph_connect(graph, "D", "E", new_double(11), NO_ORIENTED);
+  graph_connect(graph, "D", "F", new_double(7), NO_ORIENTED);
 
-  graph_connect(graph, "E", "G", new_double(4), ORIENTED);
+  graph_connect(graph, "E", "G", new_double(4), NO_ORIENTED);
 
-  graph_connect(graph, "F", "G", new_double(10), ORIENTED);
+  graph_connect(graph, "F", "G", new_double(10), NO_ORIENTED);
 
-  graph_o *min = kruskal(graph);
+  printf("created graph\n");
+  printf("size %d  order %d\n", graph_size(graph), graph_order(graph));
+  
+  void *elem = NULL;
+  void *adj = NULL;
 
-  printf("min\n");
-  printf("min order: %ld \n", (unsigned long)graph_order(min));
+  graphIterator *v_iter = graph_vertex_iter_init(graph);
+  while(graph_vertex_iter_hasNext(graph, v_iter)){
+    graph_vertex_iter_next(graph, v_iter, &elem, &adj);
+    printf("v %s\n", (char*)elem);
+    
+    void* edge_elem = NULL;
+    double* edge_weight = NULL;
+    graphIterator* edge_iter = graph_edge_iter_init(graph, elem);
+    while (graph_edge_iter_hasNext(graph, elem, edge_iter)) {
+      graph_edge_iter_next(graph, elem, edge_iter, &edge_elem, &edge_weight);
+      printf("  - %s, %lf\n", (char*)edge_elem, *(double*)edge_weight);
+    }
+    free(edge_iter);
+    
+  }
+  
+
+  //graph_o *min = kruskal(graph);
+
+  //printf("min\n");
+  //printf("min order: %ld \n", (unsigned long)graph_order(min));
 //  printf("min size: %ld\n", (unsigned long)graph_size(min));
 /*
   graphIterator *iter = graph_vertex_iter_init(min);
@@ -87,7 +110,7 @@ static void test_kruskal(){
     printf("i: %ld\n", ++i);
   }
 */
-  graph_free(min);
+//  graph_free(min);
   graph_free(graph);
 }
 
