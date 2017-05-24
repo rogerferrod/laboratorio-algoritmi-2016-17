@@ -308,6 +308,52 @@ static void test_hashtableContains(){
   hashtable_free(table);
 }
 
+static void test_hashtableUltimateExpand(){
+  hashtable_o *table = hashtable_new(5, hash, compare_str);
+  printf("size %d, capacity %d\n", hashtable_size(table), hashtable_capacity(table));
+  hashtable_put(&table, "hello", new_int(5));
+  printf("size %d, capacity %d\n", hashtable_size(table), hashtable_capacity(table));
+  hashtable_put(&table, "1234567890", new_int(1));
+  printf("size %d, capacity %d\n", hashtable_size(table), hashtable_capacity(table));
+  hashtable_put(&table, "mouse", new_int(6));
+  printf("size %d, capacity %d\n", hashtable_size(table), hashtable_capacity(table));
+  hashtable_put(&table, "hi", new_int(4));
+  printf("size %d, capacity %d\n", hashtable_size(table), hashtable_capacity(table));
+  hashtable_put(&table, "bye", new_int(1));
+  printf("size %d, capacity %d\n", hashtable_size(table), hashtable_capacity(table));
+  hashtable_put(&table, "other", new_int(1));
+  printf("size %d, capacity %d\n", hashtable_size(table), hashtable_capacity(table));
+  hashtable_put(&table, "boh", new_int(1));
+  printf("size %d, capacity %d\n", hashtable_size(table), hashtable_capacity(table));
+  hashtable_put(&table, "idk", new_int(1));
+  printf("size %d, capacity %d\n", hashtable_size(table), hashtable_capacity(table));
+  hashtable_put(&table, "ciao", new_int(1));
+  printf("size %d, capacity %d\n", hashtable_size(table), hashtable_capacity(table));
+  hashtable_put(&table, "ciaa", new_int(1));
+  printf("size %d, capacity %d\n", hashtable_size(table), hashtable_capacity(table));
+  hashtable_put(&table, "ciae", new_int(1));
+  printf("size %d, capacity %d\n", hashtable_size(table), hashtable_capacity(table));
+  hashtable_put(&table, "ciai", new_int(1));
+  printf("size %d, capacity %d\n", hashtable_size(table), hashtable_capacity(table));
+  hashtable_put(&table, "ciau", new_int(1));
+  printf("size %d, capacity %d\n", hashtable_size(table), hashtable_capacity(table));
+  hashtable_put(&table, "ciaz", new_int(1));
+  printf("size %d, capacity %d\n", hashtable_size(table), hashtable_capacity(table));
+  
+  iterator *iter = hashtable_iter_init(table);
+  
+  void *key = NULL;
+  void *value = NULL;
+
+  while(hashtable_iter_hasNext(table,iter)){
+    hashtable_iter_next(table, iter, &key, &value);
+    printf("key %s, value %d\n", key, *(int*)value);
+  } 
+  
+
+  hashtable_free(table);
+}
+
 int main() {
   UNITY_BEGIN();
   RUN_TEST(test_hashtableNew);
@@ -332,5 +378,6 @@ int main() {
   RUN_TEST(test_hashtableIteratorHasNext);
   RUN_TEST(test_hashtableIterator);
   RUN_TEST(test_hashtableContains);
+  RUN_TEST(test_hashtableUltimateExpand);
   return UNITY_END();
 }

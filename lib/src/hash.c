@@ -224,6 +224,7 @@ void hashtable_remove(hashtable_o *table, void *key){
 }
 
 void hashtable_expand(hashtable_o **table){
+  printf("EXPAND! %f\n", (float)(*table)->load_factor);
   ASSERT_PARAMETERS_NOT_NULL(table);
   hashtable_o *old_table = *table;
   hash_entry *entry;

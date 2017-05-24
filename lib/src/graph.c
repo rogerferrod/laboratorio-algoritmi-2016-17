@@ -107,7 +107,10 @@ void graph_connect(graph_o *graph, void *x, void *y, double *weight, int bitmask
     errno = EINVAL;
     exit(EXIT_FAILURE);
   }
+  printf("sono qui hashtable capacity %d\n", hashtable_capacity(E));
   hashtable_put(&E, y, weight);
+  hashtable_put(&(graph->V), x, E);
+  printf("sono qua hashtable capacity %d\n", hashtable_capacity(E));
   if((bitmask & NO_ORIENTED) == NO_ORIENTED){
     graph_connect(graph, y, x, weight, ORIENTED);
   }

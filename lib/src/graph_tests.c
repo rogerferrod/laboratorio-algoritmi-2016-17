@@ -308,9 +308,39 @@ static void test_graphEdgeIterator(){
   free(edge_iter);
 }
 
+static void test_graphVertexHashExpand(){
+  graph_o *graph = graph_new(5, djb2a, compare_str);
+  graph_add(graph, "A");
+  graph_add(graph, "B");
+  graph_add(graph, "C");
+  graph_add(graph, "E");
+  graph_add(graph, "F");
+  graph_add(graph, "G");
+
+  printf("order %d, size %d\n", graph_order(graph), graph_size(graph));
+
+  graph_free(graph);
+}
+
+static void test_graphEdgeHashExpand(){
+  graph_o *graph = graph_new(10, djb2a, compare_str);
+  graph_add(graph, "A");
+  graph_connect(graph, "A", "B", new_double(2.9), ORIENTED);
+  graph_connect(graph, "A", "C", new_double(5.3), ORIENTED);
+  graph_connect(graph, "A", "D", new_double(1.6), ORIENTED);
+  graph_connect(graph, "A", "E", new_double(1.6), ORIENTED);
+  graph_connect(graph, "A", "F", new_double(1.6), ORIENTED);
+
+  printf("order %d\n", graph_order(graph));
+  //printf("size %d\n", graph_size(graph));
+  //iteratore non funziona!!!
+  
+  graph_free(graph);
+}
+
 int main() {
   UNITY_BEGIN();
-  RUN_TEST(test_graphNew);
+  /*RUN_TEST(test_graphNew);
   RUN_TEST(test_graphFree);
   RUN_TEST(test_graphOrderEmpty);
   RUN_TEST(test_graphOrder);
@@ -332,7 +362,9 @@ int main() {
   RUN_TEST(test_graphVertexIteratorInit);
   RUN_TEST(test_graphVertexIterator);
   RUN_TEST(test_graphEdgeIteratorInit);
-  RUN_TEST(test_graphEdgeIterator);
+  RUN_TEST(test_graphEdgeIterator);*/
+  RUN_TEST(test_graphVertexHashExpand);
+  RUN_TEST(test_graphEdgeHashExpand);
   return UNITY_END();
 }
 
