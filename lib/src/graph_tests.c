@@ -329,12 +329,13 @@ static void test_graphEdgeHashExpand(){
   graph_connect(graph, "A", "C", new_double(5.3), ORIENTED);
   graph_connect(graph, "A", "D", new_double(1.6), ORIENTED);
   graph_connect(graph, "A", "E", new_double(1.6), ORIENTED);
+  
+  printf("fin qui arrivo\n");
   graph_connect(graph, "A", "F", new_double(1.6), ORIENTED);
 
   printf("order %d\n", graph_order(graph));
-  //printf("size %d\n", graph_size(graph));
-  //iteratore non funziona!!!
-  
+  printf("size %d\n", graph_size(graph));
+
   graph_free(graph);
 }
 
@@ -363,7 +364,7 @@ int main() {
   RUN_TEST(test_graphVertexIterator);
   RUN_TEST(test_graphEdgeIteratorInit);
   RUN_TEST(test_graphEdgeIterator);*/
-  RUN_TEST(test_graphVertexHashExpand);
+  //RUN_TEST(test_graphVertexHashExpand);
   RUN_TEST(test_graphEdgeHashExpand);
   return UNITY_END();
 }

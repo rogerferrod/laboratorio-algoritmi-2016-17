@@ -68,7 +68,7 @@ size_t graph_order(graph_o *graph){
 }
 
 size_t graph_size(graph_o *graph){
-  ASSERT_PARAMETERS_NOT_NULL(graph);
+  /*ASSERT_PARAMETERS_NOT_NULL(graph);
   if (graph_order(graph) == 0) {
     return 0;
   }
@@ -76,8 +76,8 @@ size_t graph_size(graph_o *graph){
   size_t size = 0;
   graphIterator *iter = graph_vertex_iter_init(graph);
 
-  void *elem = NULL; //(void*)malloc(10*sizeof(void*)); /* nome vertice */
-  void *adj = NULL; /* hashtable E */
+  void *elem = NULL; 
+  void *adj = NULL;
 
   while(graph_vertex_iter_hasNext(graph, iter)){
     graph_vertex_iter_next(graph, iter, &elem, &adj);
@@ -87,6 +87,43 @@ size_t graph_size(graph_o *graph){
   free(iter);
 
   return size;
+  */
+
+  /* iteratore su arco */
+  graphIterator *iter = graph_edge_iter_init(graph, "A");
+  void *elem = NULL;
+  void *weight = NULL;
+  while(graph_edge_iter_hasNext(graph, "A", iter)){
+    graph_edge_iter_next(graph, "A", iter, &elem, &weight);
+    printf("elem %s, weight %f\n", elem, *(float*)weight);
+  }
+  printf("*iter == NULL %d\n", *iter==NULL);
+
+
+  printf("size V %d\n", hashtable_size(graph->V));
+  void *vertex = NULL;
+  void *adj = NULL;
+  graphIterator *viter = hashtable_iter_init(graph->V);
+  printf("hasNext %d\n", hashtable_iter_hasNext(graph->V, viter));
+  hashtable_iter_next(graph->V, viter, &vertex, &adj);
+  printf("vertex %s\n", vertex);
+  printf("hasNext %d\n", hashtable_iter_hasNext(graph->V, viter));
+
+
+  /*
+  printf("num vertex %d\n", hashtable_size(graph->V)); // ce n'è uno!! solo A
+  graphIterator *viter = graph_vertex_iter_init(graph);
+  void *vertex = NULL;
+  void *adj = NULL; 
+  printf("hasNext %d\n", graph_vertex_iter_hasNext(graph, viter));
+  graph_vertex_iter_next(graph, viter, &vertex, &adj);
+  printf("vertex %s\n", vertex);
+  printf("hasNext %d\n", graph_vertex_iter_hasNext(graph, viter));
+  printf("*viter == NULL %d\n", *viter==NULL);
+  */
+  //free(iter);
+
+  return 0;
 }
 
 void graph_add(graph_o *graph, void *elem){
@@ -109,7 +146,7 @@ void graph_connect(graph_o *graph, void *x, void *y, double *weight, int bitmask
   }
   printf("sono qui hashtable capacity %d\n", hashtable_capacity(E));
   hashtable_put(&E, y, weight);
-  hashtable_put(&(graph->V), x, E);
+  hashtable_put(&(graph->V), x, E);  //perche serve???
   printf("sono qua hashtable capacity %d\n", hashtable_capacity(E));
   if((bitmask & NO_ORIENTED) == NO_ORIENTED){
     graph_connect(graph, y, x, weight, ORIENTED);
@@ -184,6 +221,7 @@ void graph_edge_iter_next(graph_o *graph, void *elem, graphIterator *iter, void 
   ASSERT_PARAMETERS_NOT_NULL(graph);
   hashtable_o *E = hashtable_find(graph->V, elem);
   if(E == NULL){
+    printf("elem %s\n", elem);
     fprintf(stderr, "Invalid parameters: vertex not found\n");
     errno = EINVAL;
     exit(EXIT_FAILURE);
