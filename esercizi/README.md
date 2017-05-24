@@ -29,6 +29,6 @@ etc etc .....
 
 ## Authors
 
-* **Riccardo Ferrero Regis** - *matricola* 
+* **Riccardo Ferrero Regis** - *821770* 
 * **Roger Ferrod** - *813766* 
 * **Luca Chironna** - *811890* 
