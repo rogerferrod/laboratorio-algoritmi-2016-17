@@ -96,10 +96,12 @@ double graph_weight(graph_o *graph) {
   typedef struct {
       void *v1;
       void *v2;
-  } edge;
+      double *weight;
+  } my_edge;
 
   double graph_weight = 0;
-  hashtable_o *set_dictionary = hashtable_new(graph_order(graph), graph_get_hash_fnc(graph), graph_get_key_compare(graph));
+
+  array_o *array = array_new(graph_order(graph));
 
   void *elem = NULL;
   void *adj = NULL;
@@ -107,36 +109,43 @@ double graph_weight(graph_o *graph) {
   while(graph_vertex_iter_hasNext(graph, v_iter)){
     graph_vertex_iter_next(graph, v_iter, &elem, &adj);
 
-    printf("h_put %s\n", elem);
-    hashtable_put(&set_dictionary, elem, make_set(elem));
-  }
-  free(v_iter);
-  printf("FINE VERTICI\n");
-
-  iterator *hIter = hashtable_iter_init(set_dictionary);
-  while(hashtable_iter_hasNext(set_dictionary, hIter)) {
-    hashtable_iter_next(set_dictionary, hIter, &elem, &adj);
-
-    void *edge = NULL;
+    void *current_edge = NULL;
     double *weight = NULL;
     graphIterator *e_iter = graph_edge_iter_init(graph, elem);
-    while(graph_edge_iter_hasNext(graph, elem, e_iter)){
-      graph_edge_iter_next(graph, elem, e_iter, &edge, &weight);
+    while(graph_edge_iter_hasNext(graph, elem, e_iter)) {
+      graph_edge_iter_next(graph, elem, e_iter, &current_edge, &weight);
 
-      set_o *setU = (set_o*)hashtable_find(set_dictionary, elem);
-      set_o *setV = (set_o*)hashtable_find(set_dictionary, edge);
+      my_edge *e = malloc(sizeof(my_edge));
+      e->v1 = elem;
+      e->v2 = current_edge;
+      e->weight = weight;
 
-      if (graph_get_key_compare(graph)(find_set(setU), find_set(setV)) != 0) {  //  if Find(u) != Find(v ) then
-        union_set(setU, setV);    //Union(u, v)
-        printf("%s - %s - %lf\n", elem, edge, *weight);
-        //printf("%lf\n", graph_weight);
-        graph_weight += *weight;
+      int exists = 0;
+      for(size_t i=0; i<array_size(array) && !exists; ++i) {
+        my_edge *a =(my_edge*)array_at(array, i);
+        if ((a->v1 == elem && a->v2 == current_edge) || (a->v1 == current_edge && a->v2 == elem)) {
+          exists = 1;
+        }
       }
-
+      if (!exists) {
+        array_insert(array, e);
+      }
     }
     free(e_iter);
   }
-  free(hIter);
+  free(v_iter);
+
+  for(size_t i=0; i<array_size(array); ++i) {
+    my_edge *a =(my_edge*)array_at(array, i);
+    graph_weight += *(a->weight);
+    printf("%s - %s - %lf\n", (char*)a->v1, (char*)a->v2, *(a->weight));
+  }
+
+  for(size_t i=0; i<array_size(array); ++i) {
+    free(array_at(array, i));
+  }
+  array_free(array);
+
   return graph_weight;
 }
 
