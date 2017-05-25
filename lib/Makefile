@@ -40,9 +40,10 @@ build_list: bin/list_tests
 build_hash: bin/hash_tests
 build_graph: bin/graph_tests
 build_kruskal: bin/kruskal_tests
+build_queue: bin/queue_tests
 
 # compila e esegue i test
-tests: tests_kruskal
+tests: tests_graph
 tests_all: tests_es1 tests_es2 tests_es3 tests_es4 tests_es5
 tests_es1: tests_array tests_sort
 tests_es2: tests_tree
@@ -68,6 +69,9 @@ tests_graph: build_graph
 	bin/graph_tests
 tests_kruskal: build_kruskal
 	bin/kruskal_tests
+tests_queue: build_queue
+	bin/queue_tests
+
 
 
 docs: docs_tree docs_heap
@@ -125,6 +129,12 @@ bin/kruskal: build/kruskal.o build/graph.o build/array.o build/list.o build/set.
 
 bin/kruskal_tests: build/kruskal_tests.o build/kruskal.o build/graph.o build/array.o build/list.o build/set.o build/hash.o build/sort.o build/unity.o $(C_COMMON_DEPS)
 	$(CC) -o bin/kruskal_tests build/kruskal_tests.o build/kruskal.o build/graph.o build/array.o build/list.o build/set.o build/hash.o build/sort.o build/unity.o
+
+bin/queue: build/queue.o build/unity.o $(C_COMMON_DEPS)
+	$(CC) -o bin/queue build/queue.o build/unity.o
+
+bin/queue_tests: build/queue_tests.o build/queue.o build/unity.o $(C_COMMON_DEPS)
+	$(CC) -o bin/queue_tests build/queue_tests.o build/queue.o build/unity.o
 
 
 clean:
