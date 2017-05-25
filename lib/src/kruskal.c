@@ -18,7 +18,6 @@
 #include "array.h"
 #include "sort.h"
 #include "set.h"
-#include "list.h"
 #include "hash.h"
 #include "graph.h"
 #include "kruskal.h"
@@ -46,11 +45,13 @@ static int compare_edge_ptr(void* elem1, void* elem2) {
   return *edge1.weight - *edge2.weight;
 }
 
+/*
 static double* new_double(double value) {
   double* elem = (double*) malloc(sizeof(double));
   *elem = value;
   return elem;
 }
+*/
 
 /*
 MST_Kruskal(G)
@@ -80,7 +81,6 @@ graph_o* kruskal(graph_o *graph){
   void *adj = NULL;
 
   graphIterator *v_iter = graph_vertex_iter_init(graph);
-  size_t v_index = 0;
   while(graph_vertex_iter_hasNext(graph, v_iter)){    //for ∀v ∈ V do
     graph_vertex_iter_next(graph, v_iter, &elem, &adj);
 
@@ -113,7 +113,7 @@ graph_o* kruskal(graph_o *graph){
     if (graph_get_key_compare(graph)(find_set(setU), find_set(setV)) != 0) {  //  if Find(u) != Find(v ) then
       graph_connect(min, e.v1, e.v2, e.weight, NO_ORIENTED);   //A ← A ∪ (u, v)
       union_set(setU, setV);    //Union(u, v)
-      printf("%s - %s - %lf\n", e.v1, e.v2, *e.weight);
+      //printf("%s - %s - %lf\n", (char*)e.v1, (char*)e.v2, *e.weight);
     }
   }
 

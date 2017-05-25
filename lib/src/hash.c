@@ -15,8 +15,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
-#include "hash.h"
 #include "list.h"
+#include "hash.h"
 
 #define MAX_LOAD_FACTOR  0.75
 

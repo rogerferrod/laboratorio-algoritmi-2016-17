@@ -16,8 +16,6 @@
 #include <stdio.h>
 #include <errno.h>
 #include "array.h"
-#include "list.h"
-#include "set.h"
 #include "hash.h"
 #include "graph.h"
 
@@ -99,7 +97,7 @@ double graph_weight(graph_o *graph) {
       double *weight;
   } my_edge;
 
-  double graph_weight = 0;
+  double graph_weight = 0.0;
 
   array_o *array = array_new(graph_order(graph));
 
@@ -115,31 +113,29 @@ double graph_weight(graph_o *graph) {
     while(graph_edge_iter_hasNext(graph, elem, e_iter)) {
       graph_edge_iter_next(graph, elem, e_iter, &current_edge, &weight);
 
-      my_edge *e = malloc(sizeof(my_edge));
-      e->v1 = elem;
-      e->v2 = current_edge;
-      e->weight = weight;
-
       int exists = 0;
       for(size_t i=0; i<array_size(array) && !exists; ++i) {
         my_edge *a =(my_edge*)array_at(array, i);
-        if ((a->v1 == elem && a->v2 == current_edge) || (a->v1 == current_edge && a->v2 == elem)) {
+        //if ((a->v1 == elem && a->v2 == current_edge) || (a->v1 == current_edge && a->v2 == elem)) {
+        if ((graph_get_key_compare(graph)(a->v1, elem)==0 && graph_get_key_compare(graph)(a->v2, current_edge)==0) ||
+            (graph_get_key_compare(graph)(a->v1, current_edge)==0 && graph_get_key_compare(graph)(a->v2, elem)==0)) {
           exists = 1;
         }
       }
       if (!exists) {
+        my_edge *e = malloc(sizeof(my_edge));
+        e->v1 = elem;
+        e->v2 = current_edge;
+        e->weight = weight;
+
         array_insert(array, e);
+
+        graph_weight += *weight;
       }
     }
     free(e_iter);
   }
   free(v_iter);
-
-  for(size_t i=0; i<array_size(array); ++i) {
-    my_edge *a =(my_edge*)array_at(array, i);
-    graph_weight += *(a->weight);
-    printf("%s - %s - %lf\n", (char*)a->v1, (char*)a->v2, *(a->weight));
-  }
 
   for(size_t i=0; i<array_size(array); ++i) {
     free(array_at(array, i));

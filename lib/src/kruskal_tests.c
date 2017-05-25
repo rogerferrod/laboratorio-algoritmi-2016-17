@@ -73,23 +73,23 @@ static void test_kruskal(){
 
   graph_connect(graph, "F", "G", new_double(10), NO_ORIENTED);
 
-  printf("created graph\n");
-  printf("size %ld  order %ld\n", (unsigned long)graph_size(graph), (unsigned long)graph_order(graph));
-  
+  //printf("created graph\n");
+  //printf("size %ld  order %ld\n", (unsigned long)graph_size(graph), (unsigned long)graph_order(graph));
+
   void *elem = NULL;
   void *adj = NULL;
 
   graphIterator *v_iter = graph_vertex_iter_init(graph);
   while(graph_vertex_iter_hasNext(graph, v_iter)){
     graph_vertex_iter_next(graph, v_iter, &elem, &adj);
-    printf("v %s\n", (char*)elem);
+    //printf("v %s\n", (char*)elem);
     
     void* edge_elem = NULL;
     double* edge_weight = NULL;
     graphIterator* edge_iter = graph_edge_iter_init(graph, elem);
     while (graph_edge_iter_hasNext(graph, elem, edge_iter)) {
       graph_edge_iter_next(graph, elem, edge_iter, &edge_elem, &edge_weight);
-      printf("  - %s, %lf\n", (char*)edge_elem, *(double*)edge_weight);
+      //printf("  - %s, %lf\n", (char*)edge_elem, *(double*)edge_weight);
     }
     free(edge_iter);
     
@@ -98,20 +98,20 @@ static void test_kruskal(){
   
 
   graph_o *min = kruskal(graph);
-  printf("min order: %ld \n", (unsigned long)graph_order(min));
-  printf("min size: %ld\n", (unsigned long)graph_size(min));
+  //printf("min order: %ld \n", (unsigned long)graph_order(min));
+  //printf("min size: %ld\n", (unsigned long)graph_size(min));
 
   graphIterator *v_iter_min = graph_vertex_iter_init(min);
   while(graph_vertex_iter_hasNext(min, v_iter_min)){
     graph_vertex_iter_next(min, v_iter_min, &elem, &adj);
-    printf("v %s\n", (char*)elem);
+    //printf("v %s\n", (char*)elem);
 
     void* edge_elem = NULL;
     double* edge_weight = NULL;
     graphIterator* edge_iter = graph_edge_iter_init(min, elem);
     while (graph_edge_iter_hasNext(min, elem, edge_iter)) {
       graph_edge_iter_next(min, elem, edge_iter, &edge_elem, &edge_weight);
-      printf("  - %s, %lf\n", (char*)edge_elem, *(double*)edge_weight);
+      //printf("  - %s, %lf\n", (char*)edge_elem, *(double*)edge_weight);
     }
     free(edge_iter);
 
@@ -127,6 +127,7 @@ static void test_kruskal(){
     printf("i: %ld\n", ++i);
   }
 */
+  TEST_ASSERT(37.0 == graph_weight(min));
   graph_free(min);
   graph_free(graph);
 }

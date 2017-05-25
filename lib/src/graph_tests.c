@@ -10,7 +10,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "unity.h"
-#include "hash.h"
 #include "graph.h"
 
 static int compare_str(void *x, void *y){
