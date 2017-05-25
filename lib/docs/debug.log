@@ -1,3 +1,0 @@
-[0508/141030.335:ERROR:file_io_win.cc(163)] CreateFile C:\Program Files (x86)\settings.dat: Accesso negato. (0x5)
-[0508/141030.335:ERROR:registration_protocol_win.cc(83)] TransactNamedPipe: Pipe terminata. (0x6D)
-[0508/141030.350:ERROR:file_io_win.cc(163)] CreateFile C:\Program Files (x86)\settings.dat: Accesso negato. (0x5)

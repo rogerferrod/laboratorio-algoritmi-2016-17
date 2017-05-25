@@ -161,3 +161,4 @@ build/
 cmake-build-debug/
 CMakeLists.txt
 
+*.log
