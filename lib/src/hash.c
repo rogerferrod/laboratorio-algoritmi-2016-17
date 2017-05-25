@@ -280,19 +280,24 @@ iterator *hashtable_iter_init(hashtable_o *table){
       return iter;
     }
   }
-  
+  *iter = NULL;
+  return iter;
+/*
   fprintf(stderr, "No such element\n");
   errno = EPERM;
   exit(EXIT_FAILURE);
+*/
 }
 
 int hashtable_iter_hasNext(hashtable_o *table, iterator *iter){
   ASSERT_PARAMETERS_NOT_NULL(table);
+  ASSERT_PARAMETERS_NOT_NULL(iter);
   return *iter != NULL;
 }
 
 void hashtable_iter_next(hashtable_o *table, iterator *iter, void **key, void **value){
   ASSERT_PARAMETERS_NOT_NULL(table);
+  ASSERT_PARAMETERS_NOT_NULL(iter);
   if(*iter == NULL){
     fprintf(stderr, "No such element\n");
     errno = EPERM;

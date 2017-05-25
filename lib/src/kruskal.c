@@ -79,54 +79,41 @@ graph_o* kruskal(graph_o *graph){
   void *elem = NULL;
   void *adj = NULL;
 
-  printf("graph_order: %d\n", (unsigned int)graph_order(graph));
-  printf("graph_size: %d\n", (unsigned int)graph_size(graph));
-
   graphIterator *v_iter = graph_vertex_iter_init(graph);
   size_t v_index = 0;
   while(graph_vertex_iter_hasNext(graph, v_iter)){    //for ∀v ∈ V do
     graph_vertex_iter_next(graph, v_iter, &elem, &adj);
-    printf("%s\n", (char*)elem);
 
     hashtable_put(&set_dictionary, elem, make_set(elem));
+    graph_add(min, elem);
 
-    if (graph_vertex_degree(graph, elem) != 0){
-      void* edge_elem = NULL;
-      double* edge_weight = NULL;
-      graphIterator* edge_iter = graph_edge_iter_init(graph, elem);
-      while (graph_edge_iter_hasNext(graph, elem, edge_iter)) {
-        graph_edge_iter_next(graph, elem, edge_iter, &edge_elem, &edge_weight);
-        printf("- %s, %lf\n", (char*)edge_elem, *(double*)edge_weight);
-        edge *e = malloc(sizeof(edge));
-        e->v1 = elem;
-        e->v2 = edge_elem;
-        e->weight = (double*)edge_weight;
-        array_insert(array, e);
-      }
-      free(edge_iter);
+    void* edge_elem = NULL;
+    double* edge_weight = NULL;
+    graphIterator* edge_iter = graph_edge_iter_init(graph, elem);
+    while (graph_edge_iter_hasNext(graph, elem, edge_iter)) {
+      graph_edge_iter_next(graph, elem, edge_iter, &edge_elem, &edge_weight);
+
+      edge *e = malloc(sizeof(edge));
+      e->v1 = elem;
+      e->v2 = edge_elem;
+      e->weight = (double*)edge_weight;
+      array_insert(array, e);
     }
+    free(edge_iter);
   }
 
+  //ci sono il doppio degli archi perché per esempio c'è sia A-D che D-A
   quick_sort(array, compare_edge_ptr);    //ordina gli archi in ordine non decrescente di peso
-
+  
   for(size_t i = 0; i<array_size(array); ++i) {   //for ∀(u, v) ∈ E nell’ordine do
-    edge e = *(edge*)array_at(array, i);
-
-    printf("%s - %s - %lf\n", (char*)e.v1, (char*)e.v2, *e.weight);
-
-  }
-  printf("fine stampa\n");
-  for(size_t i = 0; i<array_size(array); ++i) {   //for ∀(u, v) ∈ E nell’ordine do
-    printf("A (%ld)\n", (unsigned long)i);
     edge e = *(edge*)array_at(array, i);
 
     set_o *setU = (set_o*)hashtable_find(set_dictionary, e.v1);
     set_o *setV = (set_o*)hashtable_find(set_dictionary, e.v2);
     if (graph_get_key_compare(graph)(find_set(setU), find_set(setV)) != 0) {  //  if Find(u) != Find(v ) then
-      graph_add(min, e.v1);
-      graph_add(min, e.v2);
-      graph_connect(min, e.v1, e.v2, e.weight, ORIENTED);   //A ← A ∪ (u, v)
+      graph_connect(min, e.v1, e.v2, e.weight, NO_ORIENTED);   //A ← A ∪ (u, v)
       union_set(setU, setV);    //Union(u, v)
+      printf("%s - %s - %lf\n", e.v1, e.v2, *e.weight);
     }
   }
 
@@ -135,7 +122,6 @@ graph_o* kruskal(graph_o *graph){
   }
   array_free(array);
   free(v_iter);
-  //free(set);
   return min;
 }
 

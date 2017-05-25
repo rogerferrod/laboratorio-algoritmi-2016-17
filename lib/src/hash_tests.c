@@ -225,6 +225,18 @@ static void test_hashtableIteratorInit(){
 	free(iter);
 }
 
+static void test_hashtableIteratorNull(){
+  hashtable_o *table = hashtable_new(5, hash, compare_str);
+
+  iterator *iter = hashtable_iter_init(table);
+
+  TEST_ASSERT(NULL != iter);
+  TEST_ASSERT_EQUAL_INT(0, hashtable_iter_hasNext(table, iter));
+
+  hashtable_free(table);
+	free(iter);
+}
+
 static void test_hashtableIteratorNextFirst(){
   hashtable_o *table = hashtable_new(5, hash, compare_str);
   hashtable_put(&table, "hello", new_int(5));
@@ -401,6 +413,7 @@ int main() {
   RUN_TEST(test_hashtableExpandAuto);
   RUN_TEST(test_hashtableExpandMultiple);
   RUN_TEST(test_hashtableIteratorInit);
+  RUN_TEST(test_hashtableIteratorNull);
   RUN_TEST(test_hashtableIteratorNextFirst);
   RUN_TEST(test_hashtableIteratorNextMultiple);
   RUN_TEST(test_hashtableIteratorHasNext);

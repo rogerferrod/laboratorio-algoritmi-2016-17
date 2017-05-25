@@ -42,6 +42,8 @@ extern size_t graph_order(graph_o *graph);
 /* |E| */
 extern size_t graph_size(graph_o *graph);
 
+extern double graph_weight(graph_o *graph);
+
 extern void graph_add(graph_o *graph, void *elem);
 
 extern void graph_connect(graph_o *graph, void *x, void *y, double *weight, int bitmask);

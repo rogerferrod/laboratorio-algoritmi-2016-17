@@ -17,6 +17,7 @@
 #include <errno.h>
 #include "array.h"
 #include "list.h"
+#include "set.h"
 #include "hash.h"
 #include "graph.h"
 
@@ -76,7 +77,7 @@ size_t graph_size(graph_o *graph){
   size_t size = 0;
   graphIterator *iter = graph_vertex_iter_init(graph);
 
-  void *elem = NULL; 
+  void *elem = NULL;
   void *adj = NULL;
 
   while(graph_vertex_iter_hasNext(graph, iter)){
@@ -87,6 +88,56 @@ size_t graph_size(graph_o *graph){
   free(iter);
 
   return size;
+}
+
+double graph_weight(graph_o *graph) {
+  ASSERT_PARAMETERS_NOT_NULL(graph);
+
+  typedef struct {
+      void *v1;
+      void *v2;
+  } edge;
+
+  double graph_weight = 0;
+  hashtable_o *set_dictionary = hashtable_new(graph_order(graph), graph_get_hash_fnc(graph), graph_get_key_compare(graph));
+
+  void *elem = NULL;
+  void *adj = NULL;
+  graphIterator *v_iter = graph_vertex_iter_init(graph);
+  while(graph_vertex_iter_hasNext(graph, v_iter)){
+    graph_vertex_iter_next(graph, v_iter, &elem, &adj);
+
+    printf("h_put %s\n", elem);
+    hashtable_put(&set_dictionary, elem, make_set(elem));
+  }
+  free(v_iter);
+  printf("FINE VERTICI\n");
+
+  iterator *hIter = hashtable_iter_init(set_dictionary);
+  while(hashtable_iter_hasNext(set_dictionary, hIter)) {
+    hashtable_iter_next(set_dictionary, hIter, &elem, &adj);
+
+    void *edge = NULL;
+    double *weight = NULL;
+    graphIterator *e_iter = graph_edge_iter_init(graph, elem);
+    while(graph_edge_iter_hasNext(graph, elem, e_iter)){
+      graph_edge_iter_next(graph, elem, e_iter, &edge, &weight);
+
+      set_o *setU = (set_o*)hashtable_find(set_dictionary, elem);
+      set_o *setV = (set_o*)hashtable_find(set_dictionary, edge);
+
+      if (graph_get_key_compare(graph)(find_set(setU), find_set(setV)) != 0) {  //  if Find(u) != Find(v ) then
+        union_set(setU, setV);    //Union(u, v)
+        printf("%s - %s - %lf\n", elem, edge, *weight);
+        //printf("%lf\n", graph_weight);
+        graph_weight += *weight;
+      }
+
+    }
+    free(e_iter);
+  }
+  free(hIter);
+  return graph_weight;
 }
 
 void graph_add(graph_o *graph, void *elem){
