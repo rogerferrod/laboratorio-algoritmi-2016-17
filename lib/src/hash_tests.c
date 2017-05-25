@@ -114,6 +114,29 @@ static void test_hashtableFind(){
   hashtable_free(table);
 }
 
+static void test_hashtableLookup(){
+  hashtable_o *table = hashtable_new(10, hash, compare_str);
+  hashtable_put(&table, "hello", new_int(5));
+  hashtable_put(&table, "house", new_int(6)); /* collision */
+  hashtable_put(&table, "bye", new_int(9));
+  hashtable_put(&table, "hi", new_int(9));
+  TEST_ASSERT_EQUAL_INT(5, **(int**)hashtable_lookup(table, "hello"));
+  TEST_ASSERT_EQUAL_INT(6, **(int**)hashtable_lookup(table, "house"));
+  TEST_ASSERT_EQUAL_INT(9, **(int**)hashtable_lookup(table, "bye"));
+  TEST_ASSERT_EQUAL_INT(9, **(int**)hashtable_lookup(table, "hi"));
+  hashtable_free(table);
+}
+
+static void test_hashtableLookupNotFound(){
+  hashtable_o *table = hashtable_new(10, hash, compare_str);
+  hashtable_put(&table, "hello", new_int(5));
+  hashtable_put(&table, "house", new_int(6)); /* collision */
+  hashtable_put(&table, "bye", new_int(9));
+  hashtable_put(&table, "hi", new_int(9));
+  TEST_ASSERT(NULL == hashtable_lookup(table, "nonce"));
+  hashtable_free(table);
+}
+
 static void test_hashtableRemoveNoConflict(){
   hashtable_o *table = hashtable_new(10, hash, compare_str);
   hashtable_put(&table, "hello", new_int(5));
@@ -310,47 +333,50 @@ static void test_hashtableContains(){
 
 static void test_hashtableUltimateExpand(){
   hashtable_o *table = hashtable_new(5, hash, compare_str);
-  printf("size %d, capacity %d\n", hashtable_size(table), hashtable_capacity(table));
   hashtable_put(&table, "hello", new_int(5));
-  printf("size %d, capacity %d\n", hashtable_size(table), hashtable_capacity(table));
-  hashtable_put(&table, "1234567890", new_int(1));
-  printf("size %d, capacity %d\n", hashtable_size(table), hashtable_capacity(table));
   hashtable_put(&table, "mouse", new_int(6));
-  printf("size %d, capacity %d\n", hashtable_size(table), hashtable_capacity(table));
   hashtable_put(&table, "hi", new_int(4));
-  printf("size %d, capacity %d\n", hashtable_size(table), hashtable_capacity(table));
   hashtable_put(&table, "bye", new_int(1));
-  printf("size %d, capacity %d\n", hashtable_size(table), hashtable_capacity(table));
   hashtable_put(&table, "other", new_int(1));
-  printf("size %d, capacity %d\n", hashtable_size(table), hashtable_capacity(table));
   hashtable_put(&table, "boh", new_int(1));
-  printf("size %d, capacity %d\n", hashtable_size(table), hashtable_capacity(table));
   hashtable_put(&table, "idk", new_int(1));
-  printf("size %d, capacity %d\n", hashtable_size(table), hashtable_capacity(table));
   hashtable_put(&table, "ciao", new_int(1));
-  printf("size %d, capacity %d\n", hashtable_size(table), hashtable_capacity(table));
   hashtable_put(&table, "ciaa", new_int(1));
-  printf("size %d, capacity %d\n", hashtable_size(table), hashtable_capacity(table));
   hashtable_put(&table, "ciae", new_int(1));
-  printf("size %d, capacity %d\n", hashtable_size(table), hashtable_capacity(table));
   hashtable_put(&table, "ciai", new_int(1));
-  printf("size %d, capacity %d\n", hashtable_size(table), hashtable_capacity(table));
   hashtable_put(&table, "ciau", new_int(1));
-  printf("size %d, capacity %d\n", hashtable_size(table), hashtable_capacity(table));
   hashtable_put(&table, "ciaz", new_int(1));
-  printf("size %d, capacity %d\n", hashtable_size(table), hashtable_capacity(table));
-  
+
+
+  char* str[] = {
+    "hi",
+    "bye",
+    "boh",
+    "idk",
+    "ciaz",
+    "ciau",
+    "ciai",
+    "ciae",
+    "ciaa",
+    "ciao",
+    "mouse",
+    "hello",
+    "other"
+  };
+
   iterator *iter = hashtable_iter_init(table);
   
   void *key = NULL;
   void *value = NULL;
+  size_t i = 0;
 
   while(hashtable_iter_hasNext(table,iter)){
     hashtable_iter_next(table, iter, &key, &value);
-    printf("key %s, value %d\n", key, *(int*)value);
-  } 
+    TEST_ASSERT_EQUAL_INT(0, strcmp(str[i], key));
+    ++i;
+  }
   
-
+  free(iter);
   hashtable_free(table);
 }
 
@@ -366,6 +392,8 @@ int main() {
   RUN_TEST(test_hashtableFindSimple);
   RUN_TEST(test_hashtableFindChaining);
   RUN_TEST(test_hashtableFind);
+  RUN_TEST(test_hashtableLookup);
+  RUN_TEST(test_hashtableLookupNotFound);
   RUN_TEST(test_hashtableRemoveNoConflict);
   RUN_TEST(test_hashtableRemoveConflict);
   RUN_TEST(test_hashtableRemoveFirst);

@@ -40,6 +40,9 @@ extern void hashtable_put(hashtable_o **table, void *key, void *value);
 
 //extern void hashtable_replace(hashtable_o **table, void *key, void *value);
 
+/* Return a pointer to a value pointer */
+extern void** hashtable_lookup(hashtable_o *table, void *key);
+
 extern void* hashtable_find(hashtable_o *table, void *key);
 
 extern void hashtable_remove(hashtable_o *table, void *key);

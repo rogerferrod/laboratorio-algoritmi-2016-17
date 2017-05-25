@@ -107,7 +107,7 @@ void hashtable_free(hashtable_o *table){
   return;
 }
 
-void* hashtable_find(hashtable_o *table, void *key){
+void** hashtable_lookup(hashtable_o *table, void *key) {
   ASSERT_PARAMETERS_NOT_NULL(table);
   size_t index = table->hash(key) % array_h_capacity(table->T);
   node_o *list = array_h_at(table->T, index);
@@ -118,10 +118,15 @@ void* hashtable_find(hashtable_o *table, void *key){
   for(size_t i = 0; i < list_size(list); ++i){
     entry = list_get_at(list, i);
     if(table->key_compare(key, entry->key) == 0){
-      return entry->value;
+      return &(entry->value);
     }
   }
   return NULL;
+}
+
+void* hashtable_find(hashtable_o *table, void *key){
+  void** ptr = hashtable_lookup(table, key);
+  return (ptr == NULL) ? NULL : *ptr;
 }
 
 /* Insert or Replace*/
@@ -224,7 +229,6 @@ void hashtable_remove(hashtable_o *table, void *key){
 }
 
 void hashtable_expand(hashtable_o **table){
-  printf("EXPAND! %f\n", (float)(*table)->load_factor);
   ASSERT_PARAMETERS_NOT_NULL(table);
   hashtable_o *old_table = *table;
   hash_entry *entry;
