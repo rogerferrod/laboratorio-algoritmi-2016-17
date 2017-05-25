@@ -73,3 +73,4 @@ extern int graph_edge_iter_hasNext(graph_o *graph, void *elem, graphIterator *it
 
 extern void graph_edge_iter_next(graph_o *graph, void *elem, graphIterator *iter, void **adj_elem, double **weight);
 
+

@@ -248,6 +248,28 @@ void graph_edge_iter_next(graph_o *graph, void *elem, graphIterator *iter, void 
   hashtable_iter_next(E, iter, adj_elem, (void**)weight);
 }
 
+void graph_BFS(graph_o *graph){
+  ASSERT_PARAMETERS_NOT_NULL(graph);
 
+  //fai che uscire se vuoto al momento
+  if(graph_order(graph) == 0)return;
 
-
+  // color [V:color]
+  enum status{black = 0, grey, white};
+  hashtable_o *color = hashtable_new(graph_order(graph), graph->hash, graph->compare);
+  graphIterator *viter = graph_vertex_iter_init(graph);
+  void *vertex = NULL;
+  void *adj = NULL;
+  while(graph_vertex_iter_hasNext(graph, viter)){
+    graph_vertex_iter_next(graph, viter,&vertex, &adj);
+    int *visited = (int*)malloc(sizeof(int));
+    *visited = white;
+    hashtable_put(&color, vertex, visited); 
+  }
+  node_o *queue = list_new("begin");
+  viter = graph_vertex_iter_init(graph);
+  graph_vertex_iter_next(graph, viter, &vertex, &adj); //il primo elemento
+  list_add(queue, vertex); //enqueue
+  //while(!list_empty(queue)){
+  // }
+}

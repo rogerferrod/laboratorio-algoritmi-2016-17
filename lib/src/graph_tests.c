@@ -394,6 +394,38 @@ static void test_graphWeight(){
   graph_free(graph);
 }
 
+/* nn e da testare */
+static void test_graphBFS(){
+  graph_o *graph = graph_new(5, djb2a, compare_str);
+ graph_add(graph, "A");
+  graph_add(graph, "B");
+  graph_add(graph, "C");
+  graph_add(graph, "D");
+  graph_add(graph, "E");
+  graph_add(graph, "F");
+  graph_add(graph, "G");
+  graph_connect(graph, "A", "B", new_double(15), NO_ORIENTED);
+  graph_connect(graph, "A", "D", new_double(7), NO_ORIENTED);
+  graph_connect(graph, "A", "F", new_double(1), NO_ORIENTED);
+
+  graph_connect(graph, "B", "C", new_double(20), NO_ORIENTED);
+  graph_connect(graph, "B", "D", new_double(12), NO_ORIENTED);
+
+  graph_connect(graph, "C", "E", new_double(6), NO_ORIENTED);
+  graph_connect(graph, "C", "G", new_double(3), NO_ORIENTED);
+
+  graph_connect(graph, "D", "E", new_double(11), NO_ORIENTED);
+  graph_connect(graph, "D", "F", new_double(7), NO_ORIENTED);
+
+  graph_connect(graph, "E", "G", new_double(4), NO_ORIENTED);
+
+  graph_connect(graph, "F", "G", new_double(10), NO_ORIENTED);
+
+  graph_BFS(graph);
+
+  graph_free(graph);
+}
+
 int main() {
   UNITY_BEGIN();
   RUN_TEST(test_graphNew);
@@ -423,6 +455,7 @@ int main() {
   RUN_TEST(test_graphVertexHashExpand);
   RUN_TEST(test_graphEdgeHashExpand);
   RUN_TEST(test_graphWeight);
+  RUN_TEST(test_graphBFS);
   return UNITY_END();
 }
 
