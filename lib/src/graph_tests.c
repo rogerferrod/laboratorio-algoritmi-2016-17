@@ -395,6 +395,7 @@ static void test_graphWeight(){
 }
 
 /* nn e da testare */
+/*
 static void test_graphBFS(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
  graph_add(graph, "A");
@@ -425,6 +426,7 @@ static void test_graphBFS(){
 
   graph_free(graph);
 }
+*/
 
 static void test_graphWeightNotOriented(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
@@ -452,8 +454,7 @@ static void test_graphWeightNotOriented(){
 
   graph_connect(graph, "F", "G", new_double(10), NO_ORIENTED);
 
-  double tot = graph_BFS_weight(graph);
-  printf("weight %lf\n", tot);
+  TEST_ASSERT_EQUAL(96.0, graph_BFS_weight(graph));
 
   graph_free(graph);
 }
@@ -486,6 +487,8 @@ static void test_graphWeightOriented(){
 
   double tot = graph_BFS_weight(graph);
   printf("weight %lf\n", tot);
+  TEST_ASSERT_EQUAL(96.0, tot);
+  //TEST_ASSERT_EQUAL(96.0, graph_BFS_weight(graph));
 
   graph_free(graph);
 }
@@ -519,9 +522,9 @@ int main() {
   RUN_TEST(test_graphVertexHashExpand);
   RUN_TEST(test_graphEdgeHashExpand);
   RUN_TEST(test_graphWeight);
-  RUN_TEST(test_graphBFS);
+//  RUN_TEST(test_graphBFS);
   RUN_TEST(test_graphWeightNotOriented);
-  //RUN_TEST(test_graphWeightOriented);
+  RUN_TEST(test_graphWeightOriented);
   return UNITY_END();
 }
 
