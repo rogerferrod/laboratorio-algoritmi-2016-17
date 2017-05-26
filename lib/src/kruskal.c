@@ -111,7 +111,7 @@ graph_o* kruskal(graph_o *graph){
     set_o *setU = (set_o*)hashtable_find(set_dictionary, e.v1);
     set_o *setV = (set_o*)hashtable_find(set_dictionary, e.v2);
     if (graph_get_key_compare(graph)(find_set(setU), find_set(setV)) != 0) {  //  if Find(u) != Find(v ) then
-      graph_connect(min, e.v1, e.v2, e.weight, NO_ORIENTED);   //A ← A ∪ (u, v)
+      graph_connect(min, e.v1, e.v2, e.weight, NO_DIRECTED);   //A ← A ∪ (u, v)
       union_set(setU, setV);    //Union(u, v)
       //printf("%s - %s - %lf\n", (char*)e.v1, (char*)e.v2, *e.weight);
     }

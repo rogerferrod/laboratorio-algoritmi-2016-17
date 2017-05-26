@@ -49,7 +49,7 @@ tests_es1: tests_array tests_sort
 tests_es2: tests_tree
 tests_es3: tests_heap
 tests_es4: tests_unionfind
-tests_es5: tests_list tests_hash tests_graph tests_kruskal
+tests_es5: tests_list tests_hash tests_queue tests_graph tests_kruskal
 
 tests_array: build_array
 	bin/array_tests
@@ -65,12 +65,12 @@ tests_list: build_list
 	bin/list_tests
 tests_hash: build_hash
 	bin/hash_tests
+tests_queue: build_queue
+	bin/queue_tests
 tests_graph: build_graph
 	bin/graph_tests
 tests_kruskal: build_kruskal
 	bin/kruskal_tests
-tests_queue: build_queue
-	bin/queue_tests
 
 
 
@@ -118,6 +118,12 @@ bin/hash: build/hash.o build/list.o build/unity.o $(C_COMMON_DEPS)
 bin/hash_tests: build/hash_tests.o build/hash.o build/list.o build/unity.o $(C_COMMON_DEPS)
 	$(CC) -o bin/hash_tests build/hash_tests.o build/hash.o build/list.o build/unity.o
 
+bin/queue: build/queue.o build/unity.o $(C_COMMON_DEPS)
+	$(CC) -o bin/queue build/queue.o build/unity.o
+
+bin/queue_tests: build/queue_tests.o build/queue.o build/unity.o $(C_COMMON_DEPS)
+	$(CC) -o bin/queue_tests build/queue_tests.o build/queue.o build/unity.o
+
 bin/graph: build/graph.o build/hash.o build/list.o build/array.o build/queue.o build/unity.o $(C_COMMON_DEPS)
 	$(CC) -o bin/graph build/graph.o build/hash.o build/list.o build/array.o build/queue.o build/unity.o
 
@@ -125,16 +131,10 @@ bin/graph_tests: build/graph_tests.o build/graph.o build/hash.o build/list.o bui
 	$(CC) -o bin/graph_tests build/graph_tests.o build/graph.o build/hash.o build/list.o build/array.o build/queue.o build/unity.o
 
 bin/kruskal: build/kruskal.o build/graph.o build/array.o build/list.o build/set.o build/hash.o build/sort.o build/queue.o build/unity.o $(C_COMMON_DEPS)
-	$(CC) -o bin/kruskal build/kruskal.o build/graph.o build/array.o build/list.o build/set.o build/hash.o build/sort.o build/unity.o
+	$(CC) -o bin/kruskal build/kruskal.o build/graph.o build/array.o build/list.o build/set.o build/hash.o build/sort.o build/queue.o build/unity.o
 
 bin/kruskal_tests: build/kruskal_tests.o build/kruskal.o build/graph.o build/array.o build/list.o build/set.o build/hash.o build/sort.o build/queue.o build/unity.o $(C_COMMON_DEPS)
-	$(CC) -o bin/kruskal_tests build/kruskal_tests.o build/kruskal.o build/graph.o build/array.o build/list.o build/set.o build/hash.o build/sort.o build/unity.o
-
-bin/queue: build/queue.o build/unity.o $(C_COMMON_DEPS)
-	$(CC) -o bin/queue build/queue.o build/unity.o
-
-bin/queue_tests: build/queue_tests.o build/queue.o build/unity.o $(C_COMMON_DEPS)
-	$(CC) -o bin/queue_tests build/queue_tests.o build/queue.o build/unity.o
+	$(CC) -o bin/kruskal_tests build/kruskal_tests.o build/kruskal.o build/graph.o build/array.o build/list.o build/set.o build/hash.o build/sort.o build/queue.o build/unity.o
 
 
 clean:

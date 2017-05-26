@@ -169,8 +169,8 @@ void graph_connect(graph_o *graph, void *x, void *y, double *weight, int bitmask
     exit(EXIT_FAILURE);
   }
   hashtable_put(E, y, weight);
-  if((bitmask & NO_ORIENTED) == NO_ORIENTED){
-    graph_connect(graph, y, x, weight, ORIENTED);
+  if((bitmask & NO_DIRECTED) == NO_DIRECTED){
+    graph_connect(graph, y, x, weight, DIRECTED);
   }
 }
 

@@ -18,8 +18,8 @@
 #include <stddef.h>
 #include "hash.h"
 
-#define ORIENTED 0x00
-#define NO_ORIENTED 0x01 
+#define DIRECTED 0x00
+#define NO_DIRECTED 0x01
 
 
 /* Definition of the graph's opaque type */

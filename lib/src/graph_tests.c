@@ -93,8 +93,8 @@ static void test_graphSizeOriented(){
   graph_add(graph, "A");
   graph_add(graph, "B");
   graph_add(graph, "C");
-  graph_connect(graph, "A", "B", new_double(0.0), ORIENTED);
-  graph_connect(graph, "A", "C", new_double(0.0), ORIENTED);
+  graph_connect(graph, "A", "B", new_double(0.0), DIRECTED);
+  graph_connect(graph, "A", "C", new_double(0.0), DIRECTED);
   TEST_ASSERT_EQUAL_INT(2, graph_size(graph));
   graph_free(graph);
 }
@@ -104,8 +104,8 @@ static void test_graphSizeNotOriented(){
   graph_add(graph, "A");
   graph_add(graph, "B");
   graph_add(graph, "C");
-  graph_connect(graph, "A", "B", new_double(0.0), NO_ORIENTED);
-  graph_connect(graph, "A", "C", new_double(0.0), NO_ORIENTED);
+  graph_connect(graph, "A", "B", new_double(0.0), NO_DIRECTED);
+  graph_connect(graph, "A", "C", new_double(0.0), NO_DIRECTED);
   TEST_ASSERT_EQUAL_INT(4, graph_size(graph));
   graph_free(graph);
 }
@@ -121,7 +121,7 @@ static void test_graphConnectSimpleOriented(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
   graph_add(graph, "B");
-  graph_connect(graph, "A", "B", new_double(0.0), ORIENTED);
+  graph_connect(graph, "A", "B", new_double(0.0), DIRECTED);
   TEST_ASSERT_EQUAL_INT_MESSAGE(1, 1, "Link graph failed");
   graph_free(graph);
 }
@@ -130,7 +130,7 @@ static void test_graphConnectSimpleNoOriented(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
   graph_add(graph, "B");
-  graph_connect(graph, "A", "B", new_double(0.0), NO_ORIENTED);
+  graph_connect(graph, "A", "B", new_double(0.0), NO_DIRECTED);
   TEST_ASSERT_EQUAL_INT_MESSAGE(1, 1, "Link graph failed");
   graph_free(graph);
 }
@@ -146,7 +146,7 @@ static void test_graphContainsEdge(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
   graph_add(graph, "B");
-  graph_connect(graph, "A", "B", new_double(0.0), ORIENTED);
+  graph_connect(graph, "A", "B", new_double(0.0), DIRECTED);
   TEST_ASSERT_EQUAL_INT(1, graph_contains_edge(graph, "A", "B"));
   graph_free(graph);
 }
@@ -155,7 +155,7 @@ static void test_graphNotContainsEdge(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
   graph_add(graph, "B");
-  graph_connect(graph, "A", "B", new_double(0.0), ORIENTED);
+  graph_connect(graph, "A", "B", new_double(0.0), DIRECTED);
   TEST_ASSERT_EQUAL_INT(0, graph_contains_edge(graph, "A", "A"));
   graph_free(graph);
 }
@@ -167,10 +167,10 @@ static void test_graphMultipleEdge(){
   graph_add(graph, "C");
   graph_add(graph, "D");
   graph_add(graph, "E");
-  graph_connect(graph, "A", "B", new_double(0.0), ORIENTED);
-  graph_connect(graph, "A", "C", new_double(0.0), ORIENTED);
-  graph_connect(graph, "A", "D", new_double(0.0), ORIENTED);
-  graph_connect(graph, "B", "D", new_double(0.0), ORIENTED);
+  graph_connect(graph, "A", "B", new_double(0.0), DIRECTED);
+  graph_connect(graph, "A", "C", new_double(0.0), DIRECTED);
+  graph_connect(graph, "A", "D", new_double(0.0), DIRECTED);
+  graph_connect(graph, "B", "D", new_double(0.0), DIRECTED);
   TEST_ASSERT_EQUAL_INT(1, graph_contains_edge(graph, "A", "B"));
   TEST_ASSERT_EQUAL_INT(1, graph_contains_edge(graph, "A", "C"));
   TEST_ASSERT_EQUAL_INT(1, graph_contains_edge(graph, "A", "D"));
@@ -182,7 +182,7 @@ static void test_graphConnectNoOriented(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
   graph_add(graph, "B");
-  graph_connect(graph, "A", "B", new_double(0.0), NO_ORIENTED);
+  graph_connect(graph, "A", "B", new_double(0.0), NO_DIRECTED);
   TEST_ASSERT_EQUAL_INT(1, graph_contains_edge(graph, "A", "B"));
   TEST_ASSERT_EQUAL_INT(1, graph_contains_edge(graph, "B", "A"));
   graph_free(graph);
@@ -202,9 +202,9 @@ static void test_graphVertexDegreeOriented() {
   graph_add(graph, "B");
   graph_add(graph, "C");
   graph_add(graph, "D");
-  graph_connect(graph, "A", "B", new_double(0.0), ORIENTED);
-  graph_connect(graph, "A", "C", new_double(0.0), ORIENTED);
-  graph_connect(graph, "A", "D", new_double(0.0), ORIENTED);
+  graph_connect(graph, "A", "B", new_double(0.0), DIRECTED);
+  graph_connect(graph, "A", "C", new_double(0.0), DIRECTED);
+  graph_connect(graph, "A", "D", new_double(0.0), DIRECTED);
   TEST_ASSERT_EQUAL_INT(3, graph_vertex_degree(graph, "A"));
   TEST_ASSERT_EQUAL_INT(0, graph_vertex_degree(graph, "B"));
   TEST_ASSERT_EQUAL_INT(0, graph_vertex_degree(graph, "C"));
@@ -217,9 +217,9 @@ static void test_graphVertexDegreeNotOriented() {
   graph_add(graph, "B");
   graph_add(graph, "C");
   graph_add(graph, "D");
-  graph_connect(graph, "A", "B", new_double(0.0), NO_ORIENTED);
-  graph_connect(graph, "A", "C", new_double(0.0), NO_ORIENTED);
-  graph_connect(graph, "A", "D", new_double(0.0), NO_ORIENTED);
+  graph_connect(graph, "A", "B", new_double(0.0), NO_DIRECTED);
+  graph_connect(graph, "A", "C", new_double(0.0), NO_DIRECTED);
+  graph_connect(graph, "A", "D", new_double(0.0), NO_DIRECTED);
   TEST_ASSERT_EQUAL_INT(3, graph_vertex_degree(graph, "A"));
   TEST_ASSERT_EQUAL_INT(1, graph_vertex_degree(graph, "B"));
   TEST_ASSERT_EQUAL_INT(1, graph_vertex_degree(graph, "C"));
@@ -230,7 +230,7 @@ static void test_graphVertexIteratorInit(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
   graph_add(graph, "B");
-  graph_connect(graph, "A", "B", new_double(0.0), NO_ORIENTED); 
+  graph_connect(graph, "A", "B", new_double(0.0), NO_DIRECTED); 
   graphIterator *vertex_iter = graph_vertex_iter_init(graph);
 
   TEST_ASSERT(NULL != *vertex_iter);
@@ -269,9 +269,9 @@ static void test_graphEdgeIteratorInit(){
   graph_add(graph, "B");
   graph_add(graph, "C");
   graph_add(graph, "D");
-  graph_connect(graph, "A", "B", new_double(0.0), NO_ORIENTED);
-  graph_connect(graph, "A", "C", new_double(0.0), NO_ORIENTED);
-  graph_connect(graph, "A", "D", new_double(0.0), NO_ORIENTED);
+  graph_connect(graph, "A", "B", new_double(0.0), NO_DIRECTED);
+  graph_connect(graph, "A", "C", new_double(0.0), NO_DIRECTED);
+  graph_connect(graph, "A", "D", new_double(0.0), NO_DIRECTED);
   graphIterator *edge_iter = graph_edge_iter_init(graph, "A");
 
   TEST_ASSERT(NULL != *edge_iter);
@@ -286,9 +286,9 @@ static void test_graphEdgeIterator(){
   graph_add(graph, "B");
   graph_add(graph, "C");
   graph_add(graph, "D");
-  graph_connect(graph, "A", "B", new_double(2.9), NO_ORIENTED);
-  graph_connect(graph, "A", "C", new_double(5.3), NO_ORIENTED);
-  graph_connect(graph, "A", "D", new_double(1.6), NO_ORIENTED);
+  graph_connect(graph, "A", "B", new_double(2.9), NO_DIRECTED);
+  graph_connect(graph, "A", "C", new_double(5.3), NO_DIRECTED);
+  graph_connect(graph, "A", "D", new_double(1.6), NO_DIRECTED);
   graphIterator *edge_iter = graph_edge_iter_init(graph, "A");
   void *adj = NULL;
   double *weight;
@@ -349,11 +349,11 @@ static void test_graphEdgeHashExpand(){
   graph_add(graph, "D");
   graph_add(graph, "E");
   graph_add(graph, "F");
-  graph_connect(graph, "A", "B", new_double(2.9), ORIENTED);
-  graph_connect(graph, "A", "C", new_double(5.3), ORIENTED);
-  graph_connect(graph, "A", "D", new_double(1.6), ORIENTED);
-  graph_connect(graph, "A", "E", new_double(1.6), ORIENTED);
-  graph_connect(graph, "A", "F", new_double(1.6), ORIENTED);
+  graph_connect(graph, "A", "B", new_double(2.9), DIRECTED);
+  graph_connect(graph, "A", "C", new_double(5.3), DIRECTED);
+  graph_connect(graph, "A", "D", new_double(1.6), DIRECTED);
+  graph_connect(graph, "A", "E", new_double(1.6), DIRECTED);
+  graph_connect(graph, "A", "F", new_double(1.6), DIRECTED);
 
   TEST_ASSERT_EQUAL_INT(6, graph_order(graph));
   TEST_ASSERT_EQUAL_INT(5, graph_size(graph));
@@ -370,22 +370,22 @@ static void test_graphWeight(){
   graph_add(graph, "E");
   graph_add(graph, "F");
   graph_add(graph, "G");
-  graph_connect(graph, "A", "B", new_double(15), NO_ORIENTED);
-  graph_connect(graph, "A", "D", new_double(7), NO_ORIENTED);
-  graph_connect(graph, "A", "F", new_double(1), NO_ORIENTED);
+  graph_connect(graph, "A", "B", new_double(15), NO_DIRECTED);
+  graph_connect(graph, "A", "D", new_double(7), NO_DIRECTED);
+  graph_connect(graph, "A", "F", new_double(1), NO_DIRECTED);
 
-  graph_connect(graph, "B", "C", new_double(20), NO_ORIENTED);
-  graph_connect(graph, "B", "D", new_double(12), NO_ORIENTED);
+  graph_connect(graph, "B", "C", new_double(20), NO_DIRECTED);
+  graph_connect(graph, "B", "D", new_double(12), NO_DIRECTED);
 
-  graph_connect(graph, "C", "E", new_double(6), NO_ORIENTED);
-  graph_connect(graph, "C", "G", new_double(3), NO_ORIENTED);
+  graph_connect(graph, "C", "E", new_double(6), NO_DIRECTED);
+  graph_connect(graph, "C", "G", new_double(3), NO_DIRECTED);
 
-  graph_connect(graph, "D", "E", new_double(11), NO_ORIENTED);
-  graph_connect(graph, "D", "F", new_double(7), NO_ORIENTED);
+  graph_connect(graph, "D", "E", new_double(11), NO_DIRECTED);
+  graph_connect(graph, "D", "F", new_double(7), NO_DIRECTED);
 
-  graph_connect(graph, "E", "G", new_double(4), NO_ORIENTED);
+  graph_connect(graph, "E", "G", new_double(4), NO_DIRECTED);
 
-  graph_connect(graph, "F", "G", new_double(10), NO_ORIENTED);
+  graph_connect(graph, "F", "G", new_double(10), NO_DIRECTED);
 
   double tot = graph_weight(graph);
   printf("%lf\n", tot);
@@ -405,22 +405,22 @@ static void test_graphBFS(){
   graph_add(graph, "E");
   graph_add(graph, "F");
   graph_add(graph, "G");
-  graph_connect(graph, "A", "B", new_double(15), NO_ORIENTED);
-  graph_connect(graph, "A", "D", new_double(7), NO_ORIENTED);
-  graph_connect(graph, "A", "F", new_double(1), NO_ORIENTED);
+  graph_connect(graph, "A", "B", new_double(15), NO_DIRECTED);
+  graph_connect(graph, "A", "D", new_double(7), NO_DIRECTED);
+  graph_connect(graph, "A", "F", new_double(1), NO_DIRECTED);
 
-  graph_connect(graph, "B", "C", new_double(20), NO_ORIENTED);
-  graph_connect(graph, "B", "D", new_double(12), NO_ORIENTED);
+  graph_connect(graph, "B", "C", new_double(20), NO_DIRECTED);
+  graph_connect(graph, "B", "D", new_double(12), NO_DIRECTED);
 
-  graph_connect(graph, "C", "E", new_double(6), NO_ORIENTED);
-  graph_connect(graph, "C", "G", new_double(3), NO_ORIENTED);
+  graph_connect(graph, "C", "E", new_double(6), NO_DIRECTED);
+  graph_connect(graph, "C", "G", new_double(3), NO_DIRECTED);
 
-  graph_connect(graph, "D", "E", new_double(11), NO_ORIENTED);
-  graph_connect(graph, "D", "F", new_double(7), NO_ORIENTED);
+  graph_connect(graph, "D", "E", new_double(11), NO_DIRECTED);
+  graph_connect(graph, "D", "F", new_double(7), NO_DIRECTED);
 
-  graph_connect(graph, "E", "G", new_double(4), NO_ORIENTED);
+  graph_connect(graph, "E", "G", new_double(4), NO_DIRECTED);
 
-  graph_connect(graph, "F", "G", new_double(10), NO_ORIENTED);
+  graph_connect(graph, "F", "G", new_double(10), NO_DIRECTED);
 
   graph_BFS(graph);
 
@@ -437,22 +437,22 @@ static void test_graphWeightNotOriented(){
   graph_add(graph, "E");
   graph_add(graph, "F");
   graph_add(graph, "G");
-  graph_connect(graph, "A", "B", new_double(15), NO_ORIENTED);
-  graph_connect(graph, "A", "D", new_double(7), NO_ORIENTED);
-  graph_connect(graph, "A", "F", new_double(1), NO_ORIENTED);
+  graph_connect(graph, "A", "B", new_double(15), NO_DIRECTED);
+  graph_connect(graph, "A", "D", new_double(7), NO_DIRECTED);
+  graph_connect(graph, "A", "F", new_double(1), NO_DIRECTED);
 
-  graph_connect(graph, "B", "C", new_double(20), NO_ORIENTED);
-  graph_connect(graph, "B", "D", new_double(12), NO_ORIENTED);
+  graph_connect(graph, "B", "C", new_double(20), NO_DIRECTED);
+  graph_connect(graph, "B", "D", new_double(12), NO_DIRECTED);
 
-  graph_connect(graph, "C", "E", new_double(6), NO_ORIENTED);
-  graph_connect(graph, "C", "G", new_double(3), NO_ORIENTED);
+  graph_connect(graph, "C", "E", new_double(6), NO_DIRECTED);
+  graph_connect(graph, "C", "G", new_double(3), NO_DIRECTED);
 
-  graph_connect(graph, "D", "E", new_double(11), NO_ORIENTED);
-  graph_connect(graph, "D", "F", new_double(7), NO_ORIENTED);
+  graph_connect(graph, "D", "E", new_double(11), NO_DIRECTED);
+  graph_connect(graph, "D", "F", new_double(7), NO_DIRECTED);
 
-  graph_connect(graph, "E", "G", new_double(4), NO_ORIENTED);
+  graph_connect(graph, "E", "G", new_double(4), NO_DIRECTED);
 
-  graph_connect(graph, "F", "G", new_double(10), NO_ORIENTED);
+  graph_connect(graph, "F", "G", new_double(10), NO_DIRECTED);
 
   TEST_ASSERT_EQUAL(96.0, graph_BFS_weight(graph));
 
@@ -468,22 +468,22 @@ static void test_graphWeightOriented(){
   graph_add(graph, "E");
   graph_add(graph, "F");
   graph_add(graph, "G");
-  graph_connect(graph, "A", "B", new_double(15), ORIENTED);
-  graph_connect(graph, "A", "D", new_double(7), ORIENTED);
-  graph_connect(graph, "A", "F", new_double(1), ORIENTED);
+  graph_connect(graph, "A", "B", new_double(15), DIRECTED);
+  graph_connect(graph, "A", "D", new_double(7), DIRECTED);
+  graph_connect(graph, "A", "F", new_double(1), DIRECTED);
 
-  graph_connect(graph, "B", "C", new_double(20), ORIENTED);
-  graph_connect(graph, "B", "D", new_double(12), ORIENTED);
+  graph_connect(graph, "B", "C", new_double(20), DIRECTED);
+  graph_connect(graph, "B", "D", new_double(12), DIRECTED);
 
-  graph_connect(graph, "C", "E", new_double(6), ORIENTED);
-  graph_connect(graph, "C", "G", new_double(3), ORIENTED);
+  graph_connect(graph, "C", "E", new_double(6), DIRECTED);
+  graph_connect(graph, "C", "G", new_double(3), DIRECTED);
 
-  graph_connect(graph, "D", "E", new_double(11),ORIENTED);
-  graph_connect(graph, "D", "F", new_double(7), ORIENTED);
+  graph_connect(graph, "D", "E", new_double(11),DIRECTED);
+  graph_connect(graph, "D", "F", new_double(7), DIRECTED);
 
-  graph_connect(graph, "E", "G", new_double(4), ORIENTED);
+  graph_connect(graph, "E", "G", new_double(4), DIRECTED);
 
-  graph_connect(graph, "F", "G", new_double(10), ORIENTED);
+  graph_connect(graph, "F", "G", new_double(10), DIRECTED);
 
   double tot = graph_BFS_weight(graph);
   printf("weight %lf\n", tot);

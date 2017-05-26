@@ -56,22 +56,22 @@ static void test_kruskal(){
   graph_add(graph, "E");
   graph_add(graph, "F");
   graph_add(graph, "G");
-  graph_connect(graph, "A", "B", new_double(15), NO_ORIENTED);
-  graph_connect(graph, "A", "D", new_double(7), NO_ORIENTED);
-  graph_connect(graph, "A", "F", new_double(1), NO_ORIENTED);
+  graph_connect(graph, "A", "B", new_double(15), NO_DIRECTED);
+  graph_connect(graph, "A", "D", new_double(7), NO_DIRECTED);
+  graph_connect(graph, "A", "F", new_double(1), NO_DIRECTED);
 
-  graph_connect(graph, "B", "C", new_double(20), NO_ORIENTED);
-  graph_connect(graph, "B", "D", new_double(12), NO_ORIENTED);
+  graph_connect(graph, "B", "C", new_double(20), NO_DIRECTED);
+  graph_connect(graph, "B", "D", new_double(12), NO_DIRECTED);
 
-  graph_connect(graph, "C", "E", new_double(6), NO_ORIENTED);
-  graph_connect(graph, "C", "G", new_double(3), NO_ORIENTED);
+  graph_connect(graph, "C", "E", new_double(6), NO_DIRECTED);
+  graph_connect(graph, "C", "G", new_double(3), NO_DIRECTED);
 
-  graph_connect(graph, "D", "E", new_double(11), NO_ORIENTED);
-  graph_connect(graph, "D", "F", new_double(7), NO_ORIENTED);
+  graph_connect(graph, "D", "E", new_double(11), NO_DIRECTED);
+  graph_connect(graph, "D", "F", new_double(7), NO_DIRECTED);
 
-  graph_connect(graph, "E", "G", new_double(4), NO_ORIENTED);
+  graph_connect(graph, "E", "G", new_double(4), NO_DIRECTED);
 
-  graph_connect(graph, "F", "G", new_double(10), NO_ORIENTED);
+  graph_connect(graph, "F", "G", new_double(10), NO_DIRECTED);
 
   //printf("created graph\n");
   //printf("size %ld  order %ld\n", (unsigned long)graph_size(graph), (unsigned long)graph_order(graph));
