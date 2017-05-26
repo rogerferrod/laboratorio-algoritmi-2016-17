@@ -17,6 +17,7 @@
 #include <errno.h>
 #include "array.h"
 #include "hash.h"
+#include "queue.h"
 #include "graph.h"
 
 #define EDGE_CAPACITY 5
@@ -248,6 +249,23 @@ void graph_edge_iter_next(graph_o *graph, void *elem, graphIterator *iter, void 
   hashtable_iter_next(E, iter, adj_elem, (void**)weight);
 }
 
+void set_color(hashtable_o **table, void *vertex, int color){
+  int *status = (int*)malloc(sizeof(int)); //da qualche parte bisognerà fare la free di sta roba
+  *status = color;
+  hashtable_put(table, vertex, status);
+  return;
+}
+
+int get_color(hashtable_o *table, void *vertex){
+  int *status = hashtable_find(table, vertex);
+  if(status != NULL){
+    return *status;
+  }
+  //else che fai???
+  printf("HEI!\n");
+  return -1;
+}
+
 void graph_BFS(graph_o *graph){
   ASSERT_PARAMETERS_NOT_NULL(graph);
 
@@ -256,20 +274,108 @@ void graph_BFS(graph_o *graph){
 
   // color [V:color]
   enum status{black = 0, grey, white};
+  
   hashtable_o *color = hashtable_new(graph_order(graph), graph->hash, graph->compare);
+  
   graphIterator *viter = graph_vertex_iter_init(graph);
+  graphIterator *eiter;
   void *vertex = NULL;
   void *adj = NULL;
+  void *edge = NULL;
+  double *weight = NULL;
+  int *visited = (int*)malloc(sizeof(int));
+  queue_o *queue = queue_new();
+
   while(graph_vertex_iter_hasNext(graph, viter)){
-    graph_vertex_iter_next(graph, viter,&vertex, &adj);
-    int *visited = (int*)malloc(sizeof(int));
-    *visited = white;
-    hashtable_put(&color, vertex, visited); 
+    graph_vertex_iter_next(graph, viter, &vertex, &adj);
+    set_color(&color, vertex, white);
   }
-  node_o *queue = list_new("begin");
+
+
   viter = graph_vertex_iter_init(graph);
   graph_vertex_iter_next(graph, viter, &vertex, &adj); //il primo elemento
-  list_add(queue, vertex); //enqueue
-  //while(!list_empty(queue)){
-  // }
+  set_color(&color, vertex, grey);
+
+  queue_enqueue(queue, vertex);
+
+  while(!queue_is_empty(queue)){
+    void *u = queue_dequeue(queue);
+
+    eiter = graph_edge_iter_init(graph, u); 
+    while(graph_edge_iter_hasNext(graph, u, eiter)){ //for each adj di u : bianco
+      graph_edge_iter_next(graph, u, eiter, &edge, &weight);     
+      if(get_color(color, edge) == white){
+	queue_enqueue(queue, edge);
+	set_color(&color, edge, grey);
+      }
+    }
+    set_color(&color, u, black);
+  }
+
+  return;
+}
+
+double graph_BFS_weight(graph_o *graph){
+  ASSERT_PARAMETERS_NOT_NULL(graph);
+  double graph_weight = 0.0;
+
+  //fai che uscire se vuoto al momento
+  if(graph_order(graph) == 0)return;
+
+  // color [V:color]
+  enum status{black = 0, grey, white};
+  
+  hashtable_o *color = hashtable_new(graph_order(graph), graph->hash, graph->compare);
+  
+  graphIterator *viter = graph_vertex_iter_init(graph);
+  graphIterator *eiter;
+  void *vertex = NULL;
+  void *adj = NULL;
+  void *edge = NULL;
+  double *weight = NULL;
+  int *visited = (int*)malloc(sizeof(int));
+  queue_o *queue = queue_new();
+  queue_o *all_vertices = queue_new();
+
+  while(graph_vertex_iter_hasNext(graph, viter)){
+    graph_vertex_iter_next(graph, viter, &vertex, &adj);
+    set_color(&color, vertex, white);
+    queue_enqueue(all_vertices, vertex);
+  }
+
+
+  //viter = graph_vertex_iter_init(graph);
+  //graph_vertex_iter_next(graph, viter, &vertex, &adj); //il primo elemento
+  //set_color(&color, vertex, grey);
+
+
+  //while(!queue_is_empty(all_vertices)){
+  
+    vertex = queue_dequeue(all_vertices);
+
+    printf("parto da %s che ha colore %d\n", vertex, get_color(color, vertex));
+    set_color(&color, vertex, grey); //la visita parte da qua
+    queue_enqueue(queue, vertex);
+
+    while(!queue_is_empty(queue)){
+      void *u = queue_dequeue(queue);
+      printf("vertex %s\n", u);
+    
+      eiter = graph_edge_iter_init(graph, u); 
+      while(graph_edge_iter_hasNext(graph, u, eiter)){ //for each adj di u : not black
+	graph_edge_iter_next(graph, u, eiter, &edge, &weight);
+	if(get_color(color, edge) != black){
+	  queue_enqueue(queue, edge);
+	  set_color(&color, edge, grey);
+	  printf("   edge %s, weight %lf\n", edge, *weight);
+	  graph_weight += *weight;
+	}
+      }
+      set_color(&color, u, black);
+    }
+    // }
+
+
+  printf("return %lf\n", graph_weight);
+  return graph_weight;
 }
