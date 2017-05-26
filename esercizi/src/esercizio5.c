@@ -21,8 +21,8 @@
 #include <unistd.h>
 //#include "../../lib/src/array.h"
 //#include "../../lib/src/sort.h"
-#include "../../lib/src/graph.h"
 #include "../../lib/src/hash.h"
+#include "../../lib/src/graph.h"
 
 #define MAX_VERTEX 1000000
 #define BUFFER_LENGTH  100  //la linea più lunga del file è di 88 caratteri
@@ -198,32 +198,36 @@ static graph_o *graph_load(char *path, int max_record_read) {
     exit(EXIT_FAILURE);
   }
 
-  hashtable_o * hashtable = hashtable_new(max_record_read, djb2a, compare_str);
-
-  char **field1 = malloc(buff_size* sizeof(char*));
-  char **field2 = malloc(buff_size* sizeof(char*));
-  char **raw_field3 = malloc(buff_size* sizeof(char*));
+  char *field1 = malloc(buff_size*sizeof(char));
+  char *field2 = malloc(buff_size*sizeof(char));
+  char *raw_field3 = malloc(buff_size*sizeof(char));
   double *field3 = malloc(sizeof(double));
 
   count = 0;
   while (count < max_record_read && fgets(buffer, buff_size, file) != NULL) {
-    *field1 = strtok(buffer, ",");
-    *field2 = strtok(NULL, ",");
-    *raw_field3 = strtok(NULL, ",");
+    field1 = strtok(buffer, ",");
+    field2 = strtok(NULL, ",");
+    raw_field3 = strtok(NULL, ",");
 
-    //*field3 = strtod(*raw_field3, NULL);
-    *field3 = atof(*raw_field3);
+    *field3 = strtod(raw_field3, NULL);
+    //*field3 = atof(raw_field3);
 
-    printf("_field1: %s\n", *field1);
-    printf("_field2: %s\n", *field2);
-    printf("_field3: %lf\n\n", *field3);
+    printf("_field1: %s\n", field1);
+    printf("_field2: %s\n", field2);
+    printf("_field3: %lf (%s)\n\n", *field3, raw_field3);
 
-    graph_add(graph, *field1);
-    graph_add(graph, *field2);
-    graph_connect(graph, *field1, *field2, field3, NO_ORIENTED);
+    if (!graph_contains_vertex(graph, field1)) {
+      graph_add(graph, field1);
+    }
+    if (!graph_contains_vertex(graph, field2)) {
+      graph_add(graph, field2);
+    }
+    if (graph_contains_edge(graph, field1, field2)) {
+      fprintf(stderr, "EDGE (%s - %s) ESISTE GIà\n", field1, field2);
+      exit(EXIT_FAILURE);
+    }
+    graph_connect(graph, field1, field2, field3, DIRECTED);
 
-    hashtable_put(&hashtable, *field1, field3);
-    hashtable_put(&hashtable, *field2, field3);
 /*
     if (count % 50 == 0) {
       printf("%d - %s, %s, %s(%.12lf)\n", count, field1, field2, raw_field3, *field3);
@@ -232,25 +236,6 @@ static graph_o *graph_load(char *path, int max_record_read) {
     count++;
   }
 
-  printf("Hashtable size: %ld\n", (unsigned long)hashtable_size(hashtable));
-  printf("-------------------\n");
-  iterator *iter = hashtable_iter_init(hashtable);
-
-  void *key = malloc(buff_size*sizeof(char*));
-  void *value = malloc(buff_size*sizeof(double*));
-
-  size_t i = 0;
-  while(hashtable_iter_hasNext(hashtable,iter)){
-    hashtable_iter_next(hashtable, iter, &key, &value);
-    printf("-%s, %lf\n", (char*)key, *(double*)value);
-    if (++i > 10) break;
-  }
-
-  free(iter);
-
-  printf("-------------------\n");
-
-  hashtable_free(hashtable);
   free(buffer);
   fclose(file);
   return graph;
@@ -355,17 +340,34 @@ int main(int argc, char *argv[]) {
   TIMER_START(timer);
   graph = graph_load(argv[1], max_record_read);
   TIMER_STOP(timer);
+  fprintf(stdout, "graph_loaded\n");
+
+  graphIterator *vIter = graph_vertex_iter_init(graph);
+  int i=0;
+  void *v1, *adj;
+  while(graph_vertex_iter_hasNext(graph, vIter)) {
+    graph_vertex_iter_next(graph, vIter, &v1, &adj);
+    printf("%s (%d)\n", (char*)v1, i);
+    ++i;
+    if (i>10) break;
+/*
+    graphIterator *eIter = graph_edge_iter_init(graph, v1);
+    void *v2;
+    double *w;
+    while(graph_edge_iter_hasNext(graph, v1, eIter)) {
+      graph_edge_iter_next(graph, v1, eIter, &v2, &w);
+      printf(" - %s - %lf\n", (char*)v2, *w);
+    }
+    free(eIter);
+*/
+  }
+  free(vIter);
 
   TIMER_START(timer);
   fprintf(stdout, "graph_order: %u\n", (unsigned int) graph_order(graph));
+  //fprintf(stdout, "graph_size: %u\n", (unsigned int) graph_size(graph));
   TIMER_STOP(timer);
 
-
-/*
-  TIMER_START(timer);
-  fprintf(stdout, "graph_size: %u\n", (unsigned int) graph_size(graph));
-  TIMER_STOP(timer);
-*/
 /*
   sleep(1);
 */
