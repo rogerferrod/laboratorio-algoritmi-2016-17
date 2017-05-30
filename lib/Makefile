@@ -18,29 +18,25 @@ all: build_all
 build: build_kruskal
 build_all: build_es1 build_es2 build_es3 build_es4 build_es5
 build_es1: build_array build_sort
-build_es2: build_tree build_treeTest build_es2_jar
+build_es2: build_tree build_es2_jar
 build_es2_jar:
 	jar cf bin/Tree.jar -C src edu/unito/
-build_es3: build_heap build_heapTest
+build_es3: build_heap
 build_es4: build_set
-build_es5: build_list build_hash build_graph build_kruskal
+build_es5: build_list build_hash build_queue build_graph build_kruskal
 
-build_array: bin/array_tests
-build_sort: bin/sort_tests
+build_array: build/array.o
+build_sort: build/sort.o
 build_tree: src/edu/unito/tree/Tree.java
 	javac $(JAVA_COMPILE_PARAMS) src/edu/unito/tree/Tree.java
-build_treeTest: build_tree src/edu/unito/tree/TreeTests.java
-	javac $(JAVA_COMPILE_PARAMS) src/edu/unito/tree/TreeTests.java
 build_heap: src/edu/unito/heap/Heap.java
 	javac $(JAVA_COMPILE_PARAMS) src/edu/unito/heap/Heap.java
-build_heapTest: build_heap src/edu/unito/heap/HeapTests.java
-	javac $(JAVA_COMPILE_PARAMS) src/edu/unito/heap/HeapTests.java
-build_set: bin/set_tests
-build_list: bin/list_tests
-build_hash: bin/hash_tests
-build_graph: bin/graph_tests
-build_kruskal: bin/kruskal_tests
-build_queue: bin/queue_tests
+build_set: build/set.o
+build_list: build/list.o
+build_hash: build/hash.o
+build_graph: build/graph.o
+build_kruskal: build/kruskal.o
+build_queue: build/queue.o
 
 # compila e esegue i test
 tests: tests_graph
@@ -48,28 +44,44 @@ tests_all: tests_es1 tests_es2 tests_es3 tests_es4 tests_es5
 tests_es1: tests_array tests_sort
 tests_es2: tests_tree
 tests_es3: tests_heap
-tests_es4: tests_unionfind
+tests_es4: tests_set
 tests_es5: tests_list tests_hash tests_queue tests_graph tests_kruskal
 
-tests_array: build_array
+#compila i test
+tests_build_all: tests_build_array tests_build_sort tests_build_tree tests_build_heap tests_build_set tests_build_list tests_build_hash tests_build_queue tests_build_graph tests_build_hash tests_build_kruskal
+tests_build_array: bin/array_tests
+tests_build_sort: bin/sort_tests
+tests_build_tree: build_tree src/edu/unito/tree/TreeTests.java
+	javac $(JAVA_COMPILE_PARAMS) src/edu/unito/tree/TreeTests.java
+tests_build_heap: build_heap src/edu/unito/heap/HeapTests.java
+	javac $(JAVA_COMPILE_PARAMS) src/edu/unito/heap/HeapTests.java
+tests_build_set: bin/set_tests
+tests_build_list: bin/list_tests
+tests_build_hash: bin/hash_tests
+tests_build_queue: bin/queue_tests
+tests_build_graph: bin/graph_tests
+tests_build_kruskal: bin/kruskal_tests
+
+#esegue i test
+tests_array: tests_build_array
 	bin/array_tests
-tests_sort: build_sort
+tests_sort: tests_build_sort
 	bin/sort_tests
-tests_tree: build_treeTest
+tests_tree: tests_build_tree
 	java $(JAVA_RUN_PARAMS) org.junit.runner.JUnitCore edu.unito.tree.TreeTests
-tests_heap: build_heapTest
+tests_heap: tests_build_heap
 	java $(JAVA_RUN_PARAMS) org.junit.runner.JUnitCore edu.unito.heap.HeapTests
-tests_unionfind: build_set
+tests_set: tests_build_set
 	bin/set_tests
-tests_list: build_list
+tests_list: tests_build_list
 	bin/list_tests
-tests_hash: build_hash
+tests_hash: tests_build_hash
 	bin/hash_tests
-tests_queue: build_queue
+tests_queue: tests_build_queue
 	bin/queue_tests
-tests_graph: build_graph
+tests_graph: tests_build_graph
 	bin/graph_tests
-tests_kruskal: build_kruskal
+tests_kruskal: tests_build_kruskal
 	bin/kruskal_tests
 
 
@@ -94,44 +106,23 @@ build/%.o: src/%.c $(C_COMMON_DEPS)
 bin/array_tests: build/array_tests.o build/array.o build/unity.o $(C_COMMON_DEPS)
 	$(CC) -o bin/array_tests  build/array_tests.o build/array.o build/unity.o
 
-bin/sort: build/sort.o build/array.o $(C_COMMON_DEPS)
-	$(CC) -o bin/sort build/sort.o build/array.o
-
 bin/sort_tests: build/sort_tests.o build/sort.o build/array.o build/unity.o $(C_COMMON_DEPS)
 	$(CC) -o bin/sort_tests build/sort_tests.o build/sort.o build/array.o build/unity.o
-
-bin/set: build/set.o build/unity.o $(C_COMMON_DEPS)
-	$(CC) -o bin/set build/set.o build/unity.o
 
 bin/set_tests: build/set_tests.o build/set.o build/unity.o $(C_COMMON_DEPS)
 	$(CC) -o bin/set_tests build/set_tests.o build/set.o build/unity.o
 
-bin/list: build/list.o build/unity.o $(C_COMMON_DEPS)
-	$(CC) -o bin/list build/list.o build/unity.o
-
 bin/list_tests: build/list_tests.o build/list.o build/unity.o $(C_COMMON_DEPS)
 	$(CC) -o bin/list_tests build/list_tests.o build/list.o build/unity.o
-
-bin/hash: build/hash.o build/list.o build/unity.o $(C_COMMON_DEPS)
-	$(CC) -o bin/hash build/hash.o build/list.o build/unity.o
 
 bin/hash_tests: build/hash_tests.o build/hash.o build/list.o build/unity.o $(C_COMMON_DEPS)
 	$(CC) -o bin/hash_tests build/hash_tests.o build/hash.o build/list.o build/unity.o
 
-bin/queue: build/queue.o build/unity.o $(C_COMMON_DEPS)
-	$(CC) -o bin/queue build/queue.o build/unity.o
-
 bin/queue_tests: build/queue_tests.o build/queue.o build/unity.o $(C_COMMON_DEPS)
 	$(CC) -o bin/queue_tests build/queue_tests.o build/queue.o build/unity.o
 
-bin/graph: build/graph.o build/hash.o build/list.o build/array.o build/queue.o build/unity.o $(C_COMMON_DEPS)
-	$(CC) -o bin/graph build/graph.o build/hash.o build/list.o build/array.o build/queue.o build/unity.o
-
 bin/graph_tests: build/graph_tests.o build/graph.o build/hash.o build/list.o build/array.o build/queue.o build/unity.o $(C_COMMON_DEPS)
 	$(CC) -o bin/graph_tests build/graph_tests.o build/graph.o build/hash.o build/list.o build/array.o build/queue.o build/unity.o
-
-bin/kruskal: build/kruskal.o build/graph.o build/array.o build/list.o build/set.o build/hash.o build/sort.o build/queue.o build/unity.o $(C_COMMON_DEPS)
-	$(CC) -o bin/kruskal build/kruskal.o build/graph.o build/array.o build/list.o build/set.o build/hash.o build/sort.o build/queue.o build/unity.o
 
 bin/kruskal_tests: build/kruskal_tests.o build/kruskal.o build/graph.o build/array.o build/list.o build/set.o build/hash.o build/sort.o build/queue.o build/unity.o $(C_COMMON_DEPS)
 	$(CC) -o bin/kruskal_tests build/kruskal_tests.o build/kruskal.o build/graph.o build/array.o build/list.o build/set.o build/hash.o build/sort.o build/queue.o build/unity.o

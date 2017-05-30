@@ -14,34 +14,37 @@ INCLUDES = src/*.h
 # Tutti i target vanno ricompilati se cambiano gli header o questo Makefile
 COMMON_DEPS = $(INCLUDES) Makefile
 COMMON_DEPS = Makefile
-JAVA_COMPILE_PARAMS = -d bin/ -Xlint:all -Xdiags:verbose
+JAVA_COMPILE_PARAMS = -d bin/ -Xlint:all -Xdiags:verbose -cp .:../lib/bin/Tree.jar
+JAVA_RUN_PARAMS = -cp bin:../lib/bin/Tree.jar
+
 
 # Lista dei target da eseguire sempre
-all: compile
+all: compile_all
 
 compile: compile_es5
+compile_all: compile_es1 compile_es2 compile_es5
 
-#compile es1 and its libs
+#compile esN and its libs
 compile_es1:
 	$(MAKE) -C ../lib build_es1
 	$(MAKE) bin/esercizio1
 
 compile_es2:
 	$(MAKE) -C ../lib build_es2
-	javac -cp ../lib/bin/Tree.jar src/esercizio2.java -d bin
+	javac ${JAVA_COMPILE_PARAMS} src/esercizio2.java
 
 compile_es5:
 	$(MAKE) -C ../lib build_es5
 	$(MAKE) bin/esercizio5
 
-#  compila e esegue l'esercizio2
-exec: exec_es5
 
-exec_es1: compile_es1
+#exec: exec_es5
+#esegue l'esercizio n
+exec_es1: #compile_es1
 	bin/esercizio1 data/records.csv ${COUNT} ${ALG} ${FIELD} ${ORDER}
-exec_es2: compile_es2
-	java -cp bin:../lib/bin/Tree.jar esercizio2 ${CSV} ${COUNT}
-exec_es5: compile_es5
+exec_es2: #compile_es2
+	java ${JAVA_RUN_PARAMS} esercizio2 ${CSV} ${COUNT}
+exec_es5: #compile_es5
 	bin/esercizio5 data/italian_dist_graph.csv ${COUNT}
 
 # regola per compilare un .c in un .o
