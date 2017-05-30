@@ -127,8 +127,20 @@ void** hashtable_lookup(hashtable_o *table, void *key) {
 }
 
 void* hashtable_find(hashtable_o *table, void *key){
-  void** ptr = hashtable_lookup(table, key);
-  return (ptr == NULL) ? NULL : *ptr;
+  ASSERT_PARAMETERS_NOT_NULL(table);
+  size_t index = table->hash(key) % array_h_capacity(table->T);
+  node_o *list = array_h_at(table->T, index);
+  hash_entry *entry = NULL;
+  if(list == NULL){
+    return NULL;
+  }
+  for(size_t i = 0; i < list_size(list); ++i){
+    entry = list_get_at(list, i);
+    if(table->key_compare(key, entry->key) == 0){
+      return entry->value;
+    }
+  }
+  return NULL;
 }
 
 /* Insert or Replace*/

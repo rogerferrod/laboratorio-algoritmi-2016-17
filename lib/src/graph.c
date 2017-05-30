@@ -161,13 +161,13 @@ void graph_connect(graph_o *graph, void *x, void *y, double *weight, int bitmask
     exit(EXIT_FAILURE);
   }
 
-  hashtable_o **E = (hashtable_o**)hashtable_lookup(graph->V, x);
+  hashtable_o *E = (hashtable_o*)hashtable_find(graph->V, x);
   if(E == NULL){
     fprintf(stderr, "Invalid parameters: vertex not found\n");
     errno = EINVAL;
     exit(EXIT_FAILURE);
   }
-  hashtable_put(*E, y, weight);
+  hashtable_put(E, y, weight);
   if((bitmask & NO_DIRECTED) == NO_DIRECTED){
     graph_connect(graph, y, x, weight, DIRECTED);
   }
