@@ -84,7 +84,7 @@ graph_o* kruskal(graph_o *graph){
   while(graph_vertex_iter_hasNext(graph, v_iter)){    //for ∀v ∈ V do
     graph_vertex_iter_next(graph, v_iter, &elem, &adj);
 
-    hashtable_put(&set_dictionary, elem, make_set(elem));
+    hashtable_put(set_dictionary, elem, make_set(elem));
     graph_add(min, elem);
 
     void* edge_elem = NULL;

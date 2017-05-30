@@ -493,6 +493,25 @@ static void test_graphWeightOriented(){
   graph_free(graph);
 }
 
+static void test_graphIsDirectedTrue(){
+  graph_o *graph = graph_new(5, djb2a, compare_str);
+  graph_add(graph, "A");
+  graph_add(graph, "B");
+  graph_connect(graph, "A", "B", new_double(0.0), DIRECTED);
+  TEST_ASSERT_EQUAL_INT(1, graph_is_directed(graph));
+  graph_free(graph);
+}
+
+static void test_graphIsDirectedFalse(){
+  graph_o *graph = graph_new(5, djb2a, compare_str);
+  graph_add(graph, "A");
+  graph_add(graph, "B");
+  graph_connect(graph, "A", "B", new_double(0.0), NO_DIRECTED);
+  TEST_ASSERT_EQUAL_INT(0, graph_is_directed(graph));
+  graph_free(graph);
+}
+
+
 int main() {
   UNITY_BEGIN();
   RUN_TEST(test_graphNew);
@@ -525,6 +544,8 @@ int main() {
 //  RUN_TEST(test_graphBFS);
   RUN_TEST(test_graphWeightNotOriented);
   RUN_TEST(test_graphWeightOriented);
+  RUN_TEST(test_graphIsDirectedTrue);
+  RUN_TEST(test_graphIsDirectedFalse);
   return UNITY_END();
 }
 
