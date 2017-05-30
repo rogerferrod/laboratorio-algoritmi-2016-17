@@ -163,19 +163,6 @@ static void test_hashtableRemoveFirst(){
   hashtable_free(table);
 }
 
-static void test_hashtableExpand(){
-  hashtable_o *table = hashtable_new(10, hash, compare_str);
-  hashtable_put(table, "hello", new_int(5));
-  hashtable_put(table, "mouse", new_int(6));
-  hashtable_put(table, "hi", new_int(4));
-
-  size_t old_capacity = hashtable_capacity(table);
-  hashtable_expand(table);
-  TEST_ASSERT_EQUAL_INT(old_capacity*2, hashtable_capacity(table));
-
-  hashtable_free(table);
-}
-
 static void test_hashtableExpandAuto(){
   hashtable_o *table = hashtable_new(5, hash, compare_str);
   hashtable_put(table, "hello", new_int(5));
@@ -409,7 +396,6 @@ int main() {
   RUN_TEST(test_hashtableRemoveNoConflict);
   RUN_TEST(test_hashtableRemoveConflict);
   RUN_TEST(test_hashtableRemoveFirst);
-  RUN_TEST(test_hashtableExpand);
   RUN_TEST(test_hashtableExpandAuto);
   RUN_TEST(test_hashtableExpandMultiple);
   RUN_TEST(test_hashtableIteratorInit);
