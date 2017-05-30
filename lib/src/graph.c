@@ -148,7 +148,7 @@ double graph_weight(graph_o *graph) {
 void graph_add(graph_o *graph, void *elem){
   ASSERT_PARAMETERS_NOT_NULL(graph);
   hashtable_o *E = hashtable_new(EDGE_CAPACITY, graph->hash, graph->compare);
-  hashtable_put(&(graph->V), elem, E);
+  hashtable_put(graph->V, elem, E);
   return;
 }
 
@@ -167,7 +167,7 @@ void graph_connect(graph_o *graph, void *x, void *y, double *weight, int bitmask
     errno = EINVAL;
     exit(EXIT_FAILURE);
   }
-  hashtable_put(E, y, weight);
+  hashtable_put(*E, y, weight);
   if((bitmask & NO_DIRECTED) == NO_DIRECTED){
     graph_connect(graph, y, x, weight, DIRECTED);
   }
@@ -248,7 +248,7 @@ void graph_edge_iter_next(graph_o *graph, void *elem, graphIterator *iter, void 
   hashtable_iter_next(E, iter, adj_elem, (void**)weight);
 }
 
-void set_color(hashtable_o **table, void *vertex, int color){
+void set_color(hashtable_o *table, void *vertex, int color){
   int *status = (int*)malloc(sizeof(int)); //da qualche parte bisognerà fare la free di sta roba
   *status = color;
   hashtable_put(table, vertex, status);
@@ -287,13 +287,13 @@ void graph_BFS(graph_o *graph){
 
   while(graph_vertex_iter_hasNext(graph, viter)){
     graph_vertex_iter_next(graph, viter, &vertex, &adj);
-    set_color(&color, vertex, white);
+    set_color(color, vertex, white);
   }
 
 
   viter = graph_vertex_iter_init(graph);
   graph_vertex_iter_next(graph, viter, &vertex, &adj); //il primo elemento
-  set_color(&color, vertex, grey);
+  set_color(color, vertex, grey);
 
   queue_enqueue(queue, vertex);
 
@@ -305,10 +305,10 @@ void graph_BFS(graph_o *graph){
       graph_edge_iter_next(graph, u, eiter, &edge, &weight);     
       if(get_color(color, edge) == white){
 	queue_enqueue(queue, edge);
-	set_color(&color, edge, grey);
+	set_color(color, edge, grey);
       }
     }
-    set_color(&color, u, black);
+    set_color(color, u, black);
   }
 
   return;
@@ -337,14 +337,14 @@ double graph_BFS_weight(graph_o *graph){
 
   while(graph_vertex_iter_hasNext(graph, viter)){
     graph_vertex_iter_next(graph, viter, &vertex, &adj);
-    set_color(&color, vertex, white);
+    set_color(color, vertex, white);
   }
 
   viter = graph_vertex_iter_init(graph);
   graph_vertex_iter_next(graph, viter, &vertex, &adj); //il primo elemento
 
   printf("parto da %s che ha colore %d\n", (char*)vertex, get_color(color, vertex));
-  set_color(&color, vertex, grey); //la visita parte da qua
+  set_color(color, vertex, grey); //la visita parte da qua
   queue_enqueue(queue, vertex);
 
   while(!queue_is_empty(queue)){
@@ -356,12 +356,12 @@ double graph_BFS_weight(graph_o *graph){
       graph_edge_iter_next(graph, u, eiter, &edge, &weight);
       if(get_color(color, edge) != black){
         queue_enqueue(queue, edge);
-        set_color(&color, edge, grey);
+        set_color(color, edge, grey);
         printf("   edge %s, weight %lf\n", (char*)edge, *weight);
         graph_weight += *weight;
       }
     }
-    set_color(&color, u, black);
+    set_color(color, u, black);
   }
 
   return graph_weight;

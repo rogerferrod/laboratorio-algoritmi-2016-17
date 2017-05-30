@@ -48,6 +48,8 @@ typedef struct _myHashEntry{
 }hash_entry;
 
 
+void hashtable_expand(hashtable_o *table);
+
 /* Return a newly allocated array */
 array_h* array_h_new(size_t);
 
@@ -131,13 +133,13 @@ void* hashtable_find(hashtable_o *table, void *key){
 
 /* Insert or Replace*/
 
-void hashtable_put(hashtable_o **table, void *key, void *value){
+void hashtable_put(hashtable_o *table, void *key, void *value){
   ASSERT_PARAMETERS_NOT_NULL(table);
   ASSERT_PARAMETERS_NOT_NULL(key);
   ASSERT_PARAMETERS_NOT_NULL(value);
 
-  size_t index = (*table)->hash(key)% array_h_capacity((*table)->T);
-  node_o *list = array_h_at((*table)->T, index);
+  size_t index = table->hash(key) % array_h_capacity(table->T);
+  node_o *list = array_h_at(table->T, index);
   hash_entry *entry = (hash_entry*)malloc(sizeof(hash_entry));
 
   entry->key = key;
@@ -148,17 +150,17 @@ void hashtable_put(hashtable_o **table, void *key, void *value){
   if(list == NULL){
     list = list_new(entry);
   } else {
-    if (list_contains(list, entry, (*table)->key_compare) == 1) {
+    if (list_contains(list, entry, table->key_compare) == 1) {
       is_update = 1;
     }
     list_add(&list, entry);
   }
-  array_h_insert_at((*table)->T, index, list);
+  array_h_insert_at(table->T, index, list);
   if (is_update == 0) {
-    (*table)->size++;
-    (*table)->load_factor = (float)(*table)->size / array_h_capacity((*table)->T);
+    table->size++;
+    table->load_factor = (float)table->size / array_h_capacity(table->T);
 
-    if ((*table)->load_factor > MAX_LOAD_FACTOR) {
+    if (table->load_factor > MAX_LOAD_FACTOR) {
       hashtable_expand(table);
     }
   }
@@ -228,27 +230,26 @@ void hashtable_remove(hashtable_o *table, void *key){
   return;
 }
 
-void hashtable_expand(hashtable_o **table){
+void hashtable_expand(hashtable_o *table){
   ASSERT_PARAMETERS_NOT_NULL(table);
-  hashtable_o *old_table = *table;
   hash_entry *entry;
   node_o *list;
-  hashtable_o *new_table;
-  size_t capacity_old = array_h_capacity(old_table->T);
-  new_table = hashtable_new(capacity_old << 1, old_table->hash, old_table->key_compare);
+  size_t capacity_old = array_h_capacity(table->T);
+  array_h *old_T = table->T;
+  table->T = array_h_new(capacity_old << 1);
+  table->size=0;
 
   for(size_t i = 0; i < capacity_old; ++i){
-    list = array_h_at(old_table->T, i);
+    list = array_h_at(old_T, i);
     if(list != NULL){
       for(size_t j = 0; j < list_size(list); ++j){
         entry = list_get_at(list, j);
-        hashtable_put(&new_table, entry->key, entry->value);
+        hashtable_put(table, entry->key, entry->value);
       }
     }
   }
-  new_table->load_factor = (float)new_table->size / array_h_capacity(new_table->T);
-  hashtable_free(old_table);
-  *table = new_table;
+  table->load_factor = (float)table->size / array_h_capacity(table->T);
+  array_h_free(old_T);
   return;
 }
 
