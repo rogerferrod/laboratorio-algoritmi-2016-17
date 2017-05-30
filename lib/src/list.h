@@ -21,38 +21,35 @@
 
 /* Definition  */
 //typedef struct _node* node_o;
-typedef struct _node node_o;
+typedef struct _myList list_o;
+
+typedef struct _myList queue_o;
 
 /* Definition of the array's compare function */
 typedef int (*ListCompare)(void*, void*);
 
-
-
 /*  */
-extern node_o* list_new(void *elem);
+extern list_o* list_new();
 
 /* Deallocate a list */
-extern void list_free(node_o *head);
+extern void list_free(list_o *list);
 
-/**
- * Aggiunge all'inizio della lista
- * @param list
- * @param elem
- */
-extern void list_add(node_o **list, void *elem);
+extern void list_add(list_o *list, void *elem);
 
-extern void *list_get_at(node_o *list, size_t index);
+extern void *list_get_at(list_o *list, size_t index);
 
-extern void list_insert_at(node_o **list, size_t index, void *elem);
+extern void list_insert_at(list_o *list, size_t index, void *elem);
 
-extern void list_remove_at(node_o **list, size_t index);
+//extern void list_remove_at(list_o *list, size_t index);
 
-extern int list_is_empty(node_o *list);
 
-extern void list_set_at(node_o *list, size_t index, void *elem);
+extern int list_is_empty(list_o *list);
 
-extern int list_size(node_o *list);
+extern void list_set_at(list_o *list, size_t index, void *elem);
 
-extern int list_contains(node_o *list, void *elem, ListCompare compare);
+extern size_t list_size(list_o *list);
 
+extern int list_contains(list_o *list, void *elem, ListCompare compare);
+/*
 extern void* list_search(node_o *list, void *elem, ListCompare compare);
+*/
