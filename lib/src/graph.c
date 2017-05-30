@@ -41,7 +41,6 @@ struct _myGraph {
 };
 
 
-/* riorganizzare gli argomenti! */
 graph_o* graph_new(size_t capacity, hash_fnc hash, KeyCompare compare) {
   graph_o *graph = malloc(sizeof(graph_o));
   if(graph == NULL){

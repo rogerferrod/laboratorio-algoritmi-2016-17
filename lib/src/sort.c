@@ -22,7 +22,6 @@
 enum pvt_type {random,median,first,last};
 #define PIVOT_TYPE random
 
-/* DOESN'T WORK!!! */
 #if PIVOT_TYPE == random
   #define PIVOT_INDEX(first,last) (rand()%(last-first+1)+first)
 #elif PIVOT_TYPE == median
