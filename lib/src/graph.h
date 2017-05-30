@@ -18,8 +18,8 @@
 #include <stddef.h>
 #include "hash.h"
 
-#define DIRECTED 0x00
-#define NO_DIRECTED 0x01
+#define DIRECTED 0x01
+#define NO_DIRECTED 0x02
 
 
 /* Definition of the graph's opaque type */
@@ -59,6 +59,8 @@ extern size_t graph_vertex_degree(graph_o *graph, void *v);
 extern hash_fnc graph_get_hash_fnc(graph_o *graph);
 
 extern KeyCompare graph_get_key_compare(graph_o *graph);
+
+extern int graph_is_directed(graph_o *graph);
 
 
 /* Vertex iterator */

@@ -38,6 +38,7 @@ struct _myGraph {
     hashtable_o *V;
     hash_fnc hash;
     KeyCompare compare;
+    int directed;
 };
 
 
@@ -51,6 +52,7 @@ graph_o* graph_new(size_t capacity, hash_fnc hash, KeyCompare compare) {
   graph->hash = hash;
   graph->compare = compare;
   graph->V = hashtable_new(capacity, graph->hash, graph->compare);
+  graph->directed = DIRECTED;
   return graph;
 }
 
@@ -169,6 +171,7 @@ void graph_connect(graph_o *graph, void *x, void *y, double *weight, int bitmask
   }
   hashtable_put(E, y, weight);
   if((bitmask & NO_DIRECTED) == NO_DIRECTED){
+    graph->directed = NO_DIRECTED;
     graph_connect(graph, y, x, weight, DIRECTED);
   }
 }
@@ -365,4 +368,9 @@ double graph_BFS_weight(graph_o *graph){
   }
 
   return graph_weight;
+}
+
+int graph_is_directed(graph_o *graph) {
+  ASSERT_PARAMETERS_NOT_NULL(graph);
+  return graph->directed == DIRECTED ? 1 : 0;
 }
