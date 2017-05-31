@@ -34,16 +34,23 @@ extern list_o* list_new();
 /* Deallocate a list */
 extern void list_free(list_o *list);
 
+extern size_t list_size(list_o *list);
+
+extern int list_is_empty(list_o *list);
+
+/* Add elem at the beginning of the list */
 extern void list_add(list_o *list, void *elem);
+
+extern void* list_front(list_o *list);
+
+extern void* list_back(list_o *list);
 
 extern void *list_get_at(list_o *list, size_t index);
 
+/** inserisco elem in modo che quando inserito sarà in posizione index */
 extern void list_insert_at(list_o *list, size_t index, void *elem);
 
-//extern void list_remove_at(list_o *list, size_t index);
-
-
-extern int list_is_empty(list_o *list);
+extern void list_remove_at(list_o *list, size_t index);
 
 extern void list_set_at(list_o *list, size_t index, void *elem);
 

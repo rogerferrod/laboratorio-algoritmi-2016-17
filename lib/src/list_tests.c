@@ -39,6 +39,18 @@ static void test_listFree() {
   TEST_ASSERT_EQUAL_INT_MESSAGE(1,1, "List free failed\n");
 }
 
+static void test_listSizeEmpty(){
+  list_o *list = list_new();
+  TEST_ASSERT_EQUAL_INT(0, list_size(list));
+  list_free(list);
+}
+
+static void test_listIsEmpty(){
+  list_o *list = list_new();
+  TEST_ASSERT_EQUAL_INT(1, list_is_empty(list));
+  list_free(list);
+}
+
 static void test_listAddEmpty() {
   list_o* list = list_new();
   list_add(list, new_int(5));
@@ -52,14 +64,57 @@ static void test_listAddMore() {
   list_add(list, new_int(4));
   list_add(list, new_int(3));
   list_add(list, new_int(2));
+  list_add(list, new_int(1));
+  list_add(list, new_int(0));
   TEST_ASSERT_EQUAL_INT_MESSAGE(1,1, "List add more failed\n");
+  list_free(list);
+}
+
+static void test_listFrontEmpty() {
+  list_o *list = list_new();
+  TEST_ASSERT_NULL(list_front(list));
+  list_free(list);
+}
+
+static void test_listFront() {
+  list_o *list = list_new();
+  list_add(list, new_int(5));
+  list_add(list, new_int(4));
+  list_add(list, new_int(3));
+  TEST_ASSERT_EQUAL_INT(3, *(int*)list_front(list));
+  list_free(list);
+}
+
+static void test_listBackEmpty() {
+  list_o *list = list_new();
+  TEST_ASSERT_NULL(list_back(list));
+  list_free(list);
+}
+
+static void test_listBack() {
+  list_o *list = list_new();
+  list_add(list, new_int(5));
+  list_add(list, new_int(4));
+  list_add(list, new_int(3));
+  TEST_ASSERT_EQUAL_INT(5, *(int*)list_back(list));
   list_free(list);
 }
 
 static void test_listGetAtFirst(){
   list_o *list = list_new();
   list_add(list, new_int(1));
-  TEST_ASSERT_EQUAL_INT(1, *(int*)list_get_at(list, 0));
+  list_add(list, new_int(2));
+  list_add(list, new_int(3));
+  TEST_ASSERT_EQUAL_INT(3, *(int*)list_get_at(list, 0));
+  list_free(list);
+}
+
+static void test_listGetAtLast(){
+  list_o *list = list_new();
+  list_add(list, new_int(1));
+  list_add(list, new_int(2));
+  list_add(list, new_int(3));
+  TEST_ASSERT_EQUAL_INT(1, *(int*)list_get_at(list, list_size(list)-1));
   list_free(list);
 }
 
@@ -91,6 +146,7 @@ static void test_listInsertAt(){
 
 static void test_listInsertAtFirst(){
   list_o *list = list_new();
+  list_add(list, new_int(4));
   list_add(list, new_int(3));
   list_add(list, new_int(2));
   
@@ -99,21 +155,26 @@ static void test_listInsertAtFirst(){
   TEST_ASSERT_EQUAL_INT(1, *(int*)list_get_at(list, 0));
   TEST_ASSERT_EQUAL_INT(2, *(int*)list_get_at(list, 1));
   TEST_ASSERT_EQUAL_INT(3, *(int*)list_get_at(list, 2));
-  
+  TEST_ASSERT_EQUAL_INT(4, *(int*)list_get_at(list, 3));
+
   list_free(list);
 }
 
 static void test_listInsertAtBottom(){
   list_o *list = list_new();
-  list_add(list, new_int(3));
-  list_add(list, new_int(1));
+  list_add(list, new_int(3));  //3
+  list_add(list, new_int(2));  //2 - 3
+  list_add(list, new_int(1));  //1 - 2 - 3
   
-  list_insert_at(list, 1, new_int(2));
+  list_insert_at(list, list_size(list)-1, new_int(5));  //1 - 2 - 5 - 3
+  list_insert_at(list, list_size(list), new_int(4));    //1 - 2 - 5 - 3 - 4
 
   TEST_ASSERT_EQUAL_INT(1, *(int*)list_get_at(list, 0));
   TEST_ASSERT_EQUAL_INT(2, *(int*)list_get_at(list, 1));
-  TEST_ASSERT_EQUAL_INT(3, *(int*)list_get_at(list, 2));
-  
+  TEST_ASSERT_EQUAL_INT(5, *(int*)list_get_at(list, 2));
+  TEST_ASSERT_EQUAL_INT(3, *(int*)list_get_at(list, 3));
+  TEST_ASSERT_EQUAL_INT(4, *(int*)list_get_at(list, 4));
+
   list_free(list);
 }
 
@@ -140,6 +201,7 @@ static void test_listRemoveAt(){
   
   list_remove_at(list, 1);
 
+  TEST_ASSERT_EQUAL_INT(2, list_size(list));
   TEST_ASSERT_EQUAL_INT(1, *(int*)list_get_at(list, 0));
   TEST_ASSERT_EQUAL_INT(3, *(int*)list_get_at(list, 1));
   
@@ -148,13 +210,16 @@ static void test_listRemoveAt(){
 
 static void test_listRemoveAtFirst(){
   list_o *list = list_new();
-  list_add(list, new_int(1));
+  list_add(list, new_int(3));
   list_add(list, new_int(2));
-  
+  list_add(list, new_int(1));
+
   list_remove_at(list, 0);
 
-  TEST_ASSERT_EQUAL_INT(1, *(int*)list_get_at(list, 0));
-  
+  TEST_ASSERT_EQUAL_INT(2, list_size(list));
+  TEST_ASSERT_EQUAL_INT(2, *(int*)list_get_at(list, 0));
+  TEST_ASSERT_EQUAL_INT(3, *(int*)list_get_at(list, 1));
+
   list_free(list);
 }
 
@@ -164,42 +229,48 @@ static void test_listRemoveAtBottom(){
   list_add(list, new_int(2));
   list_add(list, new_int(1));
   
-  list_remove_at(list, 2);
+  list_remove_at(list, list_size(list)-1);
 
+  TEST_ASSERT_EQUAL_INT(2, list_size(list));
   TEST_ASSERT_EQUAL_INT(1, *(int*)list_get_at(list, 0));
   TEST_ASSERT_EQUAL_INT(2, *(int*)list_get_at(list, 1));
 
   list_free(list);
 }
 
-static void test_listRemoveAtAll(){
+static void test_listRemoveAtAllFromLast(){
   list_o *list = list_new();
   list_add(list, new_int(3));
   list_add(list, new_int(2));
   list_add(list, new_int(1));
 
-printf("%d\n", *(int*)list_get_at(list, 2));
-  list_remove_at(list, 3);
-printf("%d\n", *(int*)list_get_at(list, 2));
-  list_remove_at(list, 1);
-  TEST_ASSERT_EQUAL_INT(1, *(int*)list_get_at(list, 0));
-  list_remove_at(list, 0);
-  TEST_ASSERT_EQUAL_INT_MESSAGE(1, 1, "Remove all failed");
+  list_remove_at(list, list_size(list)-1);
+  list_remove_at(list, list_size(list)-1);
+  list_remove_at(list, list_size(list)-1);
+
+  TEST_ASSERT_EQUAL_INT(1, list_is_empty(list));
 
   list_free(list);
 }
 
-static void test_listIsEmpty(){
+static void test_listRemoveAtAllFromFirst(){
   list_o *list = list_new();
-  TEST_ASSERT_EQUAL_INT(1, list_is_empty(list));
   list_add(list, new_int(3));
-  TEST_ASSERT_EQUAL_INT(0, list_is_empty(list));
+  list_add(list, new_int(2));
+  list_add(list, new_int(1));
+
+  list_remove_at(list, 0);
+  list_remove_at(list, 0);
+  list_remove_at(list, 0);
+
+  TEST_ASSERT_EQUAL_INT(1, list_is_empty(list));
 
   list_free(list);
 }
 
 static void test_listSetAtBegin(){
   list_o *list = list_new();
+  list_add(list, new_int(4));
   list_add(list, new_int(3));
   list_add(list, new_int(2));
   list_add(list, new_int(1));
@@ -213,37 +284,61 @@ static void test_listSetAtBegin(){
 
 static void test_listSetAtMiddle(){
   list_o *list = list_new();
+  list_add(list, new_int(4));
   list_add(list, new_int(3));
   list_add(list, new_int(2));
   list_add(list, new_int(1));
 
   TEST_ASSERT_EQUAL_INT(2, *(int*)list_get_at(list, 1));
-  list_set_at(list, 1, new_int(4));
-  TEST_ASSERT_EQUAL_INT(4, *(int*)list_get_at(list, 1));
+  list_set_at(list, 1, new_int(5));
+  TEST_ASSERT_EQUAL_INT(5, *(int*)list_get_at(list, 1));
 
   list_free(list);
 }
 
 static void test_listSetAtEnd(){
   list_o *list = list_new();
+  list_add(list, new_int(4));
   list_add(list, new_int(3));
   list_add(list, new_int(2));
   list_add(list, new_int(1));
 
-  TEST_ASSERT_EQUAL_INT(3, *(int*)list_get_at(list, 2));
-  list_set_at(list, 2, new_int(4));
-  TEST_ASSERT_EQUAL_INT(4, *(int*)list_get_at(list, 2));
+  TEST_ASSERT_EQUAL_INT(4, *(int*)list_get_at(list, list_size(list)-1));
+  list_set_at(list, list_size(list)-1, new_int(5));
+  TEST_ASSERT_EQUAL_INT(5, *(int*)list_get_at(list, list_size(list)-1));
 
   list_free(list);
 }
 
 static void test_listSize(){
   list_o *list = list_new();
+  list_add(list, new_int(4));
   list_add(list, new_int(3));
   list_add(list, new_int(2));
   list_add(list, new_int(1));
+
+  TEST_ASSERT_EQUAL_INT(4, list_size(list));
+
+  list_free(list);
+}
+
+static void test_listSizeAfterRemove(){
+  list_o *list = list_new();
+  list_add(list, new_int(4));
+  list_add(list, new_int(3));
+  list_add(list, new_int(2));
+  list_add(list, new_int(1));
+
+  list_remove_at(list, 2);
+
   TEST_ASSERT_EQUAL_INT(3, list_size(list));
-  TEST_ASSERT_EQUAL_INT(1, *(int*)list_get_at(list, 0));
+
+  list_free(list);
+}
+
+static void test_listContainsEmpty(){
+  list_o *list = list_new();
+  TEST_ASSERT_EQUAL_INT(0, list_contains(list, new_int(1), compare_int_ptr));
   list_free(list);
 }
 
@@ -262,19 +357,21 @@ static void test_listSearchFirst(){
   TEST_ASSERT_EQUAL_INT(3, *(int*)list_search(list, new_int(3), compare_int_ptr));
   list_free(list);
 }
-
+*/
+/*
 static void test_listSearchNotFound(){
   node_o *list = list_new(new_int(3));
-  TEST_ASSERT(NULL == list_search(list, new_int(4), compare_int_ptr));
+  TEST_ASSERT_NULL(list_search(list, new_int(4), compare_int_ptr));
   list_free(list);
 }
-
+*/
+/*
 static void test_listSearch(){
   node_o *list = list_new(new_int(3));
   list_add(&list, new_int(2));
   list_add(&list, new_int(1));
   TEST_ASSERT_EQUAL_INT(2, *(int*)list_search(list, new_int(2), compare_int_ptr));
-  TEST_ASSERT(NULL == list_search(list, new_int(5), compare_int_ptr));
+  TEST_ASSERT_NULL(list_search(list, new_int(5), compare_int_ptr));
   list_free(list);
 }
 */
@@ -283,27 +380,36 @@ int main() {
   UNITY_BEGIN();
   RUN_TEST(test_listNew);
   RUN_TEST(test_listFree);
+  RUN_TEST(test_listSizeEmpty);
+  RUN_TEST(test_listIsEmpty);
   RUN_TEST(test_listAddEmpty);
   RUN_TEST(test_listAddMore);
+  RUN_TEST(test_listFrontEmpty);
+  RUN_TEST(test_listFront);
+  RUN_TEST(test_listBackEmpty);
+  RUN_TEST(test_listBack);
   RUN_TEST(test_listGetAtFirst);
+  RUN_TEST(test_listGetAtLast);
   RUN_TEST(test_listGetAt);
   RUN_TEST(test_listInsertAt);
   RUN_TEST(test_listInsertAtFirst);
   RUN_TEST(test_listInsertAtBottom);
   RUN_TEST(test_listInsertAtMiddle);
-  //RUN_TEST(test_listRemoveAt);
-  //RUN_TEST(test_listRemoveAtFirst);
-  //RUN_TEST(test_listRemoveAtBottom);
-  //RUN_TEST(test_listRemoveAtAll);
-  RUN_TEST(test_listIsEmpty);
+  RUN_TEST(test_listRemoveAt);
+  RUN_TEST(test_listRemoveAtFirst);
+  RUN_TEST(test_listRemoveAtBottom);
+  RUN_TEST(test_listRemoveAtAllFromLast);
+  RUN_TEST(test_listRemoveAtAllFromFirst);
   RUN_TEST(test_listSetAtBegin);
   RUN_TEST(test_listSetAtMiddle);
   RUN_TEST(test_listSetAtEnd);
   RUN_TEST(test_listSize);
+  RUN_TEST(test_listSizeAfterRemove);
+  RUN_TEST(test_listContainsEmpty);
   RUN_TEST(test_listContains);
-  /*RUN_TEST(test_listSearchFirst);
-  RUN_TEST(test_listSearchNotFound);
-  RUN_TEST(test_listSearch); */
+//  RUN_TEST(test_listSearchFirst);
+//  RUN_TEST(test_listSearchNotFound);
+//  RUN_TEST(test_listSearch);
   return UNITY_END();
 }
 

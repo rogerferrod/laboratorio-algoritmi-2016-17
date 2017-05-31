@@ -30,55 +30,39 @@ typedef struct list_entry {
   struct list_entry *next;	/* next element */
   struct list_entry *prev; 	/* previous element */
   void* elem;
-}list_entry_o;
+} list_entry_o;
 
 /*  A generic doubly-linked list  */
 struct _myList {
-  struct list_entry *head;	/* */
-  struct list_entry *tail;
+  list_entry_o *head;
+  list_entry_o *tail;
   size_t size;
 };
 
 list_o* list_new(){
-  list_entry_o *head = (list_entry_o*)malloc(sizeof(list_entry_o));
-  if(head != NULL){
-    list_o *list = (list_o*)malloc(sizeof(list_o));
-    if(list != NULL){
-      head->next = NULL;
-      head->prev = NULL;
-      head->elem = NULL;
-      list->head = head;
-      list->tail = head;
-      list->size = 0;
-      return list;
-    }
+  list_o *list = (list_o*)malloc(sizeof(list_o));
+  if(list == NULL){
+    fprintf(stderr, "Not enough space for malloc\n");
+    errno = ENOMEM;
+    exit(EXIT_FAILURE);
   }
-  fprintf(stderr, "Not enough space for malloc\n");
-  errno = ENOMEM;
-  exit(EXIT_FAILURE);
+  list->head = NULL;
+  list->tail = NULL;
+  list->size = 0;
+  return list;
 }
 
 void list_free(list_o* list){
-  if(list != NULL){
-    list_entry_o *entry = list->tail;
-    while(entry->prev != NULL){
-      free(entry->next); //non mi piace
-      entry = entry->prev;
-    }
-    free(entry);
+  if(list == NULL) return;
+
+  list_entry_o *entry = list->head;
+  while(entry != NULL){
+    list_entry_o *current = entry;
+    entry = entry->next;
+    free(current);
   }
   free(list);
-  return;  
-}
-
-void* list_front(list_o *list){
-  ASSERT_PARAMETERS_NOT_NULL(list);
-  return (list->head != NULL)? list->head->elem : NULL;
-}
-
-void* list_back(list_o *list){
-  ASSERT_PARAMETERS_NOT_NULL(list);
-  return (list->tail != NULL)? list->tail->elem : NULL;
+  return;
 }
 
 size_t list_size(list_o *list){
@@ -93,20 +77,40 @@ int list_is_empty(list_o *list){
 
 void list_add(list_o *list, void *elem) {
   ASSERT_PARAMETERS_NOT_NULL(list);
-  list_entry_o *entry = (list_entry_o*)malloc(sizeof(list_entry_o)); /* controlla != NULL */
+  ASSERT_PARAMETERS_NOT_NULL(elem);
+  list_entry_o *entry = (list_entry_o*)malloc(sizeof(list_entry_o));
+  if (entry == NULL) {
+    fprintf(stderr, "Not enough space for malloc\n");
+    errno = ENOMEM;
+    exit(EXIT_FAILURE);
+  }
+
+  entry->elem = elem;
   entry->prev = NULL;
   entry->next = list->head;
-  list->head->prev = entry;
-  entry->elem = elem;
-  list->head = entry;
-  if(list->size == 0){
+
+  if (list->head != NULL) { //lista non vuota
+    list->head->prev = entry;
+  } else {  //list vuota: aggiorno tail
     list->tail = entry;
   }
+  list->head = entry;
+
   list->size++;
   return;
 }
 
- /*potremmo fare se > meta parti dal fondo*/
+void* list_front(list_o *list){
+  ASSERT_PARAMETERS_NOT_NULL(list);
+  return (list->head != NULL) ? list->head->elem : NULL;
+}
+
+void* list_back(list_o *list){
+  ASSERT_PARAMETERS_NOT_NULL(list);
+  return (list->tail != NULL) ? list->tail->elem : NULL;
+}
+
+/*potremmo fare se > meta parti dal fondo*/
 void *list_get_at(list_o *list, size_t index){
   size_t count = 0;
   list_entry_o *node = list->head;
@@ -126,7 +130,7 @@ void *list_get_at(list_o *list, size_t index){
 
  /*potremmo fare se > meta parti dal fondo*/
 void list_insert_at(list_o *list, size_t index, void *elem){
-  if (index == 0) {
+  if (index == 0) { //inserisco come primo elemento
     list_add(list, elem);
     return;
   }
@@ -138,13 +142,35 @@ void list_insert_at(list_o *list, size_t index, void *elem){
     current = current->next;
     ++count;
   }
-  if(current == NULL){
-    fprintf(stderr, "List index (%d) out of bounds\n", (unsigned int)index);
-    errno = ENOMEM;
-    exit(EXIT_FAILURE);
-  }
 
-  list_entry_o *node = (list_entry_o*)malloc(sizeof(list_entry_o)); /* controlla != NULL */
+  if(current == NULL){
+    if (count != index) {
+      fprintf(stderr, "List index (%d) out of bounds\n", (unsigned int) index);
+      errno = ENOMEM;
+      exit(EXIT_FAILURE);
+    } else {  //inserisco come ultimo elemento (dopo list->tail)
+      list_entry_o *node = (list_entry_o*)malloc(sizeof(list_entry_o));
+      if (node == NULL) {
+        fprintf(stderr, "Not enough space for malloc\n");
+        errno = ENOMEM;
+        exit(EXIT_FAILURE);
+      }
+      node->prev = list->tail;
+      node->next = NULL;
+      node->elem = elem;
+      list->tail->next = node;
+      list->tail = node;
+      list->size++;
+      return;
+    }
+  }
+  // inserisco sicuramente tra 2 elementi già esistenti
+  list_entry_o *node = (list_entry_o*)malloc(sizeof(list_entry_o));
+   if (node == NULL) {
+     fprintf(stderr, "Not enough space for malloc\n");
+     errno = ENOMEM;
+     exit(EXIT_FAILURE);
+   }
   node->prev = current->prev;
   node->next = current;
   node->elem = elem;
@@ -152,13 +178,10 @@ void list_insert_at(list_o *list, size_t index, void *elem){
   current->prev->next = node; 
   current->prev = node;
 
-  if(current->next == NULL){ /* ultimo */
-    list->tail = node;
-  }
   list->size++;
   return;  
 }
-/*
+
 void list_remove_at(list_o *list, size_t index){
   size_t count = 0;
   list_entry_o *current = list->head;
@@ -172,29 +195,23 @@ void list_remove_at(list_o *list, size_t index){
     errno = ENOMEM;
     exit(EXIT_FAILURE);
   }
-printf("sono qua\n");
 
   if (current->next == NULL) { // ultimo 
-    printf("sono qui\n");
     list->tail = current->prev;
+  } else {
+    current->next->prev = current->prev;
   }
-  else {
-     current->next->prev = current->prev;
-  }  
   if (current->prev == NULL) { // primo
     list->head = current->next;
-  }
-  else {
+  } else {
     current->prev->next = current->next;
   }
 
   list->size--;
   free(current);
-
-  printf("ci sono arrivato\n");
   return;
 }
-*/
+
 /*
 void node_remove(list_entry_o *node) {
   if (node->prev != NULL) {
@@ -229,19 +246,17 @@ void list_set_at(list_o *list, size_t index, void *elem){
 }
 
 int list_contains(list_o *list, void *elem, ListCompare compare){
-  int boolean = 0;
   list_entry_o *head = list->head;
-  while(head != NULL && boolean != 1){
-    printf("elem == NULL? %d\n", head->elem == NULL);
+  while(head != NULL){
     if(compare(head->elem, elem) == 0){
-      boolean = 1;
+      return 1;
     }
     head = head->next;
   }
-  return boolean;
+  return 0;
 }
 /*
-void* list_search(node_o *head, void *elem, ListCompare compare){
+void* list_search(list_o *head, void *elem, ListCompare compare){
   while(head != NULL){
     if(compare(head->elem, elem) == 0){
       return head->elem;
@@ -251,7 +266,6 @@ void* list_search(node_o *head, void *elem, ListCompare compare){
   return NULL;
 }
 */
-
 
 
 
