@@ -113,11 +113,11 @@ static void test_hashtableFind(){
   TEST_ASSERT_EQUAL_INT(9, *(int*)hashtable_find(table, "hi"));
   hashtable_free(table);
 }
-
+/*
 static void test_hashtableLookup(){
   hashtable_o *table = hashtable_new(10, hash, compare_str);
   hashtable_put(table, "hello", new_int(5));
-  hashtable_put(table, "house", new_int(6)); /* collision */
+  hashtable_put(table, "house", new_int(6)); //collision
   hashtable_put(table, "bye", new_int(9));
   hashtable_put(table, "hi", new_int(9));
   TEST_ASSERT_EQUAL_INT(5, **(int**)hashtable_lookup(table, "hello"));
@@ -130,13 +130,13 @@ static void test_hashtableLookup(){
 static void test_hashtableLookupNotFound(){
   hashtable_o *table = hashtable_new(10, hash, compare_str);
   hashtable_put(table, "hello", new_int(5));
-  hashtable_put(table, "house", new_int(6)); /* collision */
+  hashtable_put(table, "house", new_int(6)); //collision
   hashtable_put(table, "bye", new_int(9));
   hashtable_put(table, "hi", new_int(9));
   TEST_ASSERT(NULL == hashtable_lookup(table, "nonce"));
   hashtable_free(table);
 }
-
+*/
 static void test_hashtableRemoveNoConflict(){
   hashtable_o *table = hashtable_new(10, hash, compare_str);
   hashtable_put(table, "hello", new_int(5));
@@ -391,8 +391,10 @@ int main() {
   RUN_TEST(test_hashtableFindSimple);
   RUN_TEST(test_hashtableFindChaining);
   RUN_TEST(test_hashtableFind);
+/*
   RUN_TEST(test_hashtableLookup);
   RUN_TEST(test_hashtableLookupNotFound);
+*/
   RUN_TEST(test_hashtableRemoveNoConflict);
   RUN_TEST(test_hashtableRemoveConflict);
   RUN_TEST(test_hashtableRemoveFirst);

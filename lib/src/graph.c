@@ -90,63 +90,6 @@ size_t graph_size(graph_o *graph){
   return size;
 }
 
-double graph_weight(graph_o *graph) {
-  ASSERT_PARAMETERS_NOT_NULL(graph);
-
-  typedef struct {
-      void *v1;
-      void *v2;
-      double *weight;
-  } my_edge;
-
-  double graph_weight = 0.0;
-
-  array_o *array = array_new(graph_order(graph));
-
-  void *elem = NULL;
-  void *adj = NULL;
-  graphIterator *v_iter = graph_vertex_iter_init(graph);
-  while(graph_vertex_iter_hasNext(graph, v_iter)){
-    graph_vertex_iter_next(graph, v_iter, &elem, &adj);
-
-    void *current_edge = NULL;
-    double *weight = NULL;
-    graphIterator *e_iter = graph_edge_iter_init(graph, elem);
-    while(graph_edge_iter_hasNext(graph, elem, e_iter)) {
-      graph_edge_iter_next(graph, elem, e_iter, &current_edge, &weight);
-
-      int exists = 0;
-      for(size_t i=0; i<array_size(array) && !exists; ++i) {
-        my_edge *a =(my_edge*)array_at(array, i);
-        //if ((a->v1 == elem && a->v2 == current_edge) || (a->v1 == current_edge && a->v2 == elem)) {
-        if ((graph_get_key_compare(graph)(a->v1, elem)==0 && graph_get_key_compare(graph)(a->v2, current_edge)==0) ||
-            (graph_get_key_compare(graph)(a->v1, current_edge)==0 && graph_get_key_compare(graph)(a->v2, elem)==0)) {
-          exists = 1;
-        }
-      }
-      if (!exists) {
-        my_edge *e = malloc(sizeof(my_edge));
-        e->v1 = elem;
-        e->v2 = current_edge;
-        e->weight = weight;
-
-        array_insert(array, e);
-
-        graph_weight += *weight;
-      }
-    }
-    free(e_iter);
-  }
-  free(v_iter);
-
-  for(size_t i=0; i<array_size(array); ++i) {
-    free(array_at(array, i));
-  }
-  array_free(array);
-
-  return graph_weight;
-}
-
 void graph_add(graph_o *graph, void *elem){
   ASSERT_PARAMETERS_NOT_NULL(graph);
   hashtable_o *E = hashtable_new(EDGE_CAPACITY, graph->hash, graph->compare);
@@ -251,6 +194,88 @@ void graph_edge_iter_next(graph_o *graph, void *elem, graphIterator *iter, void 
   hashtable_iter_next(E, iter, adj_elem, (void**)weight);
 }
 
+double graph_weight_all(graph_o *graph) {
+  ASSERT_PARAMETERS_NOT_NULL(graph);
+  double graph_weight = 0.0;
+
+  void *elem = NULL;
+  void *adj = NULL;
+  graphIterator *v_iter = graph_vertex_iter_init(graph);
+  while(graph_vertex_iter_hasNext(graph, v_iter)){
+    graph_vertex_iter_next(graph, v_iter, &elem, &adj);
+
+    void *current_edge = NULL;
+    double *weight = NULL;
+    graphIterator *e_iter = graph_edge_iter_init(graph, elem);
+    while(graph_edge_iter_hasNext(graph, elem, e_iter)) {
+      graph_edge_iter_next(graph, elem, e_iter, &current_edge, &weight);
+
+        graph_weight += *weight;
+    }
+    free(e_iter);
+  }
+  free(v_iter);
+
+  return graph_weight;
+}
+/*
+double graph_weight_old(graph_o *graph) {
+  ASSERT_PARAMETERS_NOT_NULL(graph);
+
+  typedef struct {
+      void *v1;
+      void *v2;
+      double *weight;
+  } my_edge;
+
+  double graph_weight = 0.0;
+
+  array_o *array = array_new(graph_order(graph));
+
+  void *elem = NULL;
+  void *adj = NULL;
+  graphIterator *v_iter = graph_vertex_iter_init(graph);
+  while(graph_vertex_iter_hasNext(graph, v_iter)){
+    graph_vertex_iter_next(graph, v_iter, &elem, &adj);
+
+    void *current_edge = NULL;
+    double *weight = NULL;
+    graphIterator *e_iter = graph_edge_iter_init(graph, elem);
+    while(graph_edge_iter_hasNext(graph, elem, e_iter)) {
+      graph_edge_iter_next(graph, elem, e_iter, &current_edge, &weight);
+
+      int exists = 0;
+      for(size_t i=0; i<array_size(array) && !exists; ++i) {
+        my_edge *a =(my_edge*)array_at(array, i);
+        //if ((a->v1 == elem && a->v2 == current_edge) || (a->v1 == current_edge && a->v2 == elem)) {
+        if ((graph_get_key_compare(graph)(a->v1, elem)==0 && graph_get_key_compare(graph)(a->v2, current_edge)==0) ||
+            (graph_get_key_compare(graph)(a->v1, current_edge)==0 && graph_get_key_compare(graph)(a->v2, elem)==0)) {
+          exists = 1;
+        }
+      }
+      if (!exists) {
+        my_edge *e = malloc(sizeof(my_edge));
+        e->v1 = elem;
+        e->v2 = current_edge;
+        e->weight = weight;
+
+        array_insert(array, e);
+
+        graph_weight += *weight;
+      }
+    }
+    free(e_iter);
+  }
+  free(v_iter);
+
+  for(size_t i=0; i<array_size(array); ++i) {
+    free(array_at(array, i));
+  }
+  array_free(array);
+
+  return graph_weight;
+}
+*/
 void set_color(hashtable_o *table, void *vertex, int color){
   int *status = (int*)malloc(sizeof(int)); //da qualche parte bisognerà fare la free di sta roba
   *status = color;
@@ -317,7 +342,7 @@ void graph_BFS(graph_o *graph){
   return;
 }
 */
-double graph_BFS_weight(graph_o *graph){
+double graph_weight_BFS(graph_o *graph){
   ASSERT_PARAMETERS_NOT_NULL(graph);
   double graph_weight = 0.0;
 
@@ -368,6 +393,15 @@ double graph_BFS_weight(graph_o *graph){
   }
 
   return graph_weight;
+}
+
+double graph_weight(graph_o *graph) {
+  ASSERT_PARAMETERS_NOT_NULL(graph);
+  if (graph->directed == 1) {
+    return graph_weight_all(graph);
+  } else {
+    return graph_weight_BFS(graph);
+  }
 }
 
 int graph_is_directed(graph_o *graph) {

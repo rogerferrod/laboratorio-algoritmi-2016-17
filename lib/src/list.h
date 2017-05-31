@@ -21,6 +21,7 @@
 
 /* Definition  */
 //typedef struct _node* node_o;
+
 typedef struct _myList list_o;
 
 typedef struct _myList queue_o;
