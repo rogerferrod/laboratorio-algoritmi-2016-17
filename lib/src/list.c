@@ -212,19 +212,6 @@ void list_remove_at(list_o *list, size_t index){
   return;
 }
 
-/*
-void node_remove(list_entry_o *node) {
-  if (node->prev != NULL) {
-    node->prev->next = node->next;
-  }
-  if (node->next != NULL) {
-    node->next->prev = node->prev;
-  }
-  node->next = NULL;
-  node->prev = NULL;
-  free(node);
-  }*/
-
 void list_set_at(list_o *list, size_t index, void *elem){
   ASSERT_PARAMETERS_NOT_NULL(list);
   ASSERT_PARAMETERS_NOT_NULL(elem);
@@ -255,8 +242,12 @@ int list_contains(list_o *list, void *elem, ListCompare compare){
   }
   return 0;
 }
-/*
-void* list_search(list_o *head, void *elem, ListCompare compare){
+
+void* list_search(list_o *list, void *elem, ListCompare compare){
+  ASSERT_PARAMETERS_NOT_NULL(list);
+  //ASSERT_PARAMETERS_NOT_NULL(elem);
+  ASSERT_PARAMETERS_NOT_NULL(compare);
+  list_entry_o *head = list->head;
   while(head != NULL){
     if(compare(head->elem, elem) == 0){
       return head->elem;
@@ -265,10 +256,6 @@ void* list_search(list_o *head, void *elem, ListCompare compare){
   }
   return NULL;
 }
-*/
-
-
-
 /*
 void queue_enqueue(queue_o *queue, void* elem){
   ASSERT_PARAMETERS_NOT_NULL(queue);
@@ -283,7 +270,8 @@ void queue_enqueue(queue_o *queue, void* elem){
   queue->size++;
   return;
 }
-
+*/
+/*
 void* queue_dequeue(queue_o *queue){
   ASSERT_PARAMETERS_NOT_NULL(queue);
   queue_entry_o *entry = queue->tail;
@@ -296,22 +284,26 @@ void* queue_dequeue(queue_o *queue){
   free(entry);
   return elem;
 }
-
+*/
+/*
 void* queue_front(queue_o *queue){
   ASSERT_PARAMETERS_NOT_NULL(queue);
   return (queue->head != NULL)? queue->head->elem : NULL;
 }
-
+*/
+/*
 void* queue_back(queue_o *queue){
   ASSERT_PARAMETERS_NOT_NULL(queue);
   return (queue->tail != NULL)? queue->tail->elem : NULL;
 }
-
+*/
+/*
 size_t queue_size(queue_o *queue){
   ASSERT_PARAMETERS_NOT_NULL(queue);
   return queue->size;
 }
-
+*/
+/*
 int queue_is_empty(queue_o *queue){
   ASSERT_PARAMETERS_NOT_NULL(queue);
   return queue->size == 0;

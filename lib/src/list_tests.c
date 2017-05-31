@@ -351,30 +351,47 @@ static void test_listContains(){
   TEST_ASSERT_EQUAL_INT(0, list_contains(list, new_int(5), compare_int_ptr));
   list_free(list);
 }
-/*
+
 static void test_listSearchFirst(){
-  node_o *list = list_new(new_int(3));
+  list_o *list = list_new();
+  list_add(list, new_int(3));
+  list_add(list, new_int(2));
+  list_add(list, new_int(1));
   TEST_ASSERT_EQUAL_INT(3, *(int*)list_search(list, new_int(3), compare_int_ptr));
   list_free(list);
 }
-*/
-/*
-static void test_listSearchNotFound(){
-  node_o *list = list_new(new_int(3));
-  TEST_ASSERT_NULL(list_search(list, new_int(4), compare_int_ptr));
+
+static void test_listSearchEmpty(){
+  list_o *list = list_new();
+  TEST_ASSERT_NULL(list_search(list, new_int(3), compare_int_ptr));
   list_free(list);
 }
-*/
-/*
+
+static void test_listSearchNull(){
+  list_o *list = list_new();
+  TEST_ASSERT_NULL(list_search(list, NULL, compare_int_ptr));
+  list_free(list);
+}
+
+static void test_listSearchNotFound(){
+  list_o *list = list_new();
+  list_add(list, new_int(3));
+  list_add(list, new_int(2));
+  list_add(list, new_int(1));
+  TEST_ASSERT_NULL(list_search(list, new_int(0), compare_int_ptr));
+  list_free(list);
+}
+
 static void test_listSearch(){
-  node_o *list = list_new(new_int(3));
-  list_add(&list, new_int(2));
-  list_add(&list, new_int(1));
+  list_o *list = list_new();
+  list_add(list, new_int(3));
+  list_add(list, new_int(2));
+  list_add(list, new_int(1));
+  TEST_ASSERT_EQUAL_INT(3, *(int*)list_search(list, new_int(3), compare_int_ptr));
   TEST_ASSERT_EQUAL_INT(2, *(int*)list_search(list, new_int(2), compare_int_ptr));
   TEST_ASSERT_NULL(list_search(list, new_int(5), compare_int_ptr));
   list_free(list);
 }
-*/
 
 int main() {
   UNITY_BEGIN();
@@ -407,9 +424,11 @@ int main() {
   RUN_TEST(test_listSizeAfterRemove);
   RUN_TEST(test_listContainsEmpty);
   RUN_TEST(test_listContains);
-//  RUN_TEST(test_listSearchFirst);
-//  RUN_TEST(test_listSearchNotFound);
-//  RUN_TEST(test_listSearch);
+  RUN_TEST(test_listSearchFirst);
+  RUN_TEST(test_listSearchEmpty);
+  RUN_TEST(test_listSearchNull);
+  RUN_TEST(test_listSearchNotFound);
+  RUN_TEST(test_listSearch);
   return UNITY_END();
 }
 

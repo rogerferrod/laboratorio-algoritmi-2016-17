@@ -57,6 +57,5 @@ extern void list_set_at(list_o *list, size_t index, void *elem);
 extern size_t list_size(list_o *list);
 
 extern int list_contains(list_o *list, void *elem, ListCompare compare);
-/*
-extern void* list_search(node_o *list, void *elem, ListCompare compare);
-*/
+
+extern void* list_search(list_o *list, void *elem, ListCompare compare);
