@@ -218,6 +218,7 @@ int graph_is_directed(graph_o *graph) {
   return graph->directed == DIRECTED;
 }
 
+/** For a directed graph. Must consider all edges. */
 double graph_weight_all(graph_o *graph) {
   ASSERT_PARAMETERS_NOT_NULL(graph);
   double graph_weight = 0.0;
@@ -241,10 +242,8 @@ double graph_weight_all(graph_o *graph) {
   return graph_weight;
 }
 
-void set_color(hashtable_o *table, void *vertex, int color){
-  int *status = (int*)malloc(sizeof(int)); //da qualche parte bisognerà fare la free di sta roba
-  *status = color;
-  hashtable_put(table, vertex, status);
+void set_color(hashtable_o *table, void *vertex, int* color){
+  hashtable_put(table, vertex, color);
   return;
 }
 
@@ -268,7 +267,14 @@ double graph_weight_BFS(graph_o *graph) {
 
   // color [V:color]
   enum status{black = 0, grey, white};
-  
+  int* colors[3];
+  colors[black] = (int*)malloc(sizeof(int));
+  colors[grey] = (int*)malloc(sizeof(int));
+  colors[white] = (int*)malloc(sizeof(int));
+  *colors[black] = black;
+  *colors[grey] = grey;
+  *colors[white] = white;
+
   hashtable_o *color = hashtable_new(graph_order(graph), graph->hash, graph->compare);
   
   graphIterator *viter = graph_vertex_iter_init(graph);
@@ -281,13 +287,13 @@ double graph_weight_BFS(graph_o *graph) {
 
   while(graph_vertex_iter_hasNext(graph, viter)){
     graph_vertex_iter_next(graph, viter, &vertex, &adj);
-    set_color(color, vertex, white);
+    set_color(color, vertex, colors[white]);
   }
 
   viter = graph_vertex_iter_init(graph);
   graph_vertex_iter_next(graph, viter, &vertex, &adj); //il primo elemento
 
-  set_color(color, vertex, grey); //la visita parte da qua
+  set_color(color, vertex, colors[grey]); //la visita parte da qua
   queue_enqueue(queue, vertex);
 
   while(!queue_is_empty(queue)){
@@ -298,12 +304,16 @@ double graph_weight_BFS(graph_o *graph) {
       graph_edge_iter_next(graph, u, eiter, &edge, &weight);
       if(get_color(color, edge) != black){
         queue_enqueue(queue, edge);
-        set_color(color, edge, grey);
+        set_color(color, edge, colors[grey]);
         graph_weight += *weight;
       }
     }
-    set_color(color, u, black);
+    set_color(color, u, colors[black]);
   }
+
+  free(colors[black]);
+  free(colors[grey]);
+  free(colors[white]);
 
   return graph_weight;
 }
