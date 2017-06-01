@@ -369,73 +369,6 @@ static void test_graphEdgeHashExpand(){
   graph_free(graph);
 }
 
-static void test_graphWeight(){
-  graph_o *graph = graph_new(5, djb2a, compare_str);
-  graph_add(graph, "A");
-  graph_add(graph, "B");
-  graph_add(graph, "C");
-  graph_add(graph, "D");
-  graph_add(graph, "E");
-  graph_add(graph, "F");
-  graph_add(graph, "G");
-  graph_connect(graph, "A", "B", new_double(15), NO_DIRECTED);
-  graph_connect(graph, "A", "D", new_double(7), NO_DIRECTED);
-  graph_connect(graph, "A", "F", new_double(1), NO_DIRECTED);
-
-  graph_connect(graph, "B", "C", new_double(20), NO_DIRECTED);
-  graph_connect(graph, "B", "D", new_double(12), NO_DIRECTED);
-
-  graph_connect(graph, "C", "E", new_double(6), NO_DIRECTED);
-  graph_connect(graph, "C", "G", new_double(3), NO_DIRECTED);
-
-  graph_connect(graph, "D", "E", new_double(11), NO_DIRECTED);
-  graph_connect(graph, "D", "F", new_double(7), NO_DIRECTED);
-
-  graph_connect(graph, "E", "G", new_double(4), NO_DIRECTED);
-
-  graph_connect(graph, "F", "G", new_double(10), NO_DIRECTED);
-
-  double tot = graph_weight(graph);
-  printf("%lf\n", tot);
-  TEST_ASSERT(96.0 == tot);
-
-  graph_free(graph);
-}
-
-/* nn e da testare */
-/*
-static void test_graphBFS(){
-  graph_o *graph = graph_new(5, djb2a, compare_str);
- graph_add(graph, "A");
-  graph_add(graph, "B");
-  graph_add(graph, "C");
-  graph_add(graph, "D");
-  graph_add(graph, "E");
-  graph_add(graph, "F");
-  graph_add(graph, "G");
-  graph_connect(graph, "A", "B", new_double(15), NO_DIRECTED);
-  graph_connect(graph, "A", "D", new_double(7), NO_DIRECTED);
-  graph_connect(graph, "A", "F", new_double(1), NO_DIRECTED);
-
-  graph_connect(graph, "B", "C", new_double(20), NO_DIRECTED);
-  graph_connect(graph, "B", "D", new_double(12), NO_DIRECTED);
-
-  graph_connect(graph, "C", "E", new_double(6), NO_DIRECTED);
-  graph_connect(graph, "C", "G", new_double(3), NO_DIRECTED);
-
-  graph_connect(graph, "D", "E", new_double(11), NO_DIRECTED);
-  graph_connect(graph, "D", "F", new_double(7), NO_DIRECTED);
-
-  graph_connect(graph, "E", "G", new_double(4), NO_DIRECTED);
-
-  graph_connect(graph, "F", "G", new_double(10), NO_DIRECTED);
-
-  graph_BFS(graph);
-
-  graph_free(graph);
-}
-*/
-
 static void test_graphWeightNotDirected(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
@@ -492,11 +425,9 @@ static void test_graphWeightDirected(){
   graph_connect(graph, "E", "G", new_double(4), DIRECTED);
 
   graph_connect(graph, "F", "G", new_double(10), DIRECTED);
+  graph_connect(graph, "G", "F", new_double(12), DIRECTED);
 
-//  double tot = graph_weight(graph);
-//  printf("weight %lf\n", tot);
-//  TEST_ASSERT_EQUAL(96.0, tot);
-  TEST_ASSERT_EQUAL(96.0, graph_weight(graph));
+  TEST_ASSERT_EQUAL(108.0, graph_weight(graph));
 
   graph_free(graph);
 }
@@ -549,8 +480,6 @@ int main() {
   RUN_TEST(test_graphEdgeIteratorEmpty);
   RUN_TEST(test_graphVertexHashExpand);
   RUN_TEST(test_graphEdgeHashExpand);
-//  RUN_TEST(test_graphWeight);
-//  RUN_TEST(test_graphBFS);
   RUN_TEST(test_graphWeightNotDirected);
   RUN_TEST(test_graphWeightDirected);
   RUN_TEST(test_graphIsDirectedTrue);
