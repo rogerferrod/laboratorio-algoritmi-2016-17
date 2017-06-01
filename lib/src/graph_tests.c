@@ -117,6 +117,14 @@ static void test_graphAdd(){
   graph_free(graph);
 }
 
+static void test_graphAddDuplicate(){
+  graph_o *graph = graph_new(5, djb2a, compare_str);
+  graph_add(graph, "A");
+  graph_add(graph, "A");
+  TEST_ASSERT_EQUAL_INT(1, graph_order(graph));
+  graph_free(graph);
+}
+
 static void test_graphConnectSimpleOriented(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
@@ -428,7 +436,7 @@ static void test_graphBFS(){
 }
 */
 
-static void test_graphWeightNotOriented(){
+static void test_graphWeightNotDirected(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
   graph_add(graph, "B");
@@ -454,12 +462,12 @@ static void test_graphWeightNotOriented(){
 
   graph_connect(graph, "F", "G", new_double(10), NO_DIRECTED);
 
-  TEST_ASSERT_EQUAL(96.0, graph_BFS_weight(graph));
+  TEST_ASSERT_EQUAL(96.0, graph_weight(graph));
 
   graph_free(graph);
 }
 
-static void test_graphWeightOriented(){
+static void test_graphWeightDirected(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
   graph_add(graph, "B");
@@ -485,10 +493,10 @@ static void test_graphWeightOriented(){
 
   graph_connect(graph, "F", "G", new_double(10), DIRECTED);
 
-  double tot = graph_BFS_weight(graph);
-  printf("weight %lf\n", tot);
-  TEST_ASSERT_EQUAL(96.0, tot);
-  //TEST_ASSERT_EQUAL(96.0, graph_BFS_weight(graph));
+//  double tot = graph_weight(graph);
+//  printf("weight %lf\n", tot);
+//  TEST_ASSERT_EQUAL(96.0, tot);
+  TEST_ASSERT_EQUAL(96.0, graph_weight(graph));
 
   graph_free(graph);
 }
@@ -523,6 +531,7 @@ int main() {
   RUN_TEST(test_graphSizeOriented);
   RUN_TEST(test_graphSizeNotOriented);
   RUN_TEST(test_graphAdd);
+  RUN_TEST(test_graphAddDuplicate);
   RUN_TEST(test_graphConnectSimpleOriented);
   RUN_TEST(test_graphConnectSimpleNoOriented);
   RUN_TEST(test_graphContainsVertex);
@@ -540,10 +549,10 @@ int main() {
   RUN_TEST(test_graphEdgeIteratorEmpty);
   RUN_TEST(test_graphVertexHashExpand);
   RUN_TEST(test_graphEdgeHashExpand);
-  RUN_TEST(test_graphWeight);
+//  RUN_TEST(test_graphWeight);
 //  RUN_TEST(test_graphBFS);
-  RUN_TEST(test_graphWeightNotOriented);
-  RUN_TEST(test_graphWeightOriented);
+  RUN_TEST(test_graphWeightNotDirected);
+  RUN_TEST(test_graphWeightDirected);
   RUN_TEST(test_graphIsDirectedTrue);
   RUN_TEST(test_graphIsDirectedFalse);
   return UNITY_END();

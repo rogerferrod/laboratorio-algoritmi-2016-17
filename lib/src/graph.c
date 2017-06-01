@@ -17,7 +17,7 @@
 #include <errno.h>
 #include "array.h"
 #include "hash.h"
-#include "queue.h"
+#include "list.h"
 #include "graph.h"
 
 #define EDGE_CAPACITY 5
@@ -40,6 +40,9 @@ struct _myGraph {
     KeyCompare compare;
     int directed;
 };
+
+double graph_weight_all(graph_o *graph);
+double graph_weight_BFS(graph_o *graph);
 
 
 graph_o* graph_new(size_t capacity, hash_fnc hash, KeyCompare compare) {
@@ -82,7 +85,9 @@ size_t graph_size(graph_o *graph){
 
   while(graph_vertex_iter_hasNext(graph, iter)){
     graph_vertex_iter_next(graph, iter, &elem, &adj);
-    size += hashtable_size(adj);
+    if (adj != NULL) {
+      size += hashtable_size(adj);
+    }
   }
 
   free(iter);
@@ -92,6 +97,10 @@ size_t graph_size(graph_o *graph){
 
 void graph_add(graph_o *graph, void *elem){
   ASSERT_PARAMETERS_NOT_NULL(graph);
+  if (graph_contains_vertex(graph, elem)) {//TODO: che faccio se il vertice esiste già?
+    printf("Vertex already exists.\n");
+    //exit(EXIT_FAILURE);
+  }
   hashtable_o *E = hashtable_new(EDGE_CAPACITY, graph->hash, graph->compare);
   hashtable_put(graph->V, elem, E);
   return;
@@ -101,18 +110,20 @@ void graph_connect(graph_o *graph, void *x, void *y, double *weight, int bitmask
   ASSERT_PARAMETERS_NOT_NULL(graph);
   ASSERT_PARAMETERS_NOT_NULL(x);
   if (!graph_contains_vertex(graph, y)) {
-    fprintf(stderr, "Invalid parameters: vertex not found\n");
+    fprintf(stderr, "Invalid parameters: destination vertex not found\n");
     errno = EINVAL;
     exit(EXIT_FAILURE);
   }
 
   hashtable_o *E = (hashtable_o*)hashtable_find(graph->V, x);
   if(E == NULL){
-    fprintf(stderr, "Invalid parameters: vertex not found\n");
+    fprintf(stderr, "Invalid parameters: start vertex not found\n");
     errno = EINVAL;
     exit(EXIT_FAILURE);
   }
+  //TODO: che faccio se l'arco esiste già?
   hashtable_put(E, y, weight);
+
   if((bitmask & NO_DIRECTED) == NO_DIRECTED){
     graph->directed = NO_DIRECTED;
     graph_connect(graph, y, x, weight, DIRECTED);
@@ -127,7 +138,7 @@ int graph_contains_vertex(graph_o *graph, void *v){
 int graph_contains_edge(graph_o *graph, void *v1, void *v2){
   ASSERT_PARAMETERS_NOT_NULL(graph);
   hashtable_o *E = hashtable_find(graph->V, v1);
-  return (hashtable_size(E) > 0)? hashtable_find(E, v2) != NULL : 0;
+  return (E != NULL && hashtable_size(E) > 0) ? hashtable_find(E, v2) != NULL : 0;
 }
 
 size_t graph_vertex_degree(graph_o *graph, void *v) {
@@ -192,6 +203,20 @@ void graph_edge_iter_next(graph_o *graph, void *elem, graphIterator *iter, void 
     exit(EXIT_FAILURE);
   }
   hashtable_iter_next(E, iter, adj_elem, (void**)weight);
+}
+
+double graph_weight(graph_o *graph) {
+  ASSERT_PARAMETERS_NOT_NULL(graph);
+  if (graph_is_directed(graph) == 1) {
+    return graph_weight_all(graph);
+  } else {
+    return graph_weight_BFS(graph);
+  }
+}
+
+int graph_is_directed(graph_o *graph) {
+  ASSERT_PARAMETERS_NOT_NULL(graph);
+  return graph->directed == DIRECTED ? 1 : 0;
 }
 
 double graph_weight_all(graph_o *graph) {
@@ -342,7 +367,7 @@ void graph_BFS(graph_o *graph){
   return;
 }
 */
-double graph_weight_BFS(graph_o *graph){
+double graph_weight_BFS(graph_o *graph) {
   ASSERT_PARAMETERS_NOT_NULL(graph);
   double graph_weight = 0.0;
 
@@ -393,18 +418,4 @@ double graph_weight_BFS(graph_o *graph){
   }
 
   return graph_weight;
-}
-
-double graph_weight(graph_o *graph) {
-  ASSERT_PARAMETERS_NOT_NULL(graph);
-  if (graph->directed == 1) {
-    return graph_weight_all(graph);
-  } else {
-    return graph_weight_BFS(graph);
-  }
-}
-
-int graph_is_directed(graph_o *graph) {
-  ASSERT_PARAMETERS_NOT_NULL(graph);
-  return graph->directed == DIRECTED ? 1 : 0;
 }
