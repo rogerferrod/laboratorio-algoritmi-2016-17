@@ -23,7 +23,7 @@ build_es2_jar:
 	jar cf bin/Tree.jar -C src edu/unito/
 build_es3: build_heap
 build_es4: build_set
-build_es5: build_list build_hash build_queue build_graph build_kruskal
+build_es5: build_list build_hash build_graph build_kruskal
 
 build_array: build/array.o
 build_sort: build/sort.o
@@ -36,7 +36,6 @@ build_list: build/list.o
 build_hash: build/hash.o
 build_graph: build/graph.o
 build_kruskal: build/kruskal.o
-build_queue: build/queue.o
 
 # compila e esegue i test
 tests: tests_graph
@@ -45,7 +44,7 @@ tests_es1: tests_array tests_sort
 tests_es2: tests_tree
 tests_es3: tests_heap
 tests_es4: tests_set
-tests_es5: tests_list tests_hash tests_queue tests_graph tests_kruskal
+tests_es5: tests_list tests_hash tests_graph tests_kruskal
 
 #compila i test
 tests_build_all: tests_build_array tests_build_sort tests_build_tree tests_build_heap tests_build_set tests_build_list tests_build_hash tests_build_queue tests_build_graph tests_build_hash tests_build_kruskal
@@ -58,7 +57,6 @@ tests_build_heap: build_heap src/edu/unito/heap/HeapTests.java
 tests_build_set: bin/set_tests
 tests_build_list: bin/list_tests
 tests_build_hash: bin/hash_tests
-tests_build_queue: bin/queue_tests
 tests_build_graph: bin/graph_tests
 tests_build_kruskal: bin/kruskal_tests
 
@@ -77,13 +75,10 @@ tests_list: tests_build_list
 	bin/list_tests
 tests_hash: tests_build_hash
 	bin/hash_tests
-tests_queue: tests_build_queue
-	bin/queue_tests
 tests_graph: tests_build_graph
 	bin/graph_tests
 tests_kruskal: tests_build_kruskal
 	bin/kruskal_tests
-
 
 
 docs: docs_tree docs_heap
@@ -117,9 +112,6 @@ bin/list_tests: build/list_tests.o build/list.o build/unity.o $(C_COMMON_DEPS)
 
 bin/hash_tests: build/hash_tests.o build/hash.o build/list.o build/unity.o $(C_COMMON_DEPS)
 	$(CC) -o bin/hash_tests build/hash_tests.o build/hash.o build/list.o build/unity.o
-
-bin/queue_tests: build/queue_tests.o build/queue.o build/unity.o $(C_COMMON_DEPS)
-	$(CC) -o bin/queue_tests build/queue_tests.o build/queue.o build/unity.o
 
 bin/graph_tests: build/graph_tests.o build/graph.o build/hash.o build/list.o build/array.o build/unity.o $(C_COMMON_DEPS)
 	$(CC) -o bin/graph_tests build/graph_tests.o build/graph.o build/hash.o build/list.o build/array.o build/unity.o
