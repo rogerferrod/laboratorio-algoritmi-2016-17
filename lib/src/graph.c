@@ -61,6 +61,7 @@ graph_o* graph_new(size_t capacity, hash_fnc hash, KeyCompare compare) {
 
 void graph_free(graph_o *graph){
   ASSERT_PARAMETERS_NOT_NULL(graph);
+  //TODO: forse deve fare anche le free di tutte le hashtable di ciascun vertice
   hashtable_free(graph->V); //fare la free dei hash_E! (serve iteratore?)
   free(graph);
   return;

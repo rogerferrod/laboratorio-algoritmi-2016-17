@@ -138,6 +138,7 @@ void* hashtable_find(hashtable_o *table, void *key){
   hash_entry *entry = malloc(sizeof(hash_entry));
   entry->key = key;
   hash_entry *elem = (hash_entry*)list_search(list, entry, table->key_compare);
+  free(entry);
   if (elem == NULL) return NULL;
   return elem->value;
 /*

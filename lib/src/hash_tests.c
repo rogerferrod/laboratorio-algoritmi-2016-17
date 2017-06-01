@@ -26,6 +26,17 @@ static size_t hash(void* key) {
   return (size_t)strlen((char*)key);
 }
 
+static void free_fixture(hashtable_o *table) {
+  iterator *iter = hashtable_iter_init(table);
+  void *key, *value;
+  while (hashtable_iter_hasNext(table, iter)) {
+    hashtable_iter_next(table, iter, &key, &value);
+    free(value);
+  }
+  free(iter);
+}
+
+
 static void test_hashtableNew(){
   hashtable_o *table = hashtable_new(5, hash, compare_str);
   TEST_ASSERT_EQUAL_INT_MESSAGE(1, 1, "New hash table failed");
@@ -42,6 +53,8 @@ static void test_hashtablePut(){
   hashtable_o *table = hashtable_new(10, hash, compare_str);
   hashtable_put(table, "hello", new_int(5));
   TEST_ASSERT_EQUAL_INT_MESSAGE(1, 1, "Insert hash table failed");
+
+  free_fixture(table);
   hashtable_free(table);
 }
 
@@ -57,6 +70,8 @@ static void test_hashtableSize(){
   hashtable_put(table, "mouse", new_int(6));
   hashtable_put(table, "hi", new_int(4));
   TEST_ASSERT_EQUAL_INT(3, hashtable_size(table));
+
+  free_fixture(table);
   hashtable_free(table);
 }
 
@@ -73,6 +88,8 @@ static void test_hashtableSizeUpdate(){
 
   hashtable_put(table, "hi", new_int(7));
   TEST_ASSERT_EQUAL_INT(3, hashtable_size(table));
+
+  free_fixture(table);
   hashtable_free(table);
 }
 
@@ -80,6 +97,8 @@ static void test_hashtableFindNotFound(){
   hashtable_o *table = hashtable_new(10, hash, compare_str);
   hashtable_put(table, "hello", new_int(5));
   TEST_ASSERT(NULL == (int*)hashtable_find(table, "ciao"));
+
+  free_fixture(table);
   hashtable_free(table);
 }
 
@@ -87,6 +106,8 @@ static void test_hashtableFindSimple(){
   hashtable_o *table = hashtable_new(10, hash, compare_str);
   hashtable_put(table, "hello", new_int(5));
   TEST_ASSERT_EQUAL_INT(5, *(int*)hashtable_find(table, "hello"));
+
+  free_fixture(table);
   hashtable_free(table);
 }
 
@@ -98,6 +119,8 @@ static void test_hashtableFindChaining(){
   TEST_ASSERT_EQUAL_INT(5, *(int*)hashtable_find(table, "hello"));
   TEST_ASSERT_EQUAL_INT(6, *(int*)hashtable_find(table, "house"));
   TEST_ASSERT_EQUAL_INT(8, *(int*)hashtable_find(table, "mouse"));
+
+  free_fixture(table);
   hashtable_free(table);
 }
 
@@ -111,6 +134,8 @@ static void test_hashtableFind(){
   TEST_ASSERT_EQUAL_INT(6, *(int*)hashtable_find(table, "house"));
   TEST_ASSERT_EQUAL_INT(9, *(int*)hashtable_find(table, "bye"));
   TEST_ASSERT_EQUAL_INT(9, *(int*)hashtable_find(table, "hi"));
+
+  free_fixture(table);
   hashtable_free(table);
 }
 /*
@@ -124,6 +149,8 @@ static void test_hashtableLookup(){
   TEST_ASSERT_EQUAL_INT(6, **(int**)hashtable_lookup(table, "house"));
   TEST_ASSERT_EQUAL_INT(9, **(int**)hashtable_lookup(table, "bye"));
   TEST_ASSERT_EQUAL_INT(9, **(int**)hashtable_lookup(table, "hi"));
+
+  free_fixture(table);
   hashtable_free(table);
 }
 
@@ -134,6 +161,8 @@ static void test_hashtableLookupNotFound(){
   hashtable_put(table, "bye", new_int(9));
   hashtable_put(table, "hi", new_int(9));
   TEST_ASSERT(NULL == hashtable_lookup(table, "nonce"));
+
+  free_fixture(table);
   hashtable_free(table);
 }
 */
@@ -142,6 +171,8 @@ static void test_hashtableRemoveNoConflict(){
   hashtable_put(table, "hello", new_int(5));
   hashtable_remove(table, "hello");
   TEST_ASSERT(NULL == (int*)hashtable_find(table, "hello"));
+
+  free_fixture(table);
   hashtable_free(table);
 }
 
@@ -151,6 +182,8 @@ static void test_hashtableRemoveConflict(){
   hashtable_put(table, "mouse", new_int(6));
   hashtable_remove(table, "hello");
   TEST_ASSERT(NULL == (int*)hashtable_find(table, "hello"));
+
+  free_fixture(table);
   hashtable_free(table);
 }
 
@@ -160,6 +193,8 @@ static void test_hashtableRemoveFirst(){
   hashtable_put(table, "mouse", new_int(6));
   hashtable_remove(table, "mouse");
   TEST_ASSERT(NULL == (int*)hashtable_find(table, "mouse"));
+
+  free_fixture(table);
   hashtable_free(table);
 }
 
@@ -174,6 +209,7 @@ static void test_hashtableExpandAuto(){
 
   TEST_ASSERT_EQUAL_INT(old_capacity*2, hashtable_capacity(table));
 
+  free_fixture(table);
   hashtable_free(table);
 }
 
@@ -195,6 +231,7 @@ static void test_hashtableExpandMultiple(){
   hashtable_put(table, "ciao", new_int(1));
   TEST_ASSERT_EQUAL_INT(old_capacity*2, hashtable_capacity(table));
 
+  free_fixture(table);
   hashtable_free(table);
 }
 
@@ -208,8 +245,9 @@ static void test_hashtableIteratorInit(){
 
   TEST_ASSERT(NULL != iter);
 
+  free(iter);
+  free_fixture(table);
   hashtable_free(table);
-	free(iter);
 }
 
 static void test_hashtableIteratorNull(){
@@ -220,8 +258,9 @@ static void test_hashtableIteratorNull(){
   TEST_ASSERT(NULL != iter);
   TEST_ASSERT_EQUAL_INT(0, hashtable_iter_hasNext(table, iter));
 
+  free(iter);
+  free_fixture(table);
   hashtable_free(table);
-	free(iter);
 }
 
 static void test_hashtableIteratorNextFirst(){
@@ -232,15 +271,16 @@ static void test_hashtableIteratorNextFirst(){
 
   iterator *iter = hashtable_iter_init(table);
 
-  void *key = (char*)malloc(10*sizeof(char));
-  void *value = new_int(0);
+  void *key = NULL;
+  void *value = NULL;
   hashtable_iter_next(table, iter, &key, &value);
   TEST_ASSERT_EQUAL_INT(0, strcmp("mouse", key)); /* mouse */
   TEST_ASSERT_EQUAL_INT(6, *(int*)value); /* mouse */
   TEST_ASSERT(NULL != *iter);
 
+  free(iter);
+  free_fixture(table);
   hashtable_free(table);
-	free(iter);
 }
 
 static void test_hashtableIteratorNextMultiple(){
@@ -251,8 +291,8 @@ static void test_hashtableIteratorNextMultiple(){
 
   iterator *iter = hashtable_iter_init(table);
 
-  void *key = (char*)malloc(10*sizeof(char));
-  void *value = new_int(0);
+  void *key = NULL;
+  void *value = NULL;
   hashtable_iter_next(table, iter, &key, &value);
   TEST_ASSERT_EQUAL_INT(6, *(int*)value); /* mouse */
 
@@ -264,8 +304,9 @@ static void test_hashtableIteratorNextMultiple(){
 
   TEST_ASSERT(NULL == *iter);
 
-  hashtable_free(table);
   free(iter);
+  free_fixture(table);
+  hashtable_free(table);
 }
 
 static void test_hashtableIteratorHasNext(){
@@ -276,8 +317,8 @@ static void test_hashtableIteratorHasNext(){
   hashtable_put(table, "bye", new_int(2));
 
   iterator *iter = hashtable_iter_init(table);
-  void *key = (char*)malloc(10*sizeof(char));
-  void *value = new_int(0);
+  void *key = NULL;
+  void *value = NULL;
 
   TEST_ASSERT_EQUAL_INT(1, hashtable_iter_hasNext(table, iter));
   hashtable_iter_next(table, iter, &key, &value);
@@ -288,9 +329,10 @@ static void test_hashtableIteratorHasNext(){
   TEST_ASSERT_EQUAL_INT(1, hashtable_iter_hasNext(table, iter));
   hashtable_iter_next(table, iter, &key, &value);
   TEST_ASSERT_EQUAL_INT(0, hashtable_iter_hasNext(table, iter));
-  
-  hashtable_free(table);
+
   free(iter);
+  free_fixture(table);
+  hashtable_free(table);
 }
 
 static void test_hashtableIterator(){
@@ -302,8 +344,8 @@ static void test_hashtableIterator(){
 
   iterator *iter = hashtable_iter_init(table);
   
-  void *key = (char*)malloc(10*sizeof(char));
-  void *value = new_int(0);
+  void *key = NULL;
+  void *value = NULL;
 	
   size_t counter = 0;
 
@@ -311,10 +353,11 @@ static void test_hashtableIterator(){
     hashtable_iter_next(table, iter, &key, &value);
     counter++;
   } 
-  TEST_ASSERT_EQUAL_INT(4,counter); 
+  TEST_ASSERT_EQUAL_INT(4,counter);
 
-  hashtable_free(table);
   free(iter);
+  free_fixture(table);
+  hashtable_free(table);
 }
 
 static void test_hashtableContains(){
@@ -325,8 +368,9 @@ static void test_hashtableContains(){
   hashtable_put(table, "bye", new_int(3));
 
   TEST_ASSERT_EQUAL_INT(1,hashtable_contains(table,"mouse")); 
-  TEST_ASSERT_EQUAL_INT(0,hashtable_contains(table,"roger")); 
-  
+  TEST_ASSERT_EQUAL_INT(0,hashtable_contains(table,"roger"));
+
+  free_fixture(table);
   hashtable_free(table);
 }
 
@@ -376,6 +420,7 @@ static void test_hashtableUltimateExpand(){
   }
   
   free(iter);
+  free_fixture(table);
   hashtable_free(table);
 }
 

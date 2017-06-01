@@ -25,6 +25,11 @@ static int* new_int(int value) {
   *elem = value;
   return elem;
 }
+static void free_fixture(list_o* list) {
+  for (size_t i=0; i<list_size(list); ++i) {
+    free(list_get_at(list, i));
+  }
+}
 
 static void test_listNew() {
   list_o* list = list_new();
@@ -55,6 +60,8 @@ static void test_listAddEmpty() {
   list_o* list = list_new();
   list_add(list, new_int(5));
   TEST_ASSERT_EQUAL_INT_MESSAGE(1,1, "List add empty failed\n");
+
+  free_fixture(list);
   list_free(list);
 }
 
@@ -67,6 +74,8 @@ static void test_listAddMore() {
   list_add(list, new_int(1));
   list_add(list, new_int(0));
   TEST_ASSERT_EQUAL_INT_MESSAGE(1,1, "List add more failed\n");
+
+  free_fixture(list);
   list_free(list);
 }
 
@@ -76,6 +85,8 @@ static void test_listGetAtFirst(){
   list_add(list, new_int(2));
   list_add(list, new_int(3));
   TEST_ASSERT_EQUAL_INT(3, *(int*)list_get_at(list, 0));
+
+  free_fixture(list);
   list_free(list);
 }
 
@@ -85,6 +96,8 @@ static void test_listGetAtLast(){
   list_add(list, new_int(2));
   list_add(list, new_int(3));
   TEST_ASSERT_EQUAL_INT(1, *(int*)list_get_at(list, list_size(list)-1));
+
+  free_fixture(list);
   list_free(list);
 }
 
@@ -96,6 +109,8 @@ static void test_listGetAt(){
   TEST_ASSERT_EQUAL_INT(3, *(int*)list_get_at(list, 0));
   TEST_ASSERT_EQUAL_INT(2, *(int*)list_get_at(list, 1));
   TEST_ASSERT_EQUAL_INT(1, *(int*)list_get_at(list, 2));
+
+  free_fixture(list);
   list_free(list);
 }
 
@@ -111,6 +126,8 @@ static void test_listInsertAt(){
   TEST_ASSERT_EQUAL_INT(4, *(int*)list_get_at(list, 1));
   TEST_ASSERT_EQUAL_INT(3, *(int*)list_get_at(list, 2));
   TEST_ASSERT_EQUAL_INT(2, *(int*)list_get_at(list, 3));
+
+  free_fixture(list);
   list_free(list);
 }
 
@@ -127,6 +144,7 @@ static void test_listInsertAtFirst(){
   TEST_ASSERT_EQUAL_INT(3, *(int*)list_get_at(list, 2));
   TEST_ASSERT_EQUAL_INT(4, *(int*)list_get_at(list, 3));
 
+  free_fixture(list);
   list_free(list);
 }
 
@@ -145,6 +163,7 @@ static void test_listInsertAtBottom(){
   TEST_ASSERT_EQUAL_INT(3, *(int*)list_get_at(list, 3));
   TEST_ASSERT_EQUAL_INT(4, *(int*)list_get_at(list, 4));
 
+  free_fixture(list);
   list_free(list);
 }
 
@@ -159,7 +178,8 @@ static void test_listInsertAtMiddle(){
   TEST_ASSERT_EQUAL_INT(1, *(int*)list_get_at(list, 0));
   TEST_ASSERT_EQUAL_INT(2, *(int*)list_get_at(list, 1));
   TEST_ASSERT_EQUAL_INT(3, *(int*)list_get_at(list, 2));
-  
+
+  free_fixture(list);
   list_free(list);
 }
 
@@ -174,7 +194,8 @@ static void test_listRemoveAt(){
   TEST_ASSERT_EQUAL_INT(2, list_size(list));
   TEST_ASSERT_EQUAL_INT(1, *(int*)list_get_at(list, 0));
   TEST_ASSERT_EQUAL_INT(3, *(int*)list_get_at(list, 1));
-  
+
+  free_fixture(list);
   list_free(list);
 }
 
@@ -190,6 +211,7 @@ static void test_listRemoveAtFirst(){
   TEST_ASSERT_EQUAL_INT(2, *(int*)list_get_at(list, 0));
   TEST_ASSERT_EQUAL_INT(3, *(int*)list_get_at(list, 1));
 
+  free_fixture(list);
   list_free(list);
 }
 
@@ -205,6 +227,7 @@ static void test_listRemoveAtBottom(){
   TEST_ASSERT_EQUAL_INT(1, *(int*)list_get_at(list, 0));
   TEST_ASSERT_EQUAL_INT(2, *(int*)list_get_at(list, 1));
 
+  free_fixture(list);
   list_free(list);
 }
 
@@ -220,6 +243,7 @@ static void test_listRemoveAtAllFromLast(){
 
   TEST_ASSERT_EQUAL_INT(1, list_is_empty(list));
 
+  free_fixture(list);
   list_free(list);
 }
 
@@ -235,6 +259,7 @@ static void test_listRemoveAtAllFromFirst(){
 
   TEST_ASSERT_EQUAL_INT(1, list_is_empty(list));
 
+  free_fixture(list);
   list_free(list);
 }
 
@@ -249,6 +274,7 @@ static void test_listSetAtBegin(){
   list_set_at(list, 0, new_int(4));
   TEST_ASSERT_EQUAL_INT(4, *(int*)list_get_at(list, 0));
 
+  free_fixture(list);
   list_free(list);
 }
 
@@ -263,6 +289,7 @@ static void test_listSetAtMiddle(){
   list_set_at(list, 1, new_int(5));
   TEST_ASSERT_EQUAL_INT(5, *(int*)list_get_at(list, 1));
 
+  free_fixture(list);
   list_free(list);
 }
 
@@ -277,6 +304,7 @@ static void test_listSetAtEnd(){
   list_set_at(list, list_size(list)-1, new_int(5));
   TEST_ASSERT_EQUAL_INT(5, *(int*)list_get_at(list, list_size(list)-1));
 
+  free_fixture(list);
   list_free(list);
 }
 
@@ -289,6 +317,7 @@ static void test_listSize(){
 
   TEST_ASSERT_EQUAL_INT(4, list_size(list));
 
+  free_fixture(list);
   list_free(list);
 }
 
@@ -303,6 +332,7 @@ static void test_listSizeAfterRemove(){
 
   TEST_ASSERT_EQUAL_INT(3, list_size(list));
 
+  free_fixture(list);
   list_free(list);
 }
 
@@ -319,6 +349,8 @@ static void test_listContains(){
   list_add(list, new_int(1));
   TEST_ASSERT_EQUAL_INT(1, list_contains(list, new_int(2), compare_int_ptr));
   TEST_ASSERT_EQUAL_INT(0, list_contains(list, new_int(5), compare_int_ptr));
+
+  free_fixture(list);
   list_free(list);
 }
 
@@ -328,6 +360,8 @@ static void test_listSearchFirst(){
   list_add(list, new_int(2));
   list_add(list, new_int(1));
   TEST_ASSERT_EQUAL_INT(3, *(int*)list_search(list, new_int(3), compare_int_ptr));
+
+  free_fixture(list);
   list_free(list);
 }
 
@@ -349,6 +383,8 @@ static void test_listSearchNotFound(){
   list_add(list, new_int(2));
   list_add(list, new_int(1));
   TEST_ASSERT_NULL(list_search(list, new_int(0), compare_int_ptr));
+
+  free_fixture(list);
   list_free(list);
 }
 
@@ -360,6 +396,8 @@ static void test_listSearch(){
   TEST_ASSERT_EQUAL_INT(3, *(int*)list_search(list, new_int(3), compare_int_ptr));
   TEST_ASSERT_EQUAL_INT(2, *(int*)list_search(list, new_int(2), compare_int_ptr));
   TEST_ASSERT_NULL(list_search(list, new_int(5), compare_int_ptr));
+
+  free_fixture(list);
   list_free(list);
 }
 
@@ -391,6 +429,7 @@ static void test_queueEnqueueEmpty(){
   queue_o* queue = queue_new();
   queue_enqueue(queue, new_int(5));
   TEST_ASSERT_EQUAL_INT_MESSAGE(1,1, "Queue enqueue empty failed\n");
+
   queue_free(queue);
 }
 
@@ -400,6 +439,7 @@ static void test_queueEnqueueMore(){
   queue_enqueue(queue, new_int(4));
   queue_enqueue(queue, new_int(3));
   TEST_ASSERT_EQUAL_INT_MESSAGE(1,1, "Queue enqueue more failed\n");
+
   queue_free(queue);
 }
 
@@ -411,6 +451,7 @@ static void test_queueDequeueSize(){
   queue_dequeue(queue);
   TEST_ASSERT_EQUAL_INT(2, queue_size(queue));
   TEST_ASSERT_EQUAL_INT_MESSAGE(1,1, "Queue dequeue failed\n");
+
   queue_free(queue);
 }
 static void test_queueDequeueAll(){
@@ -423,6 +464,7 @@ static void test_queueDequeueAll(){
   queue_dequeue(queue);
   TEST_ASSERT_EQUAL_INT(0, queue_size(queue));
   TEST_ASSERT_EQUAL_INT_MESSAGE(1,1, "Queue dequeue all failed\n");
+
   queue_free(queue);
 }
 
@@ -434,6 +476,7 @@ static void test_queueSize(){
   queue_dequeue(queue);
   queue_dequeue(queue);
   TEST_ASSERT_EQUAL_INT(1, queue_size(queue));
+
   queue_free(queue);
 }
 

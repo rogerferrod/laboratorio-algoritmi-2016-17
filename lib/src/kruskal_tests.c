@@ -31,6 +31,28 @@ static double* new_double(double value) {
   return elem;
 }
 
+/*
+ * Fa la free dei pesi degli archi
+ */
+static void free_fixture(graph_o *graph) {
+  if (!graph_is_directed(graph)) return; //TODO: non posso fare la free del peso di un arco non diretto, perché in realtà facio la free anche dell'arco opposto e quando arrivo all'arco opposto si pianta tutto
+  graphIterator *vIter = graph_vertex_iter_init(graph);
+  void *k1 = NULL, *v1 = NULL;
+  while(graph_vertex_iter_hasNext(graph, vIter)) {
+    graph_vertex_iter_next(graph, vIter, &k1, &v1);
+
+    graphIterator *eIter = graph_edge_iter_init(graph, k1);
+    void *v2;
+    double *w;
+    while(graph_edge_iter_hasNext(graph, k1, eIter)) {
+      graph_edge_iter_next(graph, k1, eIter, &v2, &w);
+      free(w);
+    }
+    free(eIter);
+  }
+  free(vIter);
+}
+
 /**
  * Hash function
  * @param str char* String to be hashed
@@ -76,10 +98,11 @@ static void test_kruskal(){
   //printf("created graph\n");
   //printf("size %ld  order %ld\n", (unsigned long)graph_size(graph), (unsigned long)graph_order(graph));
 
+/*
+  graphIterator *v_iter = graph_vertex_iter_init(graph);
   void *elem = NULL;
   void *adj = NULL;
 
-  graphIterator *v_iter = graph_vertex_iter_init(graph);
   while(graph_vertex_iter_hasNext(graph, v_iter)){
     graph_vertex_iter_next(graph, v_iter, &elem, &adj);
     //printf("v %s\n", (char*)elem);
@@ -95,12 +118,14 @@ static void test_kruskal(){
     
   }
   free(v_iter);
-  
+*/
+
 
   graph_o *min = kruskal(graph);
   //printf("min order: %ld \n", (unsigned long)graph_order(min));
   //printf("min size: %ld\n", (unsigned long)graph_size(min));
 
+/*
   graphIterator *v_iter_min = graph_vertex_iter_init(min);
   while(graph_vertex_iter_hasNext(min, v_iter_min)){
     graph_vertex_iter_next(min, v_iter_min, &elem, &adj);
@@ -117,6 +142,7 @@ static void test_kruskal(){
 
   }
   free(v_iter_min);
+*/
 
 /*
   graphIterator *iter = graph_vertex_iter_init(min);
@@ -128,7 +154,10 @@ static void test_kruskal(){
   }
 */
   TEST_ASSERT(37.0 == graph_weight(min));
+
+  free_fixture(min);
   graph_free(min);
+  free_fixture(graph);
   graph_free(graph);
 }
 

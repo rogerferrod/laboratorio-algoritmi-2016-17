@@ -30,6 +30,28 @@ static double* new_double(double value) {
   return elem;
 }
 
+/*
+ * Fa la free dei pesi degli archi
+ */
+static void free_fixture(graph_o *graph) {
+  if (!graph_is_directed(graph)) return; //TODO: non posso fare la free del peso di un arco non diretto, perché in realtà facio la free anche dell'arco opposto e quando arrivo all'arco opposto si pianta tutto
+  graphIterator *vIter = graph_vertex_iter_init(graph);
+  void *k1 = NULL, *v1 = NULL;
+  while(graph_vertex_iter_hasNext(graph, vIter)) {
+    graph_vertex_iter_next(graph, vIter, &k1, &v1);
+
+    graphIterator *eIter = graph_edge_iter_init(graph, k1);
+    void *v2;
+    double *w;
+    while(graph_edge_iter_hasNext(graph, k1, eIter)) {
+      graph_edge_iter_next(graph, k1, eIter, &v2, &w);
+      free(w);
+    }
+    free(eIter);
+  }
+  free(vIter);
+}
+
 /**
  * Hash function
  * @param str char* String to be hashed
@@ -70,6 +92,8 @@ static void test_graphOrder(){
   graph_add(graph, "B");
   graph_add(graph, "C");
   TEST_ASSERT_EQUAL_INT(3, graph_order(graph));
+
+  free_fixture(graph);
   graph_free(graph);
 }
 
@@ -85,6 +109,8 @@ static void test_graphSizeNoLinks(){
   graph_add(graph, "B");
   graph_add(graph, "C");
   TEST_ASSERT_EQUAL_INT(0, graph_size(graph));
+
+  free_fixture(graph);
   graph_free(graph);
 }
 
@@ -96,6 +122,8 @@ static void test_graphSizeOriented(){
   graph_connect(graph, "A", "B", new_double(0.0), DIRECTED);
   graph_connect(graph, "A", "C", new_double(0.0), DIRECTED);
   TEST_ASSERT_EQUAL_INT(2, graph_size(graph));
+
+  free_fixture(graph);
   graph_free(graph);
 }
 
@@ -107,6 +135,8 @@ static void test_graphSizeNotOriented(){
   graph_connect(graph, "A", "B", new_double(0.0), NO_DIRECTED);
   graph_connect(graph, "A", "C", new_double(0.0), NO_DIRECTED);
   TEST_ASSERT_EQUAL_INT(4, graph_size(graph));
+
+  free_fixture(graph);
   graph_free(graph);
 }
 
@@ -114,6 +144,8 @@ static void test_graphAdd(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
   TEST_ASSERT_EQUAL_INT(1, graph_order(graph));
+
+  free_fixture(graph);
   graph_free(graph);
 }
 
@@ -122,6 +154,8 @@ static void test_graphAddDuplicate(){
   graph_add(graph, "A");
   graph_add(graph, "A");
   TEST_ASSERT_EQUAL_INT(1, graph_order(graph));
+
+  free_fixture(graph);
   graph_free(graph);
 }
 
@@ -131,6 +165,8 @@ static void test_graphConnectSimpleOriented(){
   graph_add(graph, "B");
   graph_connect(graph, "A", "B", new_double(0.0), DIRECTED);
   TEST_ASSERT_EQUAL_INT_MESSAGE(1, 1, "Link graph failed");
+
+  free_fixture(graph);
   graph_free(graph);
 }
 
@@ -140,6 +176,8 @@ static void test_graphConnectSimpleNoOriented(){
   graph_add(graph, "B");
   graph_connect(graph, "A", "B", new_double(0.0), NO_DIRECTED);
   TEST_ASSERT_EQUAL_INT_MESSAGE(1, 1, "Link graph failed");
+
+  free_fixture(graph);
   graph_free(graph);
 }
 
@@ -147,6 +185,8 @@ static void test_graphContainsVertex(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
   TEST_ASSERT_EQUAL_INT(1, graph_contains_vertex(graph, "A"));
+
+  free_fixture(graph);
   graph_free(graph);
 }
 
@@ -156,6 +196,8 @@ static void test_graphContainsEdge(){
   graph_add(graph, "B");
   graph_connect(graph, "A", "B", new_double(0.0), DIRECTED);
   TEST_ASSERT_EQUAL_INT(1, graph_contains_edge(graph, "A", "B"));
+
+  free_fixture(graph);
   graph_free(graph);
 }
 
@@ -165,6 +207,8 @@ static void test_graphNotContainsEdge(){
   graph_add(graph, "B");
   graph_connect(graph, "A", "B", new_double(0.0), DIRECTED);
   TEST_ASSERT_EQUAL_INT(0, graph_contains_edge(graph, "A", "A"));
+
+  free_fixture(graph);
   graph_free(graph);
 }
 
@@ -183,6 +227,8 @@ static void test_graphMultipleEdge(){
   TEST_ASSERT_EQUAL_INT(1, graph_contains_edge(graph, "A", "C"));
   TEST_ASSERT_EQUAL_INT(1, graph_contains_edge(graph, "A", "D"));
   TEST_ASSERT_EQUAL_INT(1, graph_contains_edge(graph, "B", "D"));
+
+  free_fixture(graph);
   graph_free(graph);
 }
 
@@ -193,6 +239,8 @@ static void test_graphConnectNoOriented(){
   graph_connect(graph, "A", "B", new_double(0.0), NO_DIRECTED);
   TEST_ASSERT_EQUAL_INT(1, graph_contains_edge(graph, "A", "B"));
   TEST_ASSERT_EQUAL_INT(1, graph_contains_edge(graph, "B", "A"));
+
+  free_fixture(graph);
   graph_free(graph);
 }
 
@@ -201,6 +249,8 @@ static void test_graphVertexDegreeEmpty() {
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
   TEST_ASSERT_EQUAL_INT(0, graph_vertex_degree(graph, "A"));
+
+  free_fixture(graph);
   graph_free(graph);
 }
 
@@ -216,6 +266,8 @@ static void test_graphVertexDegreeOriented() {
   TEST_ASSERT_EQUAL_INT(3, graph_vertex_degree(graph, "A"));
   TEST_ASSERT_EQUAL_INT(0, graph_vertex_degree(graph, "B"));
   TEST_ASSERT_EQUAL_INT(0, graph_vertex_degree(graph, "C"));
+
+  free_fixture(graph);
   graph_free(graph);
 }
 
@@ -231,6 +283,8 @@ static void test_graphVertexDegreeNotOriented() {
   TEST_ASSERT_EQUAL_INT(3, graph_vertex_degree(graph, "A"));
   TEST_ASSERT_EQUAL_INT(1, graph_vertex_degree(graph, "B"));
   TEST_ASSERT_EQUAL_INT(1, graph_vertex_degree(graph, "C"));
+
+  free_fixture(graph);
   graph_free(graph);
 }
 
@@ -243,8 +297,9 @@ static void test_graphVertexIteratorInit(){
 
   TEST_ASSERT(NULL != *vertex_iter);
 
-  graph_free(graph);
   free(vertex_iter);
+  free_fixture(graph);
+  graph_free(graph);
 }
 
 static void test_graphVertexIterator(){
@@ -267,8 +322,9 @@ static void test_graphVertexIterator(){
   TEST_ASSERT(NULL == *vertex_iter);
   TEST_ASSERT_EQUAL_INT(graph_order(graph), count);
 
-  graph_free(graph);
   free(vertex_iter);
+  free_fixture(graph);
+  graph_free(graph);
 }
 
 static void test_graphEdgeIteratorInit(){
@@ -284,8 +340,9 @@ static void test_graphEdgeIteratorInit(){
 
   TEST_ASSERT(NULL != *edge_iter);
 
-  graph_free(graph);
   free(edge_iter);
+  free_fixture(graph);
+  graph_free(graph);
 }
 
 static void test_graphEdgeIterator(){
@@ -312,6 +369,7 @@ static void test_graphEdgeIterator(){
   TEST_ASSERT_EQUAL_INT(3, count);
 
   free(edge_iter);
+  free_fixture(graph);
   graph_free(graph);
 }
 
@@ -331,6 +389,7 @@ static void test_graphEdgeIteratorEmpty(){
   TEST_ASSERT_EQUAL_INT(0, count);
 
   free(edge_iter);
+  free_fixture(graph);
   graph_free(graph);
 }
 
@@ -346,6 +405,7 @@ static void test_graphVertexHashExpand(){
   TEST_ASSERT_EQUAL_INT(6, graph_order(graph));
   TEST_ASSERT_EQUAL_INT(0, graph_size(graph));
 
+  free_fixture(graph);
   graph_free(graph);
 }
 
@@ -366,6 +426,7 @@ static void test_graphEdgeHashExpand(){
   TEST_ASSERT_EQUAL_INT(6, graph_order(graph));
   TEST_ASSERT_EQUAL_INT(5, graph_size(graph));
 
+  free_fixture(graph);
   graph_free(graph);
 }
 
@@ -397,6 +458,7 @@ static void test_graphWeightNotDirected(){
 
   TEST_ASSERT_EQUAL(96.0, graph_weight(graph));
 
+  free_fixture(graph);
   graph_free(graph);
 }
 
@@ -429,6 +491,7 @@ static void test_graphWeightDirected(){
 
   TEST_ASSERT_EQUAL(108.0, graph_weight(graph));
 
+  free_fixture(graph);
   graph_free(graph);
 }
 
@@ -438,6 +501,8 @@ static void test_graphIsDirectedTrue(){
   graph_add(graph, "B");
   graph_connect(graph, "A", "B", new_double(0.0), DIRECTED);
   TEST_ASSERT_EQUAL_INT(1, graph_is_directed(graph));
+
+  free_fixture(graph);
   graph_free(graph);
 }
 
@@ -447,6 +512,8 @@ static void test_graphIsDirectedFalse(){
   graph_add(graph, "B");
   graph_connect(graph, "A", "B", new_double(0.0), NO_DIRECTED);
   TEST_ASSERT_EQUAL_INT(0, graph_is_directed(graph));
+
+  free_fixture(graph);
   graph_free(graph);
 }
 

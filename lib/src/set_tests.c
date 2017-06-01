@@ -38,7 +38,7 @@ static void test_findSet() {
   int* ptr = new_int(5);
   
   set_o *set = make_set(ptr);
-  TEST_ASSERT(set == find_set(set));
+  TEST_ASSERT_EQUAL_PTR(set, find_set(set));
   
   free(ptr);
   free_set(set);
@@ -51,7 +51,7 @@ static void test_unionSet() {
   set_o *set = make_set(ptr);
   set_o *set2 = make_set(ptr2);
   union_set(set, set2);
-  TEST_ASSERT(find_set(set) == find_set(set2));
+  TEST_ASSERT_EQUAL_PTR(find_set(set), find_set(set2));
   
   free(ptr);
   free(ptr2);
@@ -69,8 +69,9 @@ static void test_unionSetRank() {
   set_o *set3 = make_set(ptr3);
   union_set(set1, set2); /* rank 0 + rank 0 = rank 1 */
   union_set(set1, set3); /* rank 1 + rank 0 = rank 1 */
-  TEST_ASSERT(find_set(set1) == find_set(set2) && find_set(set2) == find_set(set3));
-  
+  TEST_ASSERT_EQUAL_PTR(find_set(set1), find_set(set2));
+  TEST_ASSERT_EQUAL_PTR(find_set(set2), find_set(set3));
+
   free(ptr1);
   free(ptr2);
   free(ptr3);
