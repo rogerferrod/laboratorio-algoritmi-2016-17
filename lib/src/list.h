@@ -58,10 +58,17 @@ extern void* list_search(list_o *list, void *elem, ListCompare compare);
 //funzioni per la coda
 
 extern queue_o* queue_new();
+
 extern void queue_free(queue_o* queue);
+
 extern void queue_enqueue(queue_o *queue, void* elem);
+
 extern void* queue_dequeue(queue_o *queue);
+
 extern void* queue_front(queue_o *queue);
+
 extern void* queue_back(queue_o *queue);
+
 extern size_t queue_size(queue_o *queue);
+
 extern int queue_is_empty(queue_o *queue);

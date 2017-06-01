@@ -26,11 +26,14 @@
 
 
 /*  A generic doubly-linked list */
-typedef struct list_entry {
+struct list_entry {
   struct list_entry *next;	/* next element */
   struct list_entry *prev; 	/* previous element */
   void* elem;
-} list_entry_o;
+};
+
+typedef struct list_entry list_entry_o;
+typedef struct list_entry queue_entry_o;
 
 /*  A generic doubly-linked list  */
 struct _myList {
@@ -250,34 +253,12 @@ void* list_search(list_o *list, void *elem, ListCompare compare){
 queue_o* queue_new() {
   return (queue_o*)list_new();
 }
+
 void queue_free(queue_o* queue) {
   list_free((list_o*)queue);
 }
-void queue_enqueue(queue_o *queue, void* elem) {
-  list_add((list_o*)queue, elem);
-}
-void* queue_dequeue(queue_o *queue) {
-  void *elem = queue_back(queue);
-  list_remove_at(queue, queue_size(queue)-1);
-  return elem;
-}
-void* queue_front(queue_o *queue) {
-  ASSERT_PARAMETERS_NOT_NULL(queue);
-  return (queue->head != NULL) ? queue->head->elem : NULL;
-}
-void* queue_back(queue_o *queue) {
-  ASSERT_PARAMETERS_NOT_NULL(queue);
-  return (queue->tail != NULL) ? queue->tail->elem : NULL;
-}
-size_t queue_size(queue_o *queue) {
-  return list_size((list_o*)queue);
-}
-int queue_is_empty(queue_o *queue) {
-  return list_is_empty((list_o*)queue);
-}
 
-/*
-void queue_enqueue(queue_o *queue, void* elem){
+void queue_enqueue(queue_o *queue, void* elem) {
   ASSERT_PARAMETERS_NOT_NULL(queue);
   queue_entry_o *entry = (queue_entry_o*)malloc(sizeof(queue_entry_o));
   entry->prev = queue->tail;
@@ -290,9 +271,8 @@ void queue_enqueue(queue_o *queue, void* elem){
   queue->size++;
   return;
 }
-*/
-/*
-void* queue_dequeue(queue_o *queue){
+
+void* queue_dequeue(queue_o *queue) {
   ASSERT_PARAMETERS_NOT_NULL(queue);
   queue_entry_o *entry = queue->tail;
   void *elem = entry->elem;
@@ -304,28 +284,21 @@ void* queue_dequeue(queue_o *queue){
   free(entry);
   return elem;
 }
-*/
-/*
-void* queue_front(queue_o *queue){
+
+void* queue_front(queue_o *queue) {
   ASSERT_PARAMETERS_NOT_NULL(queue);
-  return (queue->head != NULL)? queue->head->elem : NULL;
+  return (queue->head != NULL) ? queue->head->elem : NULL;
 }
-*/
-/*
-void* queue_back(queue_o *queue){
+
+void* queue_back(queue_o *queue) {
   ASSERT_PARAMETERS_NOT_NULL(queue);
-  return (queue->tail != NULL)? queue->tail->elem : NULL;
+  return (queue->tail != NULL) ? queue->tail->elem : NULL;
 }
-*/
-/*
-size_t queue_size(queue_o *queue){
-  ASSERT_PARAMETERS_NOT_NULL(queue);
-  return queue->size;
+
+size_t queue_size(queue_o *queue) {
+  return list_size((list_o*)queue);
 }
-*/
-/*
-int queue_is_empty(queue_o *queue){
-  ASSERT_PARAMETERS_NOT_NULL(queue);
-  return queue->size == 0;
+
+int queue_is_empty(queue_o *queue) {
+  return list_is_empty((list_o*)queue);
 }
-*/

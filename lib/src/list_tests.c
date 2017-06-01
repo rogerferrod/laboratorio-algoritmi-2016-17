@@ -403,7 +403,7 @@ static void test_queueEnqueueMore(){
   queue_free(queue);
 }
 
-static void test_queueDequeue(){
+static void test_queueDequeueSize(){
   queue_o* queue = queue_new();
   queue_enqueue(queue, new_int(5));
   queue_enqueue(queue, new_int(4));
@@ -448,7 +448,7 @@ static void test_queueFront() {
   queue_enqueue(queue, new_int(5));
   queue_enqueue(queue, new_int(4));
   queue_enqueue(queue, new_int(3));
-  TEST_ASSERT_EQUAL_INT(3, *(int*)queue_front(queue));
+  TEST_ASSERT_EQUAL_INT(5, *(int*)queue_front(queue));
   queue_free(queue);
 }
 
@@ -463,10 +463,20 @@ static void test_queueBack() {
   queue_enqueue(queue, new_int(5));
   queue_enqueue(queue, new_int(4));
   queue_enqueue(queue, new_int(3));
-  TEST_ASSERT_EQUAL_INT(5, *(int*)queue_back(queue));
+  TEST_ASSERT_EQUAL_INT(3, *(int*)queue_back(queue));
   queue_free(queue);
 }
 
+static void test_queueDequeue(){
+  queue_o* queue = queue_new();
+  queue_enqueue(queue, new_int(5));
+  queue_enqueue(queue, new_int(4));
+  queue_enqueue(queue, new_int(3));
+  TEST_ASSERT_EQUAL_INT(3, *(int*)queue_dequeue(queue));
+  TEST_ASSERT_EQUAL_INT(4, *(int*)queue_dequeue(queue));
+  TEST_ASSERT_EQUAL_INT(5, *(int*)queue_dequeue(queue));
+  queue_free(queue);
+}
 
 int main() {
   UNITY_BEGIN();
@@ -508,12 +518,13 @@ int main() {
   RUN_TEST(test_queueEnqueueEmpty);
   RUN_TEST(test_queueEnqueueMore);
   RUN_TEST(test_queueDequeueAll);
-  RUN_TEST(test_queueDequeue);
+  RUN_TEST(test_queueDequeueSize);
   RUN_TEST(test_queueSize);
   RUN_TEST(test_queueFrontEmpty);
   RUN_TEST(test_queueFront);
   RUN_TEST(test_queueBackEmpty);
   RUN_TEST(test_queueBack);
+  RUN_TEST(test_queueDequeue);
 
   return UNITY_END();
 }
