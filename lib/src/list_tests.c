@@ -70,36 +70,6 @@ static void test_listAddMore() {
   list_free(list);
 }
 
-static void test_listFrontEmpty() {
-  list_o *list = list_new();
-  TEST_ASSERT_NULL(list_front(list));
-  list_free(list);
-}
-
-static void test_listFront() {
-  list_o *list = list_new();
-  list_add(list, new_int(5));
-  list_add(list, new_int(4));
-  list_add(list, new_int(3));
-  TEST_ASSERT_EQUAL_INT(3, *(int*)list_front(list));
-  list_free(list);
-}
-
-static void test_listBackEmpty() {
-  list_o *list = list_new();
-  TEST_ASSERT_NULL(list_back(list));
-  list_free(list);
-}
-
-static void test_listBack() {
-  list_o *list = list_new();
-  list_add(list, new_int(5));
-  list_add(list, new_int(4));
-  list_add(list, new_int(3));
-  TEST_ASSERT_EQUAL_INT(5, *(int*)list_back(list));
-  list_free(list);
-}
-
 static void test_listGetAtFirst(){
   list_o *list = list_new();
   list_add(list, new_int(1));
@@ -393,6 +363,111 @@ static void test_listSearch(){
   list_free(list);
 }
 
+static void test_queueNew() {
+  queue_o* queue = queue_new();
+  TEST_ASSERT_NOT_NULL(queue);
+  free(queue);
+}
+
+static void test_queueFree() {
+  queue_o* queue = queue_new();
+  queue_free(queue);
+  TEST_ASSERT_EQUAL_INT_MESSAGE(1,1, "Queue free failed\n");
+}
+
+static void test_queueSizeEmpty(){
+  queue_o* queue = queue_new();
+  TEST_ASSERT_EQUAL_INT(0, queue_size(queue));
+  queue_free(queue);
+}
+
+static void test_queueIsEmpty(){
+  queue_o* queue = queue_new();
+  TEST_ASSERT_EQUAL_INT(1, queue_is_empty(queue));
+  queue_free(queue);
+}
+
+static void test_queueEnqueueEmpty(){
+  queue_o* queue = queue_new();
+  queue_enqueue(queue, new_int(5));
+  TEST_ASSERT_EQUAL_INT_MESSAGE(1,1, "Queue enqueue empty failed\n");
+  queue_free(queue);
+}
+
+static void test_queueEnqueueMore(){
+  queue_o* queue = queue_new();
+  queue_enqueue(queue, new_int(5));
+  queue_enqueue(queue, new_int(4));
+  queue_enqueue(queue, new_int(3));
+  TEST_ASSERT_EQUAL_INT_MESSAGE(1,1, "Queue enqueue more failed\n");
+  queue_free(queue);
+}
+
+static void test_queueDequeue(){
+  queue_o* queue = queue_new();
+  queue_enqueue(queue, new_int(5));
+  queue_enqueue(queue, new_int(4));
+  queue_enqueue(queue, new_int(3));
+  queue_dequeue(queue);
+  TEST_ASSERT_EQUAL_INT(2, queue_size(queue));
+  TEST_ASSERT_EQUAL_INT_MESSAGE(1,1, "Queue dequeue failed\n");
+  queue_free(queue);
+}
+static void test_queueDequeueAll(){
+  queue_o* queue = queue_new();
+  queue_enqueue(queue, new_int(5));
+  queue_enqueue(queue, new_int(4));
+  queue_enqueue(queue, new_int(3));
+  queue_dequeue(queue);
+  queue_dequeue(queue);
+  queue_dequeue(queue);
+  TEST_ASSERT_EQUAL_INT(0, queue_size(queue));
+  TEST_ASSERT_EQUAL_INT_MESSAGE(1,1, "Queue dequeue all failed\n");
+  queue_free(queue);
+}
+
+static void test_queueSize(){
+  queue_o* queue = queue_new();
+  queue_enqueue(queue, new_int(5));
+  queue_enqueue(queue, new_int(4));
+  queue_enqueue(queue, new_int(3));
+  queue_dequeue(queue);
+  queue_dequeue(queue);
+  TEST_ASSERT_EQUAL_INT(1, queue_size(queue));
+  queue_free(queue);
+}
+
+static void test_queueFrontEmpty() {
+  queue_o* queue = queue_new();
+  TEST_ASSERT_NULL(queue_front(queue));
+  queue_free(queue);
+}
+
+static void test_queueFront() {
+  queue_o* queue = queue_new();
+  queue_enqueue(queue, new_int(5));
+  queue_enqueue(queue, new_int(4));
+  queue_enqueue(queue, new_int(3));
+  TEST_ASSERT_EQUAL_INT(3, *(int*)queue_front(queue));
+  queue_free(queue);
+}
+
+static void test_queueBackEmpty() {
+  queue_o* queue = queue_new();
+  TEST_ASSERT_NULL(queue_back(queue));
+  queue_free(queue);
+}
+
+static void test_queueBack() {
+  queue_o* queue = queue_new();
+  queue_enqueue(queue, new_int(5));
+  queue_enqueue(queue, new_int(4));
+  queue_enqueue(queue, new_int(3));
+  TEST_ASSERT_EQUAL_INT(5, *(int*)queue_back(queue));
+  queue_free(queue);
+}
+
+
 int main() {
   UNITY_BEGIN();
   RUN_TEST(test_listNew);
@@ -401,10 +476,6 @@ int main() {
   RUN_TEST(test_listIsEmpty);
   RUN_TEST(test_listAddEmpty);
   RUN_TEST(test_listAddMore);
-  RUN_TEST(test_listFrontEmpty);
-  RUN_TEST(test_listFront);
-  RUN_TEST(test_listBackEmpty);
-  RUN_TEST(test_listBack);
   RUN_TEST(test_listGetAtFirst);
   RUN_TEST(test_listGetAtLast);
   RUN_TEST(test_listGetAt);
@@ -429,6 +500,21 @@ int main() {
   RUN_TEST(test_listSearchNull);
   RUN_TEST(test_listSearchNotFound);
   RUN_TEST(test_listSearch);
+
+  RUN_TEST(test_queueNew);
+  RUN_TEST(test_queueFree);
+  RUN_TEST(test_queueSizeEmpty);
+  RUN_TEST(test_queueIsEmpty);
+  RUN_TEST(test_queueEnqueueEmpty);
+  RUN_TEST(test_queueEnqueueMore);
+  RUN_TEST(test_queueDequeueAll);
+  RUN_TEST(test_queueDequeue);
+  RUN_TEST(test_queueSize);
+  RUN_TEST(test_queueFrontEmpty);
+  RUN_TEST(test_queueFront);
+  RUN_TEST(test_queueBackEmpty);
+  RUN_TEST(test_queueBack);
+
   return UNITY_END();
 }
 

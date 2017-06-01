@@ -100,16 +100,6 @@ void list_add(list_o *list, void *elem) {
   return;
 }
 
-void* list_front(list_o *list){
-  ASSERT_PARAMETERS_NOT_NULL(list);
-  return (list->head != NULL) ? list->head->elem : NULL;
-}
-
-void* list_back(list_o *list){
-  ASSERT_PARAMETERS_NOT_NULL(list);
-  return (list->tail != NULL) ? list->tail->elem : NULL;
-}
-
 /*potremmo fare se > meta parti dal fondo*/
 void *list_get_at(list_o *list, size_t index){
   size_t count = 0;
@@ -256,6 +246,36 @@ void* list_search(list_o *list, void *elem, ListCompare compare){
   }
   return NULL;
 }
+
+queue_o* queue_new() {
+  return (queue_o*)list_new();
+}
+void queue_free(queue_o* queue) {
+  list_free((list_o*)queue);
+}
+void queue_enqueue(queue_o *queue, void* elem) {
+  list_add((list_o*)queue, elem);
+}
+void* queue_dequeue(queue_o *queue) {
+  void *elem = queue_back(queue);
+  list_remove_at(queue, queue_size(queue)-1);
+  return elem;
+}
+void* queue_front(queue_o *queue) {
+  ASSERT_PARAMETERS_NOT_NULL(queue);
+  return (queue->head != NULL) ? queue->head->elem : NULL;
+}
+void* queue_back(queue_o *queue) {
+  ASSERT_PARAMETERS_NOT_NULL(queue);
+  return (queue->tail != NULL) ? queue->tail->elem : NULL;
+}
+size_t queue_size(queue_o *queue) {
+  return list_size((list_o*)queue);
+}
+int queue_is_empty(queue_o *queue) {
+  return list_is_empty((list_o*)queue);
+}
+
 /*
 void queue_enqueue(queue_o *queue, void* elem){
   ASSERT_PARAMETERS_NOT_NULL(queue);

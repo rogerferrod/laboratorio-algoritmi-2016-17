@@ -20,8 +20,6 @@
 
 
 /* Definition  */
-//typedef struct _node* node_o;
-
 typedef struct _myList list_o;
 
 typedef struct _myList queue_o;
@@ -42,10 +40,6 @@ extern int list_is_empty(list_o *list);
 /* Add elem at the beginning of the list */
 extern void list_add(list_o *list, void *elem);
 
-extern void* list_front(list_o *list);
-
-extern void* list_back(list_o *list);
-
 extern void *list_get_at(list_o *list, size_t index);
 
 /** inserisco elem in modo che quando inserito sarà in posizione index */
@@ -60,3 +54,14 @@ extern size_t list_size(list_o *list);
 extern int list_contains(list_o *list, void *elem, ListCompare compare);
 
 extern void* list_search(list_o *list, void *elem, ListCompare compare);
+
+//funzioni per la coda
+
+extern queue_o* queue_new();
+extern void queue_free(queue_o* queue);
+extern void queue_enqueue(queue_o *queue, void* elem);
+extern void* queue_dequeue(queue_o *queue);
+extern void* queue_front(queue_o *queue);
+extern void* queue_back(queue_o *queue);
+extern size_t queue_size(queue_o *queue);
+extern int queue_is_empty(queue_o *queue);
