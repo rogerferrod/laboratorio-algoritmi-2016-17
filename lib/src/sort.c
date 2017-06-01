@@ -23,9 +23,9 @@ enum pvt_type {random,median,first,last};
 #define PIVOT_TYPE random
 
 #if PIVOT_TYPE == random
-  #define PIVOT_INDEX(first,last) (rand()%(last-first+1)+first)
+  #define PIVOT_INDEX(first,last) (rand()%((last)-(first)+1)+(first))
 #elif PIVOT_TYPE == median
-  #define PIVOT_INDEX(first,last) (((last-first)/2)+first)
+  #define PIVOT_INDEX(first,last) ((((last)-(first))/2)+(first))
 #elif PIVOT_TYPE == first
   #define PIVOT_INDEX(first,last) (first)
 #elif PIVOT_TYPE == last

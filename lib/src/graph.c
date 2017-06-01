@@ -97,10 +97,10 @@ size_t graph_size(graph_o *graph){
 
 void graph_add(graph_o *graph, void *elem){
   ASSERT_PARAMETERS_NOT_NULL(graph);
-  if (graph_contains_vertex(graph, elem)) {//TODO: che faccio se il vertice esiste già?
+  /*if (graph_contains_vertex(graph, elem)) {//TODO: che faccio se il vertice esiste già?
     printf("Vertex already exists.\n");
     //exit(EXIT_FAILURE);
-  }
+    }*/
   hashtable_o *E = hashtable_new(EDGE_CAPACITY, graph->hash, graph->compare);
   hashtable_put(graph->V, elem, E);
   return;
@@ -121,7 +121,7 @@ void graph_connect(graph_o *graph, void *x, void *y, double *weight, int bitmask
     errno = EINVAL;
     exit(EXIT_FAILURE);
   }
-  //TODO: che faccio se l'arco esiste già?
+  //TODO: che faccio se l'arco esiste già? niente:sostitusce
   hashtable_put(E, y, weight);
 
   if((bitmask & NO_DIRECTED) == NO_DIRECTED){
@@ -207,22 +207,20 @@ void graph_edge_iter_next(graph_o *graph, void *elem, graphIterator *iter, void 
 
 double graph_weight(graph_o *graph) {
   ASSERT_PARAMETERS_NOT_NULL(graph);
-  if (graph_is_directed(graph) == 1) {
+  if (graph->directed == DIRECTED) {
     return graph_weight_all(graph);
-  } else {
-    return graph_weight_BFS(graph);
   }
+  return graph_weight_BFS(graph);
 }
 
 int graph_is_directed(graph_o *graph) {
   ASSERT_PARAMETERS_NOT_NULL(graph);
-  return graph->directed == DIRECTED ? 1 : 0;
+  return graph->directed == DIRECTED;
 }
 
 double graph_weight_all(graph_o *graph) {
   ASSERT_PARAMETERS_NOT_NULL(graph);
   double graph_weight = 0.0;
-
   void *elem = NULL;
   void *adj = NULL;
   graphIterator *v_iter = graph_vertex_iter_init(graph);
@@ -234,8 +232,7 @@ double graph_weight_all(graph_o *graph) {
     graphIterator *e_iter = graph_edge_iter_init(graph, elem);
     while(graph_edge_iter_hasNext(graph, elem, e_iter)) {
       graph_edge_iter_next(graph, elem, e_iter, &current_edge, &weight);
-
-        graph_weight += *weight;
+      graph_weight += *weight;
     }
     free(e_iter);
   }
@@ -243,64 +240,7 @@ double graph_weight_all(graph_o *graph) {
 
   return graph_weight;
 }
-/*
-double graph_weight_old(graph_o *graph) {
-  ASSERT_PARAMETERS_NOT_NULL(graph);
 
-  typedef struct {
-      void *v1;
-      void *v2;
-      double *weight;
-  } my_edge;
-
-  double graph_weight = 0.0;
-
-  array_o *array = array_new(graph_order(graph));
-
-  void *elem = NULL;
-  void *adj = NULL;
-  graphIterator *v_iter = graph_vertex_iter_init(graph);
-  while(graph_vertex_iter_hasNext(graph, v_iter)){
-    graph_vertex_iter_next(graph, v_iter, &elem, &adj);
-
-    void *current_edge = NULL;
-    double *weight = NULL;
-    graphIterator *e_iter = graph_edge_iter_init(graph, elem);
-    while(graph_edge_iter_hasNext(graph, elem, e_iter)) {
-      graph_edge_iter_next(graph, elem, e_iter, &current_edge, &weight);
-
-      int exists = 0;
-      for(size_t i=0; i<array_size(array) && !exists; ++i) {
-        my_edge *a =(my_edge*)array_at(array, i);
-        //if ((a->v1 == elem && a->v2 == current_edge) || (a->v1 == current_edge && a->v2 == elem)) {
-        if ((graph_get_key_compare(graph)(a->v1, elem)==0 && graph_get_key_compare(graph)(a->v2, current_edge)==0) ||
-            (graph_get_key_compare(graph)(a->v1, current_edge)==0 && graph_get_key_compare(graph)(a->v2, elem)==0)) {
-          exists = 1;
-        }
-      }
-      if (!exists) {
-        my_edge *e = malloc(sizeof(my_edge));
-        e->v1 = elem;
-        e->v2 = current_edge;
-        e->weight = weight;
-
-        array_insert(array, e);
-
-        graph_weight += *weight;
-      }
-    }
-    free(e_iter);
-  }
-  free(v_iter);
-
-  for(size_t i=0; i<array_size(array); ++i) {
-    free(array_at(array, i));
-  }
-  array_free(array);
-
-  return graph_weight;
-}
-*/
 void set_color(hashtable_o *table, void *vertex, int color){
   int *status = (int*)malloc(sizeof(int)); //da qualche parte bisognerà fare la free di sta roba
   *status = color;
@@ -317,6 +257,57 @@ int get_color(hashtable_o *table, void *vertex){
   printf("HEI!\n");
   return -1;
 }
+
+double graph_weight_BFS(graph_o *graph) {
+  ASSERT_PARAMETERS_NOT_NULL(graph);
+  double graph_weight = 0.0;
+
+  if(graph_order(graph) == 0) {
+    return 0.0;
+  }
+
+  // color [V:color]
+  enum status{black = 0, grey, white};
+  
+  hashtable_o *color = hashtable_new(graph_order(graph), graph->hash, graph->compare);
+  
+  graphIterator *viter = graph_vertex_iter_init(graph);
+  graphIterator *eiter;
+  void *vertex = NULL;
+  void *adj = NULL;
+  void *edge = NULL;
+  double *weight = NULL;
+  queue_o *queue = queue_new();
+
+  while(graph_vertex_iter_hasNext(graph, viter)){
+    graph_vertex_iter_next(graph, viter, &vertex, &adj);
+    set_color(color, vertex, white);
+  }
+
+  viter = graph_vertex_iter_init(graph);
+  graph_vertex_iter_next(graph, viter, &vertex, &adj); //il primo elemento
+
+  set_color(color, vertex, grey); //la visita parte da qua
+  queue_enqueue(queue, vertex);
+
+  while(!queue_is_empty(queue)){
+    void *u = queue_dequeue(queue);
+
+    eiter = graph_edge_iter_init(graph, u);
+    while(graph_edge_iter_hasNext(graph, u, eiter)){ //for each adj di u : not black
+      graph_edge_iter_next(graph, u, eiter, &edge, &weight);
+      if(get_color(color, edge) != black){
+        queue_enqueue(queue, edge);
+        set_color(color, edge, grey);
+        graph_weight += *weight;
+      }
+    }
+    set_color(color, u, black);
+  }
+
+  return graph_weight;
+}
+
 /*
 void graph_BFS(graph_o *graph){
   ASSERT_PARAMETERS_NOT_NULL(graph);
@@ -367,55 +358,4 @@ void graph_BFS(graph_o *graph){
   return;
 }
 */
-double graph_weight_BFS(graph_o *graph) {
-  ASSERT_PARAMETERS_NOT_NULL(graph);
-  double graph_weight = 0.0;
 
-  if(graph_order(graph) == 0) {
-    return 0.0;
-  }
-
-  // color [V:color]
-  enum status{black = 0, grey, white};
-  
-  hashtable_o *color = hashtable_new(graph_order(graph), graph->hash, graph->compare);
-  
-  graphIterator *viter = graph_vertex_iter_init(graph);
-  graphIterator *eiter;
-  void *vertex = NULL;
-  void *adj = NULL;
-  void *edge = NULL;
-  double *weight = NULL;
-  queue_o *queue = queue_new();
-
-  while(graph_vertex_iter_hasNext(graph, viter)){
-    graph_vertex_iter_next(graph, viter, &vertex, &adj);
-    set_color(color, vertex, white);
-  }
-
-  viter = graph_vertex_iter_init(graph);
-  graph_vertex_iter_next(graph, viter, &vertex, &adj); //il primo elemento
-
-  printf("parto da %s che ha colore %d\n", (char*)vertex, get_color(color, vertex));
-  set_color(color, vertex, grey); //la visita parte da qua
-  queue_enqueue(queue, vertex);
-
-  while(!queue_is_empty(queue)){
-    void *u = queue_dequeue(queue);
-    printf("vertex %s\n", (char*)u);
-
-    eiter = graph_edge_iter_init(graph, u);
-    while(graph_edge_iter_hasNext(graph, u, eiter)){ //for each adj di u : not black
-      graph_edge_iter_next(graph, u, eiter, &edge, &weight);
-      if(get_color(color, edge) != black){
-        queue_enqueue(queue, edge);
-        set_color(color, edge, grey);
-        printf("   edge %s, weight %lf\n", (char*)edge, *weight);
-        graph_weight += *weight;
-      }
-    }
-    set_color(color, u, black);
-  }
-
-  return graph_weight;
-}
