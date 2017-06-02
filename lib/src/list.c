@@ -15,14 +15,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
+#include <assert.h>
+#include "lib.h"
 #include "list.h"
-
-/* fare macro per errore malloc */
-
-#define ASSERT_PARAMETERS_NOT_NULL(x) if((x) == NULL){     \
-           fprintf(stderr, "Invalid parameter NULL\n");    \
-           errno = EINVAL;                                 \
-           exit(EXIT_FAILURE);}
 
 
 /*  A generic doubly-linked list */
@@ -43,12 +38,7 @@ struct _myList {
 };
 
 list_o* list_new(){
-  list_o *list = (list_o*)malloc(sizeof(list_o));
-  if(list == NULL){
-    fprintf(stderr, "Not enough space for malloc\n");
-    errno = ENOMEM;
-    exit(EXIT_FAILURE);
-  }
+  list_o *list = (list_o*) xmalloc(sizeof(list_o));
   list->head = NULL;
   list->tail = NULL;
   list->size = 0;
@@ -69,25 +59,24 @@ void list_free(list_o* list){
 }
 
 size_t list_size(list_o *list){
-  ASSERT_PARAMETERS_NOT_NULL(list);
+  assert(list != NULL);
   return list->size;
 }
 
 int list_is_empty(list_o *list){
-  ASSERT_PARAMETERS_NOT_NULL(list);
+  assert(list != NULL);
   return list->size == 0;
 }
 
 void list_add(list_o *list, void *elem) {
-  ASSERT_PARAMETERS_NOT_NULL(list);
-  ASSERT_PARAMETERS_NOT_NULL(elem);
-  list_entry_o *entry = (list_entry_o*)malloc(sizeof(list_entry_o));
-  if (entry == NULL) {
-    fprintf(stderr, "Not enough space for malloc\n");
-    errno = ENOMEM;
+  assert(list != NULL);
+  if(elem == NULL){
+    fprintf(stderr, "Invalid parameters: elem cannot be NULL\n");
+    errno = EINVAL;
     exit(EXIT_FAILURE);
   }
-
+   
+  list_entry_o *entry = (list_entry_o*) xmalloc(sizeof(list_entry_o));
   entry->elem = elem;
   entry->prev = NULL;
   entry->next = list->head;
@@ -98,13 +87,13 @@ void list_add(list_o *list, void *elem) {
     list->tail = entry;
   }
   list->head = entry;
-
   list->size++;
   return;
 }
 
 /*potremmo fare se > meta parti dal fondo*/
 void *list_get_at(list_o *list, size_t index){
+  assert(list != NULL);
   size_t count = 0;
   list_entry_o *node = list->head;
 
@@ -123,9 +112,16 @@ void *list_get_at(list_o *list, size_t index){
 
  /*potremmo fare se > meta parti dal fondo*/
 void list_insert_at(list_o *list, size_t index, void *elem){
+  assert(list != NULL);
   if (index == 0) { //inserisco come primo elemento
     list_add(list, elem);
     return;
+  }
+
+  if(elem == NULL){
+    fprintf(stderr, "Invalid parameters: elem cannot be NULL\n");
+    errno = EINVAL;
+    exit(EXIT_FAILURE);
   }
   
   size_t count = 0;
@@ -142,12 +138,7 @@ void list_insert_at(list_o *list, size_t index, void *elem){
       errno = ENOMEM;
       exit(EXIT_FAILURE);
     } else {  //inserisco come ultimo elemento (dopo list->tail)
-      list_entry_o *node = (list_entry_o*)malloc(sizeof(list_entry_o));
-      if (node == NULL) {
-        fprintf(stderr, "Not enough space for malloc\n");
-        errno = ENOMEM;
-        exit(EXIT_FAILURE);
-      }
+      list_entry_o *node = (list_entry_o*) xmalloc(sizeof(list_entry_o));
       node->prev = list->tail;
       node->next = NULL;
       node->elem = elem;
@@ -158,12 +149,7 @@ void list_insert_at(list_o *list, size_t index, void *elem){
     }
   }
   // inserisco sicuramente tra 2 elementi già esistenti
-  list_entry_o *node = (list_entry_o*)malloc(sizeof(list_entry_o));
-   if (node == NULL) {
-     fprintf(stderr, "Not enough space for malloc\n");
-     errno = ENOMEM;
-     exit(EXIT_FAILURE);
-   }
+  list_entry_o *node = (list_entry_o*) xmalloc(sizeof(list_entry_o));
   node->prev = current->prev;
   node->next = current;
   node->elem = elem;
@@ -176,6 +162,8 @@ void list_insert_at(list_o *list, size_t index, void *elem){
 }
 
 void list_remove_at(list_o *list, size_t index){
+  assert(list != NULL);
+  
   size_t count = 0;
   list_entry_o *current = list->head;
 
@@ -206,8 +194,13 @@ void list_remove_at(list_o *list, size_t index){
 }
 
 void list_set_at(list_o *list, size_t index, void *elem){
-  ASSERT_PARAMETERS_NOT_NULL(list);
-  ASSERT_PARAMETERS_NOT_NULL(elem);
+  assert(list != NULL);
+  if(elem == NULL){
+    fprintf(stderr, "Invalid parameters: elem cannot be NULL\n");
+    errno = EINVAL;
+    exit(EXIT_FAILURE);
+  }
+  
   size_t count = 0;
   list_entry_o *current = list->head;
 
@@ -226,6 +219,8 @@ void list_set_at(list_o *list, size_t index, void *elem){
 }
 
 int list_contains(list_o *list, void *elem, ListCompare compare){
+  assert(list != NULL);
+  
   list_entry_o *head = list->head;
   while(head != NULL){
     if(compare(head->elem, elem) == 0){
@@ -237,9 +232,9 @@ int list_contains(list_o *list, void *elem, ListCompare compare){
 }
 
 void* list_search(list_o *list, void *elem, ListCompare compare){
-  ASSERT_PARAMETERS_NOT_NULL(list);
-  //ASSERT_PARAMETERS_NOT_NULL(elem);
-  ASSERT_PARAMETERS_NOT_NULL(compare);
+  assert(list != NULL);
+  assert(compare != NULL);
+  
   list_entry_o *head = list->head;
   while(head != NULL){
     if(compare(head->elem, elem) == 0){
@@ -259,8 +254,9 @@ void queue_free(queue_o* queue) {
 }
 
 void queue_enqueue(queue_o *queue, void* elem) {
-  ASSERT_PARAMETERS_NOT_NULL(queue);
-  queue_entry_o *entry = (queue_entry_o*)malloc(sizeof(queue_entry_o));
+  assert(queue != NULL);
+  
+  queue_entry_o *entry = (queue_entry_o*) xmalloc(sizeof(queue_entry_o));
   entry->prev = queue->tail;
   entry->next = NULL;
   entry->elem = elem;
@@ -273,7 +269,8 @@ void queue_enqueue(queue_o *queue, void* elem) {
 }
 
 void* queue_dequeue(queue_o *queue) {
-  ASSERT_PARAMETERS_NOT_NULL(queue);
+  assert(queue != NULL);
+  
   queue_entry_o *entry = queue->tail;
   void *elem = entry->elem;
   queue->tail = entry->prev;
@@ -286,12 +283,12 @@ void* queue_dequeue(queue_o *queue) {
 }
 
 void* queue_front(queue_o *queue) {
-  ASSERT_PARAMETERS_NOT_NULL(queue);
+  assert(queue != NULL);
   return (queue->head != NULL) ? queue->head->elem : NULL;
 }
 
 void* queue_back(queue_o *queue) {
-  ASSERT_PARAMETERS_NOT_NULL(queue);
+  assert(queue != NULL);
   return (queue->tail != NULL) ? queue->tail->elem : NULL;
 }
 

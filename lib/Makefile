@@ -36,6 +36,7 @@ build_list: build/list.o
 build_hash: build/hash.o
 build_graph: build/graph.o
 build_kruskal: build/kruskal.o
+build_lib: build/lib.o
 
 # compila e esegue i test
 tests: tests_graph
@@ -98,26 +99,26 @@ docs_heap: src/edu/unito/heap/*.java
 build/%.o: src/%.c $(C_COMMON_DEPS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-bin/array_tests: build/array_tests.o build/array.o build/unity.o $(C_COMMON_DEPS)
-	$(CC) -o bin/array_tests  build/array_tests.o build/array.o build/unity.o
+bin/array_tests: build/array_tests.o build/array.o build/lib.o build/unity.o $(C_COMMON_DEPS)
+	$(CC) -o bin/array_tests  build/array_tests.o build/array.o build/lib.o build/unity.o
 
-bin/sort_tests: build/sort_tests.o build/sort.o build/array.o build/unity.o $(C_COMMON_DEPS)
-	$(CC) -o bin/sort_tests build/sort_tests.o build/sort.o build/array.o build/unity.o
+bin/sort_tests: build/sort_tests.o build/sort.o build/array.o build/lib.o build/unity.o $(C_COMMON_DEPS)
+	$(CC) -o bin/sort_tests build/sort_tests.o build/sort.o build/array.o build/lib.o build/unity.o
 
-bin/set_tests: build/set_tests.o build/set.o build/unity.o $(C_COMMON_DEPS)
-	$(CC) -o bin/set_tests build/set_tests.o build/set.o build/unity.o
+bin/set_tests: build/set_tests.o build/set.o build/lib.o build/unity.o $(C_COMMON_DEPS)
+	$(CC) -o bin/set_tests build/set_tests.o build/set.o build/lib.o build/unity.o
 
-bin/list_tests: build/list_tests.o build/list.o build/unity.o $(C_COMMON_DEPS)
-	$(CC) -o bin/list_tests build/list_tests.o build/list.o build/unity.o
+bin/list_tests: build/list_tests.o build/list.o build/lib.o build/unity.o $(C_COMMON_DEPS)
+	$(CC) -o bin/list_tests build/list_tests.o build/list.o build/lib.o build/unity.o
 
-bin/hash_tests: build/hash_tests.o build/hash.o build/list.o build/unity.o $(C_COMMON_DEPS)
-	$(CC) -o bin/hash_tests build/hash_tests.o build/hash.o build/list.o build/unity.o
+bin/hash_tests: build/hash_tests.o build/hash.o build/list.o build/lib.o build/unity.o $(C_COMMON_DEPS)
+	$(CC) -o bin/hash_tests build/hash_tests.o build/hash.o build/list.o build/lib.o build/unity.o
 
-bin/graph_tests: build/graph_tests.o build/graph.o build/hash.o build/list.o build/array.o build/unity.o $(C_COMMON_DEPS)
-	$(CC) -o bin/graph_tests build/graph_tests.o build/graph.o build/hash.o build/list.o build/array.o build/unity.o
+bin/graph_tests: build/graph_tests.o build/graph.o build/hash.o build/list.o build/array.o build/lib.o build/unity.o $(C_COMMON_DEPS)
+	$(CC) -o bin/graph_tests build/graph_tests.o build/graph.o build/hash.o build/list.o build/array.o build/lib.o build/unity.o
 
-bin/kruskal_tests: build/kruskal_tests.o build/kruskal.o build/graph.o build/array.o build/list.o build/set.o build/hash.o build/sort.o build/unity.o $(C_COMMON_DEPS)
-	$(CC) -o bin/kruskal_tests build/kruskal_tests.o build/kruskal.o build/graph.o build/array.o build/list.o build/set.o build/hash.o build/sort.o build/unity.o
+bin/kruskal_tests: build/kruskal_tests.o build/kruskal.o build/graph.o build/array.o build/list.o build/set.o build/hash.o build/sort.o build/lib.o build/unity.o $(C_COMMON_DEPS)
+	$(CC) -o bin/kruskal_tests build/kruskal_tests.o build/kruskal.o build/graph.o build/array.o build/list.o build/set.o build/hash.o build/sort.o build/lib.o build/unity.o
 
 
 clean:

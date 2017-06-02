@@ -15,6 +15,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
+#include <assert.h>
+#include "lib.h"
 #include "set.h"
 
 /* Implementation of the opaque type */
@@ -25,30 +27,26 @@ struct _mySet {
 };
 
 set_o* make_set(void* elem){
-  set_o *set = (set_o*)malloc(sizeof(set_o));
-  if(set == NULL){
-    fprintf(stderr, "Not enough memory for malloc\n");
-    errno = ENOMEM;
-    exit(EXIT_FAILURE);
-  }
+  set_o *set = (set_o*) xmalloc(sizeof(set_o));
   set->parent = set;
   set->rank = 0;
   set->elem = elem;
   return set;
 }
 
-void union_set(set_o *x, set_o *y) {
-  if(x == NULL || y == NULL){
-    fprintf(stderr, "Invalid parameter NULL\n");
-    errno = EINVAL;
-    exit(EXIT_FAILURE);
-  }
+set_o* find_set(set_o *x) {
+  assert(x != NULL);
   
-  link_set(find_set(x), find_set(y));
-  return;
+  while(x != x->parent){
+    x = x->parent;
+  }
+  return x;
 }
 
 void link_set(set_o *x, set_o *y) {  
+  assert(x != NULL);
+  assert(y != NULL);
+
   if(x->rank > y->rank){
     y->parent = x;
   }
@@ -61,17 +59,9 @@ void link_set(set_o *x, set_o *y) {
   return;
 }
 
-set_o* find_set(set_o *x) {
-  if(x == NULL){
-    fprintf(stderr, "Invalid parameter NULL\n");
-    errno = EINVAL;
-    exit(EXIT_FAILURE);
-  }
-  
-  while(x != x->parent){
-    x = x->parent;
-  }
-  return x;
+void union_set(set_o *x, set_o *y) {
+  link_set(find_set(x), find_set(y));
+  return;
 }
 
 void free_set(set_o *set) {
