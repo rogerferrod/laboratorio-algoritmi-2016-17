@@ -17,13 +17,13 @@ all: build_all
 # compila (grazie alla dipendenza) i sorgenti (crea i binari e i file .class)
 build: build_kruskal
 build_all: build_es1 build_es2 build_es3 build_es4 build_es5
-build_es1: build_array build_sort
+build_es1: build_lib build_array build_sort
 build_es2: build_tree build_es2_jar
 build_es2_jar:
 	jar cf bin/Tree.jar -C src edu/unito/
 build_es3: build_heap
-build_es4: build_set
-build_es5: build_list build_hash build_graph build_kruskal
+build_es4: build_lib build_set
+build_es5: build_lib build_array build_sort build_set build_list build_hash build_graph build_kruskal
 
 build_array: build/array.o
 build_sort: build/sort.o
@@ -48,7 +48,7 @@ tests_es4: tests_set
 tests_es5: tests_list tests_hash tests_graph tests_kruskal
 
 #compila i test
-tests_build_all: tests_build_array tests_build_sort tests_build_tree tests_build_heap tests_build_set tests_build_list tests_build_hash tests_build_queue tests_build_graph tests_build_hash tests_build_kruskal
+tests_build_all: tests_build_array tests_build_sort tests_build_tree tests_build_heap tests_build_set tests_build_list tests_build_hash tests_build_graph tests_build_hash tests_build_kruskal
 tests_build_array: bin/array_tests
 tests_build_sort: bin/sort_tests
 tests_build_tree: build_tree src/edu/unito/tree/TreeTests.java

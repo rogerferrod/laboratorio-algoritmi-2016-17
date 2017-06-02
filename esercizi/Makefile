@@ -12,7 +12,7 @@ CFLAGS = -g -Wall -pedantic -Wno-padded -std=c99 -O3 -march=native
 INCLUDES = src/*.h
 
 # Tutti i target vanno ricompilati se cambiano gli header o questo Makefile
-COMMON_DEPS = $(INCLUDES) Makefile
+#COMMON_DEPS = $(INCLUDES) Makefile
 COMMON_DEPS = Makefile
 JAVA_COMPILE_PARAMS = -d bin/ -Xlint:all -Xdiags:verbose -cp .:../lib/bin/Tree.jar
 JAVA_RUN_PARAMS = -cp bin:../lib/bin/Tree.jar
@@ -58,14 +58,14 @@ exec_es5: #compile_es5
 build/%.o: src/%.c $(COMMON_DEPS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-bin/esercizio1: build/esercizio1.o $(COMMON_DEPS)
-	$(CC) -o bin/esercizio1 build/esercizio1.o ../lib/build/array.o ../lib/build/sort.o
+bin/esercizio1: src/esercizio1.c build/esercizio1.o $(COMMON_DEPS)
+	$(CC) -o bin/esercizio1 build/esercizio1.o ../lib/build/array.o ../lib/build/sort.o ../lib/build/lib.o
 
 bin/esercizio2: src/esercizio2.java
 	javac $(JAVA_COMPILE_PARAMS) src/esercizio2.java
 
-bin/esercizio5: build/esercizio5.o $(COMMON_DEPS)
-	$(CC) -o bin/esercizio5 build/esercizio5.o ../lib/build/graph.o ../lib/build/hash.o ../lib/build/list.o ../lib/build/queue.o ../lib/build/array.o
+bin/esercizio5: src/esercizio5.c build/esercizio5.o $(COMMON_DEPS)
+	$(CC) -o bin/esercizio5 build/esercizio5.o ../lib/build/graph.o ../lib/build/hash.o ../lib/build/list.o ../lib/build/array.o ../lib/build/sort.o ../lib/build/lib.o
 
 clean:
 	rm -fr build/* bin/*
