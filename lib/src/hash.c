@@ -103,8 +103,7 @@ void hashtable_free(hashtable_o *table){
 
 int cmp(void *a, void *b) {
   hash_entry *h1 = (hash_entry*)a;
-  hash_entry *h2 = (hash_entry*)b;
-  return h1->key_compare(h1->key, h2->key);
+  return h1->key_compare(h1->key, b);
 }
 
 void* hashtable_find(hashtable_o *table, void *key){
@@ -115,13 +114,7 @@ void* hashtable_find(hashtable_o *table, void *key){
   if(list == NULL){
     return NULL;
   }
-  hash_entry *entry = malloc(sizeof(hash_entry));
-  entry->key = key;
-//  hash_entry *elem = (hash_entry*)list_search(list, entry, table->key_compare);
-  hash_entry *elem = (hash_entry*)list_search(list, entry, cmp);
-  //printf("#hashtable_find: key = %s ? %s\n", (char*)key, (elem != NULL) ? "OK" : "NO");
-  //printf("#hashtable_find: elem = %s\n", (char*)(key));
-  free(entry);
+  hash_entry *elem = (hash_entry*)list_find(list, key, cmp);
   return elem != NULL? elem->value : NULL;
 }
 
@@ -131,7 +124,6 @@ void hashtable_put(hashtable_o *table, void *key, void *value){
   assert(key != NULL);
 
   size_t index = table->hash(key) % array_h_capacity(table->T);
-  //printf("#hashtable_put: index = %ld\n", (unsigned long)index);
   list_o *list = array_h_at(table->T, index);
 
   hash_entry *entry = (hash_entry*) xmalloc(sizeof(hash_entry));
@@ -140,23 +132,19 @@ void hashtable_put(hashtable_o *table, void *key, void *value){
   entry->key_compare = table->key_compare;
 
   if(list == NULL){
-    //printf("#hashtable_put: table at hash position NULL\n");
     list = list_new();
     list_add(list, entry);
     array_h_insert_at(table->T, index, list);
-    //list_print(list);
   } else {
     for(size_t i=0; i<list_size(list); ++i) {
       hash_entry *tmp = list_get_at(list, i);
       if (table->key_compare(key, tmp->key)==0) {
         list_set_at(list, i, entry);
-        //list_print(list);
         return; //ho aggiornato la lista, posso uscire
       }
     }
     //non ho aggiornato la lista: inserisco
     list_add(list, entry);
-    //list_print(list);
   }
   table->size++;
   table->load_factor = (float)table->size / array_h_capacity(table->T);
@@ -275,8 +263,10 @@ void hashtable_iter_next(hashtable_o *table, iterator *iter, void **key, void **
   *key = entry->key;  //e' possibile copiare  valori?
   *value = entry->value; //invece di passare un puntatore che è modificabile?
 
+  size_t array_h_cap = array_h_capacity(table->T);
+
   /* si sposta al successivo */
-  size_t index = table->hash(*key)% array_h_capacity(table->T);
+  size_t index = table->hash(*key) % array_h_cap;
   list = array_h_at(table->T, index);
   for(size_t i = 0; i < list_size(list); ++i){
     entry = list_get_at(list, i);
@@ -290,7 +280,7 @@ void hashtable_iter_next(hashtable_o *table, iterator *iter, void **key, void **
   }
 
   /* se non e' nella lista riprovo sull'array */
-  for(size_t i = index + 1; i < array_h_capacity(table->T); ++i){
+  for(size_t i = index + 1; i < array_h_cap; ++i){
     list = array_h_at(table->T, i);
     if(list != NULL){
       entry = list_get_at(list, 0);

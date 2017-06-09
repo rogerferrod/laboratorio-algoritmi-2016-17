@@ -53,7 +53,9 @@ extern size_t list_size(list_o *list);
 
 extern int list_contains(list_o *list, void *elem, ListCompare compare);
 
-extern void* list_search(list_o *list, void *elem, ListCompare compare);
+extern void* list_find(list_o *list, void *elem, ListCompare compare);
+
+extern void* list_search(list_o *list, void *key, ListCompare compare);
 
 //funzioni per la coda
 
@@ -72,5 +74,3 @@ extern void* queue_back(queue_o *queue);
 extern size_t queue_size(queue_o *queue);
 
 extern int queue_is_empty(queue_o *queue);
-
-extern void list_print(list_o *list);

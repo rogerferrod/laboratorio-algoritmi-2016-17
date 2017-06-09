@@ -354,48 +354,48 @@ static void test_listContains(){
   list_free(list);
 }
 
-static void test_listSearchFirst(){
+static void test_listFindFirst(){
   list_o *list = list_new();
   list_add(list, new_int(3));
   list_add(list, new_int(2));
   list_add(list, new_int(1));
-  TEST_ASSERT_EQUAL_INT(3, *(int*)list_search(list, new_int(3), compare_int_ptr));
+  TEST_ASSERT_EQUAL_INT(3, *(int*)list_find(list, new_int(3), compare_int_ptr));
 
   free_fixture(list);
   list_free(list);
 }
 
-static void test_listSearchEmpty(){
+static void test_listFindEmpty(){
   list_o *list = list_new();
-  TEST_ASSERT_NULL(list_search(list, new_int(3), compare_int_ptr));
+  TEST_ASSERT_NULL(list_find(list, new_int(3), compare_int_ptr));
   list_free(list);
 }
 
-static void test_listSearchNull(){
+static void test_listFindNull(){
   list_o *list = list_new();
-  TEST_ASSERT_NULL(list_search(list, NULL, compare_int_ptr));
+  TEST_ASSERT_NULL(list_find(list, NULL, compare_int_ptr));
   list_free(list);
 }
 
-static void test_listSearchNotFound(){
+static void test_listFindNotFound(){
   list_o *list = list_new();
   list_add(list, new_int(3));
   list_add(list, new_int(2));
   list_add(list, new_int(1));
-  TEST_ASSERT_NULL(list_search(list, new_int(0), compare_int_ptr));
+  TEST_ASSERT_NULL(list_find(list, new_int(0), compare_int_ptr));
 
   free_fixture(list);
   list_free(list);
 }
 
-static void test_listSearch(){
+static void test_listFind(){
   list_o *list = list_new();
   list_add(list, new_int(3));
   list_add(list, new_int(2));
   list_add(list, new_int(1));
-  TEST_ASSERT_EQUAL_INT(3, *(int*)list_search(list, new_int(3), compare_int_ptr));
-  TEST_ASSERT_EQUAL_INT(2, *(int*)list_search(list, new_int(2), compare_int_ptr));
-  TEST_ASSERT_NULL(list_search(list, new_int(5), compare_int_ptr));
+  TEST_ASSERT_EQUAL_INT(3, *(int*)list_find(list, new_int(3), compare_int_ptr));
+  TEST_ASSERT_EQUAL_INT(2, *(int*)list_find(list, new_int(2), compare_int_ptr));
+  TEST_ASSERT_NULL(list_find(list, new_int(5), compare_int_ptr));
 
   free_fixture(list);
   list_free(list);
@@ -548,11 +548,11 @@ int main() {
   RUN_TEST(test_listSizeAfterRemove);
   RUN_TEST(test_listContainsEmpty);
   RUN_TEST(test_listContains);
-  RUN_TEST(test_listSearchFirst);
-  RUN_TEST(test_listSearchEmpty);
-  RUN_TEST(test_listSearchNull);
-  RUN_TEST(test_listSearchNotFound);
-  RUN_TEST(test_listSearch);
+  RUN_TEST(test_listFindFirst);
+  RUN_TEST(test_listFindEmpty);
+  RUN_TEST(test_listFindNull);
+  RUN_TEST(test_listFindNotFound);
+  RUN_TEST(test_listFind);
 
   RUN_TEST(test_queueNew);
   RUN_TEST(test_queueFree);

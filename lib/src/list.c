@@ -231,23 +231,37 @@ int list_contains(list_o *list, void *elem, ListCompare compare){
   return 0;
 }
 
-void* list_search(list_o *list, void *elem, ListCompare compare){
+void* list_find(list_o *list, void *elem, ListCompare compare){
   assert(list != NULL);
-  assert(elem != NULL);
+  //assert(elem != NULL);
   assert(compare != NULL);
   
   list_entry_o *head = list->head;
   while(head != NULL){
     if(compare(head->elem, elem) == 0){
-      //printf("£list_search: found, return %s\n", (char*)head->elem);
       return head->elem;
     }
     head = head->next;
   }
-  //printf("£list_search: printing all list\n");
-  //list_print(list);
 
   return NULL;
+}
+
+void* list_search(list_o *list, void *key, ListCompare compare) {
+  assert(list != NULL);
+  //assert(key != NULL);
+  assert(compare != NULL);
+
+  list_entry_o *head = list->head;
+  while(head != NULL){
+    if(compare(head->elem, key) == 0){
+      return head->elem;
+    }
+    head = head->next;
+  }
+
+  return NULL;
+
 }
 
 queue_o* queue_new() {
