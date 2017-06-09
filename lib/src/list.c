@@ -246,27 +246,6 @@ void* list_find(list_o *list, void *elem, ListCompare compare){
   return NULL;
 }
 
-/* l'idea è che action ritorna 0 se passa quella condizione*/
-/* se la passa vuol dire che devi restituire quell elemento */
-/* quindi ricapitolando: ritornami l'elemento che soddisfa quel requisito */
-/* ah dimenticavo: action ha due parametri */
-void* list_lookup(list_o *list, void *param, Procedure action) {
-  assert(list != NULL);
-  //* param è il parametro da passare a action */
-  assert(action != NULL);
-
-  list_entry_o *head = list->head;
-  while(head != NULL){
-    if(action(head->elem, param) == 0){
-      return head->elem;
-    }
-    head = head->next;
-  }
-
-  return NULL;
-
-}
-
 queue_o* queue_new() {
   return (queue_o*)list_new();
 }
