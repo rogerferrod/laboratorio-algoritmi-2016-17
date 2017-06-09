@@ -18,9 +18,6 @@
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
-//#include "../../lib/src/array.h"
-//#include "../../lib/src/sort.h"
-//#include "../../lib/src/hash.h"
 #include "../../lib/src/graph.h"
 #include "../../lib/src/kruskal.h"
 #include "../../lib/src/lib.h"
@@ -37,40 +34,26 @@ typedef struct {
 
 static size_t djb2a(void* str) {
   return (size_t)strlen((char*)str);
-/*
-  size_t hash = 5381;
+  /*size_t hash = 5381;
   int c;
   char* my_str = (char*)str;
   while((c = *my_str)==1){
     (*my_str)++;
     hash = ((hash << 5) + hash) ^ c; // hash * 33 ^ c
   }
-  return hash;
-*/
+  return hash;*/
 }
 
 static int compare_str(void *x, void *y){
   return strcmp((char*)x, (char*)y);
 }
-/*
-static int* new_int(int value) {
-  int* elem = (int*) malloc(sizeof(int));
-  *elem = value;
-  return elem;
-}
-*/
+
 static double* new_double(double value) {
   double* elem = (double*) malloc(sizeof(double));
   *elem = value;
   return elem;
 }
-/*
-static char** new_string(char* value) {
-  char** elem = (char**)malloc(sizeof(char*)*(strlen(value)+1));
-  strcpy(*elem, value);
-  return elem;
-}
-*/
+
 static void memory_free(graph_o *graph){
 //  record *elem;
 //  size_t i;
@@ -143,35 +126,27 @@ static graph_o *graph_load(char *path, int max_record_read) {
 
   count = 0;
   while (count < max_record_read && fgets(buffer, buff_size, file) != NULL) {
-  //while (count < 10 && fgets(buffer, buff_size, file) != NULL) {
     record *row;
     row = record_load(buffer);
-    //printf("[%d]  %s -> %s (%lf)-------------\n", count, row->field1, row->field2, *row->field3);
 
-    void *k1 = graph_contains_vertex(graph, row->field1);
-    //printf("[%d] k1 == NULL ? %d\n", count, k1 == NULL);
-    if (k1 == NULL || graph_get_key_compare(graph)(k1, row->field1) != 0) {
-//    if(!graph_contains_vertex(graph, row->field1)){
+    //void *k1 = graph_contains_vertex(graph, row->field1);
+    // if (k1 == NULL || graph_get_key_compare(graph)(k1, row->field1) != 0) {    //non l'ho capita
+    if(!graph_contains_vertex(graph, row->field1)){
       //printf("[%d]  - graph NOT contains_vertex %s\n", count, row->field1);
       graph_add(graph, row->field1);
       //printf("[%d]  - graph added %s\n", count, row->field1);
-    } else {
-      //printf("[%d]  - graph contains_vertex %s\n", count, row->field1);
     }
 
-    void *k2 = graph_contains_vertex(graph, row->field2);
+    //void *k2 = graph_contains_vertex(graph, row->field2);
     //printf("[%d] k2 == NULL ? %d\n", count, k2 == NULL);
-    if (k2 == NULL || graph_get_key_compare(graph)(k2, row->field2) != 0) {
-//    if(!graph_contains_vertex(graph, row->field2)){
+    //if (k2 == NULL || graph_get_key_compare(graph)(k2, row->field2) != 0) {
+    if(!graph_contains_vertex(graph, row->field2)){
       //printf("[%d]  - graph NOT contains_vertex %s\n", count, row->field2);
       graph_add(graph, row->field2);
       //printf("[%d]  - graph added %s\n", count, row->field2);
-    } else {
-      //printf("[%d]  - graph contains_vertex %s\n", count, row->field2);
     }
 
     graph_connect(graph, row->field1, row->field2, row->field3, NO_DIRECTED);
-    //graph_connect(graph, row->field1, row->field2, new_double(0.5), NO_DIRECTED);
     
     count++;
   }
@@ -208,7 +183,6 @@ int main(int argc, char *argv[]) {
   graph = graph_load(argv[1], max_record_read);
   TIMER_STOP(timer, "graph load");
 
-  //printf("graph != NULL? %d\n", graph != NULL);
   fprintf(stdout, "calculating graph order & size...\n");
   TIMER_START(timer);
   size_t g_order = graph_order(graph);
@@ -222,17 +196,10 @@ int main(int argc, char *argv[]) {
   TIMER_STOP(timer, "graph weight");
   printf("graph: weight = %lf\n", g_weight);
 
-/*
-  graphIterator *vIter = graph_vertex_iter_init(graph);
-  void *elem, *adj;
-  while(graph_vertex_iter_hasNext(graph, vIter)) {
-    graph_vertex_iter_next(graph, vIter, &elem, &adj);
-    printf("%s\n", (char*)elem);
-  }
-  free(vIter);
-*/
-
+  fprintf(stdout, "kuscal...\n");
+  TIMER_START(timer);
   graph_o *min = kruskal(graph);
+  TIMER_STOP(timer, "kruscal");
 
   fprintf(stdout, "calculation kruskal graph order & size...\n");
   TIMER_START(timer);
