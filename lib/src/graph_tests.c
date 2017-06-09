@@ -184,7 +184,8 @@ static void test_graphConnectSimpleNoOriented(){
 static void test_graphContainsVertex(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
-  TEST_ASSERT_EQUAL_INT(1, graph_contains_vertex(graph, "A"));
+//  TEST_ASSERT_EQUAL_INT(1, graph_contains_vertex(graph, "A"));
+  TEST_ASSERT_NOT_NULL(graph_contains_vertex(graph, "A"));
 
   free_fixture(graph);
   graph_free(graph);

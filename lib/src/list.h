@@ -72,3 +72,5 @@ extern void* queue_back(queue_o *queue);
 extern size_t queue_size(queue_o *queue);
 
 extern int queue_is_empty(queue_o *queue);
+
+extern void list_print(list_o *list);

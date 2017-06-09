@@ -65,7 +65,7 @@ bin/esercizio2: src/esercizio2.java
 	javac $(JAVA_COMPILE_PARAMS) src/esercizio2.java
 
 bin/esercizio5: src/esercizio5.c build/esercizio5.o $(COMMON_DEPS)
-	$(CC) -o bin/esercizio5 build/esercizio5.o ../lib/build/graph.o ../lib/build/hash.o ../lib/build/list.o ../lib/build/array.o ../lib/build/sort.o ../lib/build/lib.o
+	$(CC) -o bin/esercizio5 build/esercizio5.o ../lib/build/kruskal.o ../lib/build/set.o ../lib/build/graph.o ../lib/build/hash.o ../lib/build/list.o ../lib/build/array.o ../lib/build/sort.o ../lib/build/lib.o
 
 clean:
 	rm -fr build/* bin/*

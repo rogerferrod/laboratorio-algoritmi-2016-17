@@ -14,6 +14,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <errno.h>
 #include "assert.h"
 #include "lib.h"
@@ -38,11 +39,6 @@ struct _myHashtable {
   KeyCompare key_compare;
   float load_factor;
 };
-
-typedef struct _myHashEntry{
-  void *key;
-  void *value;
-}hash_entry;
 
 
 void hashtable_expand(hashtable_o *table);
@@ -100,8 +96,15 @@ void hashtable_free(hashtable_o *table){
   return;
 }
 
+int cmp(void *a, void *b) {
+  hash_entry *h1 = (hash_entry*)a;
+  hash_entry *h2 = (hash_entry*)b;
+  return strcmp(h1->key, h2->key);
+}
+
 void* hashtable_find(hashtable_o *table, void *key){
   assert(table != NULL);
+  assert(key != NULL);
   size_t index = table->hash(key) % array_h_capacity(table->T);
   list_o *list = array_h_at(table->T, index);
   if(list == NULL){
@@ -109,7 +112,10 @@ void* hashtable_find(hashtable_o *table, void *key){
   }
   hash_entry *entry = malloc(sizeof(hash_entry));
   entry->key = key;
-  hash_entry *elem = (hash_entry*)list_search(list, entry, table->key_compare);
+//  hash_entry *elem = (hash_entry*)list_search(list, entry, table->key_compare);
+  hash_entry *elem = (hash_entry*)list_search(list, entry, cmp);
+  //printf("#hashtable_find: key = %s ? %s\n", (char*)key, (elem != NULL) ? "OK" : "NO");
+  //printf("#hashtable_find: elem = %s\n", (char*)(key));
   free(entry);
   return elem != NULL? elem->value : NULL;
 }
@@ -120,6 +126,7 @@ void hashtable_put(hashtable_o *table, void *key, void *value){
   assert(key != NULL);
 
   size_t index = table->hash(key) % array_h_capacity(table->T);
+  //printf("#hashtable_put: index = %ld\n", (unsigned long)index);
   list_o *list = array_h_at(table->T, index);
 
   hash_entry *entry = (hash_entry*) xmalloc(sizeof(hash_entry));
@@ -127,19 +134,23 @@ void hashtable_put(hashtable_o *table, void *key, void *value){
   entry->value = value;
 
   if(list == NULL){
+    //printf("#hashtable_put: table at hash position NULL\n");
     list = list_new();
     list_add(list, entry);
     array_h_insert_at(table->T, index, list);
+    //list_print(list);
   } else {
     for(size_t i=0; i<list_size(list); ++i) {
       hash_entry *tmp = list_get_at(list, i);
-      if (tmp != NULL && table->key_compare(key, tmp->key)==0) {
+      if (table->key_compare(key, tmp->key)==0) {
         list_set_at(list, i, entry);
+        //list_print(list);
         return; //ho aggiornato la lista, posso uscire
       }
     }
     //non ho aggiornato la lista: inserisco
     list_add(list, entry);
+    //list_print(list);
   }
   table->size++;
   table->load_factor = (float)table->size / array_h_capacity(table->T);

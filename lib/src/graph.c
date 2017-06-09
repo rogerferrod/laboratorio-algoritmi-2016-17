@@ -91,6 +91,7 @@ size_t graph_size(graph_o *graph){
 
 void graph_add(graph_o *graph, void *elem){
   assert(graph != NULL);
+  assert(elem != NULL);
   hashtable_o *E = hashtable_new(EDGE_CAPACITY, graph->hash, graph->compare);
   hashtable_put(graph->V, elem, E);
   return;
@@ -120,9 +121,14 @@ void graph_connect(graph_o *graph, void *x, void *y, double *weight, int bitmask
   return;
 }
 
-int graph_contains_vertex(graph_o *graph, void *v){
+void* graph_contains_vertex(graph_o *graph, void *v){
   assert(graph != NULL);
-  return hashtable_find(graph->V, v) != NULL;
+  assert(v != NULL);
+  //printf("@graph_contains_vertex: v = %s\n", (char*)v);
+  void *find = hashtable_find(graph->V, v);
+  //printf("@graph_contains_vertex: find = %s\n", (char*)find);
+  return (find != NULL) ? v : NULL;
+//  return hashtable_find(graph->V, v) != NULL;
 }
 
 int graph_contains_edge(graph_o *graph, void *v1, void *v2){

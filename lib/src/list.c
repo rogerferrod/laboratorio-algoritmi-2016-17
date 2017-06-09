@@ -18,6 +18,7 @@
 #include <assert.h>
 #include "lib.h"
 #include "list.h"
+#include "hash.h"
 
 
 /*  A generic doubly-linked list */
@@ -233,16 +234,32 @@ int list_contains(list_o *list, void *elem, ListCompare compare){
 
 void* list_search(list_o *list, void *elem, ListCompare compare){
   assert(list != NULL);
+  assert(elem != NULL);
   assert(compare != NULL);
   
   list_entry_o *head = list->head;
   while(head != NULL){
     if(compare(head->elem, elem) == 0){
+      //printf("£list_search: found, return %s\n", (char*)head->elem);
       return head->elem;
     }
     head = head->next;
   }
+  //printf("£list_search: printing all list\n");
+  //list_print(list);
+
   return NULL;
+}
+
+void list_print(list_o *list) {
+  assert(list != NULL);
+  list_entry_o *item = list->head;
+  printf("£list:");
+  while (item != NULL) {
+    printf(", %s", (char*)(((hash_entry*)(item->elem))->key));
+    item = item->next;
+  }
+  printf(" :END:\n");
 }
 
 queue_o* queue_new() {

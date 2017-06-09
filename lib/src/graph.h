@@ -48,7 +48,7 @@ extern void graph_add(graph_o *graph, void *elem);
 
 extern void graph_connect(graph_o *graph, void *x, void *y, double *weight, int bitmask);
 
-extern int graph_contains_vertex(graph_o *graph, void *v);
+extern void* graph_contains_vertex(graph_o *graph, void *v);
 
 extern int graph_contains_edge(graph_o *graph, void *v1, void *v2);
 

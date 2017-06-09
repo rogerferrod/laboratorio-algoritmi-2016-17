@@ -24,7 +24,6 @@
 #include "graph.h"
 #include "kruskal.h"
 
-
 typedef struct {
     void *v1;
     void *v2;
@@ -41,17 +40,24 @@ static int compare_weight(void* elem1, void* elem2) {
 
 graph_o* kruskal(graph_o *graph){
   assert(graph != NULL);
+  clock_t timer;
 
   size_t numVertex = graph_order(graph);
   size_t numEdge = graph_size(graph);
 
+  TIMER_START(timer);
   graph_o * min = graph_new(numVertex, graph_get_hash_fnc(graph), graph_get_key_compare(graph));  //A ←∅
-
+  TIMER_STOP(timer, "kruskal: graph_new");
+  TIMER_START(timer);
   hashtable_o *set_dictionary = hashtable_new(numVertex, graph_get_hash_fnc(graph), graph_get_key_compare(graph));
+  TIMER_STOP(timer, "kruskal: hashtable_new");
+  TIMER_START(timer);
   array_o* array = array_new(numEdge);
+  TIMER_STOP(timer, "kruskal: array_new");
   void *elem = NULL;
   void *adj = NULL;
 
+  TIMER_START(timer);
   graphIterator *v_iter = graph_vertex_iter_init(graph);
   while(graph_vertex_iter_hasNext(graph, v_iter)){    //for ∀v ∈ V do
     graph_vertex_iter_next(graph, v_iter, &elem, &adj);
@@ -73,10 +79,15 @@ graph_o* kruskal(graph_o *graph){
     }
     free(edge_iter);
   }
+  free(v_iter);
+  TIMER_STOP(timer, "kruskal: make_set & array_insert");
 
   //ci sono il doppio degli archi perché per esempio c'è sia A-D che D-A
+  TIMER_START(timer);
   quick_sort(array, compare_weight);    //ordina gli archi in ordine non decrescente di peso
-  
+  TIMER_STOP(timer, "kruskal: quick_sort");
+
+  TIMER_START(timer);
   for(size_t i = 0; i<array_size(array); ++i) {   //for ∀(u, v) ∈ E nell’ordine do
     edge e = *(edge*)array_at(array, i);
 
@@ -87,12 +98,14 @@ graph_o* kruskal(graph_o *graph){
       union_set(setU, setV);    //Union(u, v)
     }
   }
+  TIMER_STOP(timer, "kruskal: graph_connect & union_set");
 
+  TIMER_START(timer);
   for (size_t i=0; i<array_size(array); ++i) {
     free(array_at(array, i));
   }
   array_free(array);
-  free(v_iter);
+  TIMER_STOP(timer, "kruskal: free_array");
   return min;
 }
 
