@@ -32,16 +32,14 @@ typedef struct {
 } record;
 
 
-static size_t djb2a(void* str) {
-  return (size_t)strlen((char*)str);
-  /*size_t hash = 5381;
-  int c;
-  char* my_str = (char*)str;
-  while((c = *my_str)==1){
-    (*my_str)++;
-    hash = ((hash << 5) + hash) ^ c; // hash * 33 ^ c
-  }
-  return hash;*/
+static size_t hashJava(void* str) {
+  size_t hash = 0;
+  size_t offset = 0;
+  char *val = (char*)str;
+  for(size_t i = 0; i < strlen(str); i++){
+    hash = ((hash << 5) - hash) + val[offset++];  //hash*31 + val[offset]
+  } 
+  return hash;
 }
 
 static int compare_str(void *x, void *y){
@@ -112,7 +110,7 @@ static graph_o *graph_load(char *path, int max_record_read) {
     exit(EXIT_FAILURE);
   }
 
-  graph_o *graph = graph_new(max_record_read, djb2a, compare_str);
+  graph_o *graph = graph_new(max_record_read, hashJava, compare_str);
   size_t buff_size = BUFFER_LENGTH;
   char *buffer;
   int count;
