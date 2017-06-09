@@ -27,10 +27,11 @@
 
 /* Implementation of the opaque type */
 struct _myGraph {
-    hashtable_o *V;
-    hash_fnc hash;
-    KeyCompare compare;
-    int directed;
+  hashtable_o *V;
+  hash_fnc hash;
+  KeyCompare compare;
+  int directed;
+  size_t size;
 };
 
 double graph_weight_all(graph_o *graph);
@@ -45,6 +46,7 @@ graph_o* graph_new(size_t capacity, hash_fnc hash, KeyCompare compare) {
   graph->compare = compare;
   graph->V = hashtable_new(capacity, graph->hash, graph->compare);
   graph->directed = DIRECTED;
+  graph->size = 0;
   return graph;
 }
 
@@ -68,25 +70,7 @@ size_t graph_order(graph_o *graph){
 
 size_t graph_size(graph_o *graph){
   assert(graph != NULL);
-  if (graph_order(graph) == 0) {
-    return 0;
-  }
-
-  size_t size = 0;
-  graphIterator *iter = graph_vertex_iter_init(graph);
-
-  void *elem = NULL;
-  void *adj = NULL;
-
-  while(graph_vertex_iter_hasNext(graph, iter)){
-    graph_vertex_iter_next(graph, iter, &elem, &adj);
-    if (adj != NULL) {
-      size += hashtable_size(adj);
-    }
-  }
-
-  free(iter);
-  return size;
+  return graph->size;
 }
 
 void graph_add(graph_o *graph, void *elem){
@@ -107,28 +91,29 @@ void graph_connect(graph_o *graph, void *x, void *y, double *weight, int bitmask
 
   hashtable_o *E = (hashtable_o*)hashtable_find(graph->V, x);
   if(E == NULL){
-    fprintf(stderr, "Invalid parameters: start vertex not found\n");
+    fprintf(stderr, "Invalid parameters: source vertex not found\n");
     errno = EINVAL;
     exit(EXIT_FAILURE);
   }
   
-  hashtable_put(E, y, weight);
+  if(!hashtable_contains(E, y)){
+    hashtable_put(E, y, weight);
+    graph->size++;
+  }
 
   if((bitmask & NO_DIRECTED) == NO_DIRECTED){
     graph->directed = NO_DIRECTED;
     graph_connect(graph, y, x, weight, DIRECTED);
   }
+
   return;
 }
 
 void* graph_contains_vertex(graph_o *graph, void *v){
   assert(graph != NULL);
   assert(v != NULL);
-  //printf("@graph_contains_vertex: v = %s\n", (char*)v);
   void *find = hashtable_find(graph->V, v);
-  //printf("@graph_contains_vertex: find = %s\n", (char*)find);
   return (find != NULL) ? v : NULL;
-//  return hashtable_find(graph->V, v) != NULL;
 }
 
 int graph_contains_edge(graph_o *graph, void *v1, void *v2){

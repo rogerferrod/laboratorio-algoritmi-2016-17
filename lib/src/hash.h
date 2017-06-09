@@ -16,7 +16,7 @@
 #pragma once
 
 #include <stddef.h>
-
+#include "lib.h"
 
 /* Definition of the graph's opaque type */
 typedef struct _myHashtable hashtable_o;

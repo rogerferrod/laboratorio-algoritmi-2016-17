@@ -55,7 +55,7 @@ extern int list_contains(list_o *list, void *elem, ListCompare compare);
 
 extern void* list_find(list_o *list, void *elem, ListCompare compare);
 
-extern void* list_search(list_o *list, void *key, ListCompare compare);
+extern void* list_foreach(list_o *list, void *param,  Procedure action);
 
 //funzioni per la coda
 

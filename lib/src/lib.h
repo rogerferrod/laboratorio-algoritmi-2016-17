@@ -26,3 +26,6 @@
 extern void* xmalloc(size_t);
 
 extern void* xrealloc(void *pointer, size_t size);
+
+
+typedef int (*Procedure)(void*, void*);

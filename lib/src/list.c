@@ -223,7 +223,7 @@ int list_contains(list_o *list, void *elem, ListCompare compare){
   
   list_entry_o *head = list->head;
   while(head != NULL){
-    if(compare(head->elem, elem) == 0){
+    if(compare(head->elem, elem) == 0){   //usare la find(?)
       return 1;
     }
     head = head->next;
@@ -233,7 +233,6 @@ int list_contains(list_o *list, void *elem, ListCompare compare){
 
 void* list_find(list_o *list, void *elem, ListCompare compare){
   assert(list != NULL);
-  //assert(elem != NULL);
   assert(compare != NULL);
   
   list_entry_o *head = list->head;
@@ -247,14 +246,18 @@ void* list_find(list_o *list, void *elem, ListCompare compare){
   return NULL;
 }
 
-void* list_search(list_o *list, void *key, ListCompare compare) {
+/* l'idea è che action ritorna 0 se passa quella condizione*/
+/* se la passa vuol dire che devi restituire quell elemento */
+/* quindi ricapitolando: ritornami l'elemento che soddisfa quel requisito */
+/* ah dimenticavo: action ha due parametri */
+void* list_foreach(list_o *list, void *param, Procedure action) {
   assert(list != NULL);
-  //assert(key != NULL);
-  assert(compare != NULL);
+  //* param è il parametro da passare a action */
+  assert(action != NULL);
 
   list_entry_o *head = list->head;
   while(head != NULL){
-    if(compare(head->elem, key) == 0){
+    if(action(head->elem, param) == 0){
       return head->elem;
     }
     head = head->next;

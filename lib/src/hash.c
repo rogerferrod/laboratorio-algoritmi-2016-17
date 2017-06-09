@@ -114,7 +114,8 @@ void* hashtable_find(hashtable_o *table, void *key){
   if(list == NULL){
     return NULL;
   }
-  hash_entry *elem = (hash_entry*)list_find(list, key, cmp);
+  /* coppia chiave-valore che soddisfa quei requisiti (specificati in action) */
+  hash_entry *elem = (hash_entry*)list_foreach(list, key, cmp);
   return elem != NULL? elem->value : NULL;
 }
 
