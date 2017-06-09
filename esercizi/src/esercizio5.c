@@ -18,9 +18,9 @@
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
+#include "../../lib/src/lib.h"
 #include "../../lib/src/graph.h"
 #include "../../lib/src/kruskal.h"
-#include "../../lib/src/lib.h"
 
 #define MAX_VERTEX 1000000
 #define BUFFER_LENGTH  100  //la linea più lunga del file è di 88 caratteri
@@ -33,10 +33,9 @@ typedef struct {
 
 
 static size_t hashJava(void* str) {
-  size_t hash = 0;
-  size_t offset = 0;
   char *val = (char*)str;
-  for(size_t i = 0; i < strlen(str); i++){
+  size_t hash = 0, offset = 0;
+  for(size_t i = 0; i < strlen(str); ++i){
     hash = ((hash << 5) - hash) + val[offset++];  //hash*31 + val[offset]
   } 
   return hash;
@@ -98,7 +97,7 @@ static record *record_load(char *buffer){
 }
 
 static graph_o *graph_load(char *path, int max_record_read) {
-  if (max_record_read == -1) {
+  if (max_record_read < 0 || max_record_read > MAX_VERTEX) {
     max_record_read = MAX_VERTEX;
   }
 
@@ -127,21 +126,12 @@ static graph_o *graph_load(char *path, int max_record_read) {
     record *row;
     row = record_load(buffer);
 
-    //void *k1 = graph_contains_vertex(graph, row->field1);
-    // if (k1 == NULL || graph_get_key_compare(graph)(k1, row->field1) != 0) {    //non l'ho capita
     if(!graph_contains_vertex(graph, row->field1)){
-      //printf("[%d]  - graph NOT contains_vertex %s\n", count, row->field1);
       graph_add(graph, row->field1);
-      //printf("[%d]  - graph added %s\n", count, row->field1);
     }
 
-    //void *k2 = graph_contains_vertex(graph, row->field2);
-    //printf("[%d] k2 == NULL ? %d\n", count, k2 == NULL);
-    //if (k2 == NULL || graph_get_key_compare(graph)(k2, row->field2) != 0) {
     if(!graph_contains_vertex(graph, row->field2)){
-      //printf("[%d]  - graph NOT contains_vertex %s\n", count, row->field2);
       graph_add(graph, row->field2);
-      //printf("[%d]  - graph added %s\n", count, row->field2);
     }
 
     graph_connect(graph, row->field1, row->field2, row->field3, NO_DIRECTED);
@@ -194,10 +184,10 @@ int main(int argc, char *argv[]) {
   TIMER_STOP(timer, "graph weight");
   printf("graph: weight = %lf\n", g_weight);
 
-  fprintf(stdout, "kuscal...\n");
+  fprintf(stdout, "kruskal...\n");
   TIMER_START(timer);
   graph_o *min = kruskal(graph);
-  TIMER_STOP(timer, "kruscal");
+  TIMER_STOP(timer, "kruskal");
 
   fprintf(stdout, "calculation kruskal graph order & size...\n");
   TIMER_START(timer);
