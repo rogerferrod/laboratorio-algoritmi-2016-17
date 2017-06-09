@@ -250,7 +250,7 @@ void* list_find(list_o *list, void *elem, ListCompare compare){
 /* se la passa vuol dire che devi restituire quell elemento */
 /* quindi ricapitolando: ritornami l'elemento che soddisfa quel requisito */
 /* ah dimenticavo: action ha due parametri */
-void* list_foreach(list_o *list, void *param, Procedure action) {
+void* list_lookup(list_o *list, void *param, Procedure action) {
   assert(list != NULL);
   //* param è il parametro da passare a action */
   assert(action != NULL);
