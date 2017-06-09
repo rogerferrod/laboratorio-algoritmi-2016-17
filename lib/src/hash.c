@@ -40,6 +40,11 @@ struct _myHashtable {
   float load_factor;
 };
 
+typedef struct _myHashEntry{
+  void *key;
+  void *value;
+  KeyCompare key_compare;
+}hash_entry;
 
 void hashtable_expand(hashtable_o *table);
 
@@ -99,7 +104,7 @@ void hashtable_free(hashtable_o *table){
 int cmp(void *a, void *b) {
   hash_entry *h1 = (hash_entry*)a;
   hash_entry *h2 = (hash_entry*)b;
-  return strcmp(h1->key, h2->key);
+  return h1->key_compare(h1->key, h2->key);
 }
 
 void* hashtable_find(hashtable_o *table, void *key){
@@ -132,6 +137,7 @@ void hashtable_put(hashtable_o *table, void *key, void *value){
   hash_entry *entry = (hash_entry*) xmalloc(sizeof(hash_entry));
   entry->key = key;
   entry->value = value;
+  entry->key_compare = table->key_compare;
 
   if(list == NULL){
     //printf("#hashtable_put: table at hash position NULL\n");

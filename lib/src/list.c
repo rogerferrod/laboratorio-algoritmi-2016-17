@@ -18,7 +18,6 @@
 #include <assert.h>
 #include "lib.h"
 #include "list.h"
-#include "hash.h"
 
 
 /*  A generic doubly-linked list */
@@ -249,17 +248,6 @@ void* list_search(list_o *list, void *elem, ListCompare compare){
   //list_print(list);
 
   return NULL;
-}
-
-void list_print(list_o *list) {
-  assert(list != NULL);
-  list_entry_o *item = list->head;
-  printf("£list:");
-  while (item != NULL) {
-    printf(", %s", (char*)(((hash_entry*)(item->elem))->key));
-    item = item->next;
-  }
-  printf(" :END:\n");
 }
 
 queue_o* queue_new() {

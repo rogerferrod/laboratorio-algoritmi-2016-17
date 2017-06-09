@@ -28,12 +28,6 @@ typedef size_t (*hash_fnc)(void* key);
 
 typedef struct _myHashEntry* iterator;
 
-typedef struct _myHashEntry{
-    void *key;
-    void *value;
-}hash_entry;
-
-
 
 /* Return a newly allocated hash table */
 extern hashtable_o* hashtable_new(size_t capacity, hash_fnc hash, KeyCompare compare);
