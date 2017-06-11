@@ -84,7 +84,8 @@ graph_o* kruskal(graph_o *graph){
 
   //ci sono il doppio degli archi perché per esempio c'è sia A-D che D-A
   TIMER_START(timer);
-  quick_sort(array, compare_weight);    //ordina gli archi in ordine non decrescente di peso
+  insertion_sort(array, compare_weight);    //ordina gli archi in ordine non decrescente di peso
+//  quick_sort(array, compare_weight);    //ordina gli archi in ordine non decrescente di peso
   TIMER_STOP(timer, "kruskal: quick_sort");
 
   TIMER_START(timer);
