@@ -7,7 +7,6 @@
  */
 
 
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
@@ -21,7 +20,7 @@ void* xmalloc(size_t size){
     errno = ENOMEM;
     exit(EXIT_FAILURE);
   }
-  return ptr;  
+  return ptr;
 }
 
 void* xrealloc(void *pointer, size_t size){
@@ -31,6 +30,5 @@ void* xrealloc(void *pointer, size_t size){
     errno = ENOMEM;
     exit(EXIT_FAILURE);
   }
-  return ptr;  
+  return ptr;
 }
-

@@ -1,6 +1,6 @@
 /*
  *  File: graph_tests.c
- *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna 
+ *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna
  *
  *  Date: 11-04-2017
  *
@@ -9,6 +9,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include "lib.h"
 #include "unity.h"
 #include "graph.h"
 
@@ -18,14 +19,14 @@ static int compare_str(void *x, void *y){
 
 /*
 static int* new_int(int value) {
-  int* elem = (int*) malloc(sizeof(int));
+  int* elem = (int*) xmalloc(sizeof(int));
   *elem = value;
   return elem;
 }
 */
 
 static double* new_double(double value) {
-  double* elem = (double*) malloc(sizeof(double));
+  double* elem = (double*) xmalloc(sizeof(double));
   *elem = value;
   return elem;
 }
@@ -293,7 +294,7 @@ static void test_graphVertexIteratorInit(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
   graph_add(graph, "B");
-  graph_connect(graph, "A", "B", new_double(0.0), NO_DIRECTED); 
+  graph_connect(graph, "A", "B", new_double(0.0), NO_DIRECTED);
   graphIterator *vertex_iter = graph_vertex_iter_init(graph);
 
   TEST_ASSERT(NULL != *vertex_iter);
@@ -309,17 +310,17 @@ static void test_graphVertexIterator(){
   graph_add(graph, "B");
   graph_add(graph, "C");
   graph_add(graph, "D");
- 
+
   graphIterator *vertex_iter = graph_vertex_iter_init(graph);
   size_t count = 0;
 
   void *elem = NULL;
-  void *adj = NULL; 
+  void *adj = NULL;
   while(graph_vertex_iter_hasNext(graph, vertex_iter)){
     graph_vertex_iter_next(graph, vertex_iter, &elem, &adj);
     count++;
   }
-  
+
   TEST_ASSERT(NULL == *vertex_iter);
   TEST_ASSERT_EQUAL_INT(graph_order(graph), count);
 

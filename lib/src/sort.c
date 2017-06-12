@@ -1,6 +1,6 @@
 /*
  *  File: sort.c
- *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna 
+ *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna
  *
  *  Date: 11-04-2017
  *
@@ -30,7 +30,7 @@ enum pvt_type {random,median,first,last};
   #define PIVOT_INDEX(first,last) (first)
 #elif PIVOT_TYPE == last
   #define PIVOT_INDEX(first,last) (last)
-#else 
+#else
   #define PIVOT_INDEX(first,last) (rand()%(last-first+1)+first)
 #endif
 
@@ -81,17 +81,17 @@ void quick_sort(array_o* array, ArrayCompare compare) {
   if(array_size(array) == 0){
     return;
   }
-  
+
   srand(time(NULL));
   q_sort(array, 0, array_size(array)-1, compare);
   return;
 }
 
-void q_sort(array_o* array, int  begin, int  end, ArrayCompare compare) {
+void q_sort(array_o* array, int begin, int end, ArrayCompare compare) {
   int i,j;
 
   q_partition(array, begin, end, &i, &j, compare);
-  
+
   if(begin < j){
     q_sort(array, begin, j, compare);
    }
@@ -119,7 +119,7 @@ void q_partition(array_o* array, int begin, int end, int *p, int *q, ArrayCompar
     }
     while(compare(array_at(array, j), pivot) > 0){ /* array[j] > pivot */
       j--;
-    } 
+    }
     if(i <= j){
       array_swap(array, i, j);
       i++;
@@ -130,7 +130,7 @@ void q_partition(array_o* array, int begin, int end, int *p, int *q, ArrayCompar
   /* output */
   *p = i;
   *q = j;
-  
+
   return;
 }
 

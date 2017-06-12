@@ -18,6 +18,7 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include "../../lib/src/lib.h"
 #include "../../lib/src/array.h"
 #include "../../lib/src/sort.h"
 
@@ -36,9 +37,6 @@
 #define S_SORT 2
 #define Q_SORT 3
 
-#define TIMER_START(timer)  (timer = clock());
-#define TIMER_STOP(timer)   (printf("Processor time used: %f s\n", \
-            ((double) ((clock_t)clock() - timer)) / CLOCKS_PER_SEC));
 
 typedef struct {
     int id;
@@ -92,7 +90,7 @@ static void array_print(array_o *array, float rate) {
   if (rate == 0){
     return;
   }
-  
+
   if ((int)(array_size(array) * rate) == 0) {
     delta=1;
   } else {
@@ -113,13 +111,13 @@ static void array_print(array_o *array, float rate) {
 static void memory_free(array_o *array){
   record *elem;
   size_t i;
-  
+
   for (i = 0; i < array_size(array); ++i) {
     elem = (record *) array_at(array, i);
     free(elem->field1);
-    free(elem);    
+    free(elem);
   }
-  
+
   array_free(array);
   return;
 }
@@ -129,8 +127,8 @@ static record *record_load(char *buffer){
   char *field1;
   int field2;
   float field3;
-  
-  record *row = (record *) malloc(sizeof(record));
+
+  record *row = (record *) xmalloc(sizeof(record));
   if (row == NULL) {
     fprintf(stderr, "Not enough memory for new record\n");
     errno = ENOMEM;
@@ -143,13 +141,13 @@ static record *record_load(char *buffer){
   char *raw_field3 = strtok(NULL, ",");
 
   id = atoi(raw_id);
-  field1 = malloc((strlen(raw_field1) + 1)*sizeof(char));  /* +1 di \0 */
+  field1 = xmalloc((strlen(raw_field1) + 1)*sizeof(char));  // +1 di '\0'
   if (field1 == NULL) {
     fprintf(stderr, "Not enough memory for new field1\n");
     errno = ENOMEM;
     exit(EXIT_FAILURE);
   }
-  
+
   strcpy(field1, raw_field1);
   field2 = atoi(raw_field2);
   field3 = atof(raw_field3);
@@ -179,8 +177,8 @@ static array_o *array_load(char *path, int max_record_read) {
   size_t buff_size = BUFFER_LENGTH;
   char *buffer;
   int count;
-  
-  buffer = (char *) malloc(buff_size * (sizeof(char)));
+
+  buffer = (char *) xmalloc(buff_size * (sizeof(char)));
   if (buffer == NULL) {
     fprintf(stderr, "Not enough space for new buffer\n");
     errno = ENOMEM;
@@ -195,7 +193,7 @@ static array_o *array_load(char *path, int max_record_read) {
 
     count++;
   }
-  
+
   free(buffer);
   fclose(file);
   return array;
@@ -220,7 +218,7 @@ static void array_sort(array_o *array, int algorithm, int field, int order){
       compare_pnt = (order == ASCENDING)? compare_ascending_field3 : compare_descending_field3;
       break;
   }
-  
+
   switch(algorithm){
     case I_SORT:
       fprintf(stdout, " insertion_sort\n");
@@ -239,8 +237,8 @@ static void array_sort(array_o *array, int algorithm, int field, int order){
   /* Sorting */
   TIMER_START(timer);
   sort_pnt(array, compare_pnt);
-  TIMER_STOP(timer);
-  
+  TIMER_STOP(timer, "sorting array.");
+
   sleep(1);
 
   return;
@@ -260,7 +258,7 @@ int main(int argc, char *argv[]) {
   algorithm = Q_SORT;
   field = FIELD1;
   order = ASCENDING;
-      
+
   /* Parsing arguments */
   if (argc < 2) {
     fprintf(stderr, "No such argument\n");
@@ -288,7 +286,7 @@ int main(int argc, char *argv[]) {
   fprintf(stdout, "array_load\n");
   TIMER_START(timer);
   array = array_load(argv[1], max_record_read);
-  TIMER_STOP(timer);
+  TIMER_STOP(timer, "loading array.");
   fprintf(stdout, "array_size: %u\n", (unsigned int) array_size(array));
 
   sleep(1);
@@ -298,7 +296,7 @@ int main(int argc, char *argv[]) {
 
   /* Print array */
   array_print(array, PRINT_RATE);
-  
+
   /* Free array */
   memory_free(array);
 

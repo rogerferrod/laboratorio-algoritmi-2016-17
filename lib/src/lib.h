@@ -8,8 +8,6 @@
 
 
 /*
- * Defines an abstracted array. The elements in 
- * the array are comparable through the compare function
  *
  */
 
@@ -19,8 +17,7 @@
 #include <time.h>
 
 #define TIMER_START(timer)  (timer = clock());
-#define TIMER_STOP(timer, msg)   (printf("Processor time used: %f s (%s)\n", \
-            ((double) ((clock_t)clock() - timer)) / CLOCKS_PER_SEC, msg));
+#define TIMER_STOP(timer, msg)  (printf("Processor time used: %f s (%s)\n", ((double)((clock_t)clock() - (timer))) / (CLOCKS_PER_SEC), (msg)));
 
 
 extern void* xmalloc(size_t);

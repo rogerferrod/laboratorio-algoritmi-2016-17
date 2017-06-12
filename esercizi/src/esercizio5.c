@@ -10,7 +10,7 @@
 /*
  * Exercise 5 application
  * Riga nel file:
- *    citta,citta,distanza
+ *   citta,citta,distanza
 */
 
 #include <stdio.h>
@@ -23,12 +23,12 @@
 #include "../../lib/src/kruskal.h"
 
 #define MAX_VERTEX 1000000
-#define BUFFER_LENGTH  100  //la linea più lunga del file è di 88 caratteri
+#define BUFFER_LENGTH 100  //la linea più lunga del file è di 88 caratteri
 
 typedef struct {
-    char *field1;
-    char *field2;
-    double *field3;
+  char *field1;
+  char *field2;
+  double *field3;
 } record;
 
 
@@ -37,7 +37,7 @@ static size_t hashJava(void* str) {
   size_t hash = 0, offset = 0;
   for(size_t i = 0; i < strlen(str); ++i){
     hash = ((hash << 5) - hash) + val[offset++];  //hash*31 + val[offset]
-  } 
+  }
   return hash;
 }
 
@@ -46,7 +46,7 @@ static int compare_str(void *x, void *y){
 }
 
 static double* new_double(double value) {
-  double* elem = (double*) malloc(sizeof(double));
+  double* elem = (double*) xmalloc(sizeof(double));
   *elem = value;
   return elem;
 }
@@ -54,23 +54,23 @@ static double* new_double(double value) {
 static void memory_free(graph_o *graph){
 //  record *elem;
 //  size_t i;
-  
+
   /*for (i = 0; i < array_size(array); ++i) {
     elem = (record *) array_at(array, i);
     free(elem->field1);
-    free(elem);    
+    free(elem);
     }*/
-  
+
   graph_free(graph);
   return;
 }
 
-static record *record_load(char *buffer){  
+static record *record_load(char *buffer){
   char *field1;
   char *field2;
   double *field3;
 
-  record *row = (record *) malloc(sizeof(record));
+  record *row = (record *) xmalloc(sizeof(record));
   if (row == NULL) {
     fprintf(stderr, "Not enough memory for new record\n");
     errno = ENOMEM;
@@ -81,10 +81,10 @@ static record *record_load(char *buffer){
   char *raw_field2 = strtok(NULL, ",");
   char *raw_field3 = strtok(NULL, ",");
 
-  field1 = malloc((strlen(raw_field1) + 1)*sizeof(char));  /* +1 di \0 */
+  field1 = xmalloc((strlen(raw_field1) + 1)*sizeof(char));  /* +1 di \0 */
   strcpy(field1, raw_field1);
 
-  field2 = malloc((strlen(raw_field2) + 1)*sizeof(char));  /* +1 di \0 */
+  field2 = xmalloc((strlen(raw_field2) + 1)*sizeof(char));  /* +1 di \0 */
   strcpy(field2, raw_field2);
 
   field3 = new_double(atof(raw_field3));
@@ -114,7 +114,7 @@ static graph_o *graph_load(char *path, int max_record_read) {
   char *buffer;
   int count;
 
-  buffer = (char *) malloc(buff_size * (sizeof(char)));
+  buffer = (char *) xmalloc(buff_size * (sizeof(char)));
   if (buffer == NULL) {
     fprintf(stderr, "Not enough space for new buffer\n");
     errno = ENOMEM;
@@ -135,7 +135,7 @@ static graph_o *graph_load(char *path, int max_record_read) {
     }
 
     graph_connect(graph, row->field1, row->field2, row->field3, NO_DIRECTED);
-    
+
     count++;
   }
 

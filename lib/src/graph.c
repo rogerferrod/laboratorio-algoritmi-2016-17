@@ -54,7 +54,7 @@ void graph_free(graph_o *graph){
   void* vertex;
   void *adj;
   graphIterator *viter = graph_vertex_iter_init(graph);
-  while(graph_vertex_iter_hasNext(graph, viter)){ 
+  while(graph_vertex_iter_hasNext(graph, viter)){
     graph_vertex_iter_next(graph, viter, &vertex, &adj);
     hashtable_free((hashtable_o*)adj);
   }
@@ -95,7 +95,7 @@ void graph_connect(graph_o *graph, void *x, void *y, double *weight, int bitmask
     errno = EINVAL;
     exit(EXIT_FAILURE);
   }
-  
+
   if(!hashtable_contains(E, y)){
     hashtable_put(E, y, weight);
     graph->size++;
@@ -241,15 +241,15 @@ double graph_weight_BFS(graph_o *graph) {
   // color [V:color]
   enum status{black = 0, grey, white};
   int* colors[3];
-  colors[black] = (int*)malloc(sizeof(int));
-  colors[grey] = (int*)malloc(sizeof(int));
-  colors[white] = (int*)malloc(sizeof(int));
+  colors[black] = (int*)xmalloc(sizeof(int));
+  colors[grey] = (int*)xmalloc(sizeof(int));
+  colors[white] = (int*)xmalloc(sizeof(int));
   *colors[black] = black;
   *colors[grey] = grey;
   *colors[white] = white;
 
   hashtable_o *color = hashtable_new(graph_order(graph), graph->hash, graph->compare);
-  
+
   graphIterator *viter = graph_vertex_iter_init(graph);
   graphIterator *eiter;
   void *vertex = NULL;

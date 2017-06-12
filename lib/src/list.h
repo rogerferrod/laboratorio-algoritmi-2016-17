@@ -19,7 +19,7 @@
 #include <stddef.h>
 
 
-/* Definition  */
+/* Definition */
 typedef struct _myList list_o;
 
 typedef struct _myList queue_o;

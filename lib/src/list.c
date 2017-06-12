@@ -5,8 +5,8 @@
  *  Date: 05-05-2017
  *
  */
- 
- 
+
+
 /*
  * Implements an abstracted double linked list
  *
@@ -20,7 +20,7 @@
 #include "list.h"
 
 
-/*  A generic doubly-linked list */
+/* A generic doubly-linked list.*/
 struct list_entry {
   struct list_entry *next;	/* next element */
   struct list_entry *prev; 	/* previous element */
@@ -30,7 +30,7 @@ struct list_entry {
 typedef struct list_entry list_entry_o;
 typedef struct list_entry queue_entry_o;
 
-/*  A generic doubly-linked list  */
+/* A generic doubly-linked list.*/
 struct _myList {
   list_entry_o *head;
   list_entry_o *tail;
@@ -75,7 +75,7 @@ void list_add(list_o *list, void *elem) {
     errno = EINVAL;
     exit(EXIT_FAILURE);
   }
-   
+
   list_entry_o *entry = (list_entry_o*) xmalloc(sizeof(list_entry_o));
   entry->elem = elem;
   entry->prev = NULL;
@@ -97,7 +97,7 @@ void *list_get_at(list_o *list, size_t index){
   size_t count = 0;
   list_entry_o *node = list->head;
 
-  while(node != NULL && count < index){ 
+  while(node != NULL && count < index){
     node = node->next;
     ++count;
   }
@@ -123,7 +123,7 @@ void list_insert_at(list_o *list, size_t index, void *elem){
     errno = EINVAL;
     exit(EXIT_FAILURE);
   }
-  
+
   size_t count = 0;
   list_entry_o *current = list->head;
 
@@ -154,16 +154,16 @@ void list_insert_at(list_o *list, size_t index, void *elem){
   node->next = current;
   node->elem = elem;
 
-  current->prev->next = node; 
+  current->prev->next = node;
   current->prev = node;
 
   list->size++;
-  return;  
+  return;
 }
 
 void list_remove_at(list_o *list, size_t index){
   assert(list != NULL);
-  
+
   size_t count = 0;
   list_entry_o *current = list->head;
 
@@ -177,7 +177,7 @@ void list_remove_at(list_o *list, size_t index){
     exit(EXIT_FAILURE);
   }
 
-  if (current->next == NULL) { // ultimo 
+  if (current->next == NULL) { // ultimo
     list->tail = current->prev;
   } else {
     current->next->prev = current->prev;
@@ -200,7 +200,7 @@ void list_set_at(list_o *list, size_t index, void *elem){
     errno = EINVAL;
     exit(EXIT_FAILURE);
   }
-  
+
   size_t count = 0;
   list_entry_o *current = list->head;
 
@@ -214,16 +214,16 @@ void list_set_at(list_o *list, size_t index, void *elem){
     exit(EXIT_FAILURE);
   }
 
-  current->elem = elem;  
-  return;  
+  current->elem = elem;
+  return;
 }
 
 int list_contains(list_o *list, void *elem, ListCompare compare){
   assert(list != NULL);
-  
+
   list_entry_o *head = list->head;
   while(head != NULL){
-    if(compare(head->elem, elem) == 0){   //usare la find(?)
+    if(compare(head->elem, elem) == 0){  //usare la find(?)
       return 1;
     }
     head = head->next;
@@ -234,7 +234,7 @@ int list_contains(list_o *list, void *elem, ListCompare compare){
 void* list_find(list_o *list, void *elem, ListCompare compare){
   assert(list != NULL);
   assert(compare != NULL);
-  
+
   list_entry_o *head = list->head;
   while(head != NULL){
     if(compare(head->elem, elem) == 0){
@@ -256,7 +256,7 @@ void queue_free(queue_o* queue) {
 
 void queue_enqueue(queue_o *queue, void* elem) {
   assert(queue != NULL);
-  
+
   queue_entry_o *entry = (queue_entry_o*) xmalloc(sizeof(queue_entry_o));
   entry->prev = queue->tail;
   entry->next = NULL;
@@ -271,7 +271,7 @@ void queue_enqueue(queue_o *queue, void* elem) {
 
 void* queue_dequeue(queue_o *queue) {
   assert(queue != NULL);
-  
+
   queue_entry_o *entry = queue->tail;
   void *elem = entry->elem;
   queue->tail = entry->prev;

@@ -1,6 +1,6 @@
 /*
  *  File: array_tests.c
- *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna 
+ *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna
  *
  *  Date: 11-04-2017
  *
@@ -9,11 +9,12 @@
 
 #include <stdlib.h>
 #include "unity.h"
+#include "lib.h"
 #include "array.h"
 
 
 static int* new_int(int value) {
-  int* elem = (int*) malloc(sizeof(int));
+  int* elem = (int*) xmalloc(sizeof(int));
   *elem = value;
   return elem;
 }
@@ -90,10 +91,10 @@ static void test_array_realloc() {
 
 static void test_array_at() {
   array_o* array = build_fixture();
-  TEST_ASSERT_EQUAL_INT(1,  *(int*)array_at(array, 0) );
-  TEST_ASSERT_EQUAL_INT(10, *(int*)array_at(array, 1) );
-  TEST_ASSERT_EQUAL_INT(4,  *(int*)array_at(array, 2) );
-  TEST_ASSERT_EQUAL_INT(7,  *(int*)array_at(array, 3) );
+  TEST_ASSERT_EQUAL_INT(1, *(int*)array_at(array, 0));
+  TEST_ASSERT_EQUAL_INT(10, *(int*)array_at(array, 1));
+  TEST_ASSERT_EQUAL_INT(4, *(int*)array_at(array, 2));
+  TEST_ASSERT_EQUAL_INT(7, *(int*)array_at(array, 3));
   free_fixture(array);
 }
 
@@ -109,7 +110,7 @@ static void test_array_insert_at_end() {
 
 static void test_array_delete(){
   array_o* array = build_fixture();
-  
+
   array_delete(array,0);
   TEST_ASSERT_EQUAL_INT(10, *(int*)array_at(array, 0));
   TEST_ASSERT_EQUAL_INT(3, array_size(array));
@@ -140,7 +141,7 @@ int main() {
   RUN_TEST(test_array_at);
   RUN_TEST(test_array_insert_at_end);
   RUN_TEST(test_array_delete);
-  RUN_TEST(test_array_swap); 
+  RUN_TEST(test_array_swap);
   return UNITY_END();
 }
 

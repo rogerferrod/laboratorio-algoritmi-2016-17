@@ -5,8 +5,8 @@
  *  Date: 05-05-2017
  *
  */
- 
- 
+
+
 /*
  * Implements union-find data structure
  *
@@ -36,14 +36,14 @@ set_o* make_set(void* elem){
 
 set_o* find_set(set_o *x) {
   assert(x != NULL);
-  
+
   while(x != x->parent){
     x = x->parent;
   }
   return x;
 }
 
-void link_set(set_o *x, set_o *y) {  
+void link_set(set_o *x, set_o *y) {
   assert(x != NULL);
   assert(y != NULL);
 

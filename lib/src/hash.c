@@ -5,8 +5,8 @@
  *  Date: 11-04-2017
  *
  */
- 
- 
+
+
 /*
  * Implements an abstracted hash table with chaining
  *
@@ -26,7 +26,7 @@
 
 /* Implementation of the opaque type */
 typedef struct _myHashArray {
-  list_o **array;            /* array */
+  list_o **array;           /* array */
   size_t size;              /* size of the array */
   size_t capacity;          /* capacity of the array */
 }array_h;
@@ -159,7 +159,7 @@ void hashtable_put(hashtable_o *table, void *key, void *value){
 void hashtable_remove(hashtable_o *table, void *key){
   assert(table != NULL);
   assert(key != NULL);
-  
+
   size_t index = table->hash(key) % array_h_capacity(table->T);
   list_o *list = array_h_at(table->T, index);
   if(list == NULL){
@@ -176,7 +176,7 @@ void hashtable_remove(hashtable_o *table, void *key){
       entry = list_get_at(list, i);
       if(table->key_compare(key, entry->key) == 0){
       	list_remove_at(list, i);
-	removed = 1;
+        removed = 1;
         break;
       }
     }
@@ -190,7 +190,7 @@ void hashtable_remove(hashtable_o *table, void *key){
 
 void hashtable_expand(hashtable_o *table){
   assert(table != NULL);
-  
+
   hash_entry *entry;
   list_o *list;
   size_t capacity_old = array_h_capacity(table->T);
@@ -214,7 +214,7 @@ void hashtable_expand(hashtable_o *table){
 
 size_t hashtable_size(hashtable_o *table){
   assert(table != NULL);
-  return table->size; 
+  return table->size;
 }
 
 size_t hashtable_capacity(hashtable_o *table){
@@ -244,24 +244,24 @@ iterator *hashtable_iter_init(hashtable_o *table){
 int hashtable_iter_hasNext(hashtable_o *table, iterator *iter){
   assert(table != NULL);
   assert(iter != NULL);
-  
+
   return *iter != NULL;
 }
 
 void hashtable_iter_next(hashtable_o *table, iterator *iter, void **key, void **value){
   assert(table != NULL);
   assert(iter != NULL);
-  
+
   if(*iter == NULL){
     fprintf(stderr, "No such element\n");
     errno = EPERM;
     exit(EXIT_FAILURE);
   }
-  
+
   list_o *list;
   hash_entry *entry = *iter;
-  
-  *key = entry->key;  //e' possibile copiare  valori?
+
+  *key = entry->key; //e' possibile copiare valori?
   *value = entry->value; //invece di passare un puntatore che è modificabile?
 
   size_t array_h_cap = array_h_capacity(table->T);
@@ -302,18 +302,18 @@ int hashtable_contains(hashtable_o *table,void *key){
 /*
  * Implementation of
  * static array for table T
- * 
+ *
  */
 array_h* array_h_new(size_t capacity) {
   assert(capacity != 0);
 
   array_h* new_array = (array_h*) xmalloc(sizeof(array_h));
   new_array->array = (list_o**) xmalloc(sizeof(list_o*)*capacity);
-  
+
   new_array->size = 0;
   new_array->capacity = capacity;
   for(size_t i = 0; i < capacity; ++i){
-    new_array->array[i] = NULL;  // usare memset
+    new_array->array[i] = NULL; // usare memset
   }
   return new_array;
 }
@@ -349,7 +349,7 @@ list_o* array_h_at(array_h* array, size_t index) { //NB puo restituire null!
 void array_h_insert_at(array_h* array, size_t index, list_o* list) {
   assert(array != NULL);
   assert(index <= array->capacity);
-  
+
   array->array[index] = list;
   if(index >= array->size){
     array->size++;

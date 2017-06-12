@@ -1,6 +1,6 @@
 /*
  *  File: hash_tests.c
- *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna 
+ *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna
  *
  *  Date: 11-04-2017
  *
@@ -9,6 +9,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include "lib.h"
 #include "unity.h"
 #include "hash.h"
 
@@ -17,7 +18,7 @@ static int compare_str(void *x, void *y){
 }
 
 static int* new_int(int value) {
-  int* elem = (int*) malloc(sizeof(int));
+  int* elem = (int*) xmalloc(sizeof(int));
   *elem = value;
   return elem;
 }
@@ -343,7 +344,7 @@ static void test_hashtableIterator(){
   hashtable_put(table, "bye", new_int(3));
 
   iterator *iter = hashtable_iter_init(table);
-  
+
   void *key = NULL;
   void *value = NULL;
 	
@@ -352,7 +353,7 @@ static void test_hashtableIterator(){
   while(hashtable_iter_hasNext(table,iter)){
     hashtable_iter_next(table, iter, &key, &value);
     counter++;
-  } 
+  }
   TEST_ASSERT_EQUAL_INT(4,counter);
 
   free(iter);
@@ -367,7 +368,7 @@ static void test_hashtableContains(){
   hashtable_put(table, "hi", new_int(4));
   hashtable_put(table, "bye", new_int(3));
 
-  TEST_ASSERT_EQUAL_INT(1,hashtable_contains(table,"mouse")); 
+  TEST_ASSERT_EQUAL_INT(1,hashtable_contains(table,"mouse"));
   TEST_ASSERT_EQUAL_INT(0,hashtable_contains(table,"roger"));
 
   free_fixture(table);
@@ -408,7 +409,7 @@ static void test_hashtableUltimateExpand(){
   };
 
   iterator *iter = hashtable_iter_init(table);
-  
+
   void *key = NULL;
   void *value = NULL;
   size_t i = 0;
@@ -418,7 +419,7 @@ static void test_hashtableUltimateExpand(){
     TEST_ASSERT_EQUAL_INT(0, strcmp(str[i], key));
     ++i;
   }
-  
+
   free(iter);
   free_fixture(table);
   hashtable_free(table);

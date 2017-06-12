@@ -1,6 +1,6 @@
 /*
  *  File: kruskal_tests.c
- *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna 
+ *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna
  *
  *  Date: 11-04-2017
  *
@@ -9,6 +9,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include "lib.h"
 #include "unity.h"
 #include "graph.h"
 #include "kruskal.h"
@@ -19,14 +20,14 @@ static int compare_str(void *x, void *y){
 
 /*
 static int* new_int(int value) {
-  int* elem = (int*) malloc(sizeof(int));
+  int* elem = (int*) xmalloc(sizeof(int));
   *elem = value;
   return elem;
 }
 */
 
 static double* new_double(double value) {
-  double* elem = (double*) malloc(sizeof(double));
+  double* elem = (double*) xmalloc(sizeof(double));
   *elem = value;
   return elem;
 }
@@ -106,16 +107,16 @@ static void test_kruskal(){
   while(graph_vertex_iter_hasNext(graph, v_iter)){
     graph_vertex_iter_next(graph, v_iter, &elem, &adj);
     printf("v %s\n", (char*)elem);
-    
+
     void* edge_elem = NULL;
     double* edge_weight = NULL;
     graphIterator* edge_iter = graph_edge_iter_init(graph, elem);
     while (graph_edge_iter_hasNext(graph, elem, edge_iter)) {
       graph_edge_iter_next(graph, elem, edge_iter, &edge_elem, &edge_weight);
-      printf("  - %s, %lf\n", (char*)edge_elem, *(double*)edge_weight);
+      printf(" - %s, %lf\n", (char*)edge_elem, *(double*)edge_weight);
     }
     free(edge_iter);
-    
+
   }
   free(v_iter);
 */
@@ -137,7 +138,7 @@ static void test_kruskal(){
     graphIterator* edge_iter = graph_edge_iter_init(min, elem2);
     while (graph_edge_iter_hasNext(min, elem2, edge_iter)) {
       graph_edge_iter_next(min, elem2, edge_iter, &edge_elem, &edge_weight);
-      printf("  - %s, %lf\n", (char*)edge_elem, *(double*)edge_weight);
+      printf(" - %s, %lf\n", (char*)edge_elem, *(double*)edge_weight);
     }
     free(edge_iter);
 

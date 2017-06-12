@@ -1,6 +1,6 @@
 /*
  *  File: list_tests.c
- *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna 
+ *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna
  *
  *  Date: 05-05-2017
  *
@@ -8,6 +8,7 @@
 
 
 #include <stdlib.h>
+#include "lib.h"
 #include "unity.h"
 #include "list.h"
 
@@ -21,7 +22,7 @@ static int compare_int_ptr(void* elem1, void* elem2) {
 }
 
 static int* new_int(int value) {
-  int* elem = (int*) malloc(sizeof(int));
+  int* elem = (int*) xmalloc(sizeof(int));
   *elem = value;
   return elem;
 }
@@ -136,7 +137,7 @@ static void test_listInsertAtFirst(){
   list_add(list, new_int(4));
   list_add(list, new_int(3));
   list_add(list, new_int(2));
-  
+
   list_insert_at(list, 0, new_int(1));
 
   TEST_ASSERT_EQUAL_INT(1, *(int*)list_get_at(list, 0));
@@ -153,7 +154,7 @@ static void test_listInsertAtBottom(){
   list_add(list, new_int(3));  //3
   list_add(list, new_int(2));  //2 - 3
   list_add(list, new_int(1));  //1 - 2 - 3
-  
+
   list_insert_at(list, list_size(list)-1, new_int(5));  //1 - 2 - 5 - 3
   list_insert_at(list, list_size(list), new_int(4));    //1 - 2 - 5 - 3 - 4
 
@@ -172,7 +173,7 @@ static void test_listInsertAtMiddle(){
   list_add(list, new_int(4));
   list_add(list, new_int(3));
   list_add(list, new_int(1));
-  
+
   list_insert_at(list, 1, new_int(2));
 
   TEST_ASSERT_EQUAL_INT(1, *(int*)list_get_at(list, 0));
@@ -188,7 +189,7 @@ static void test_listRemoveAt(){
   list_add(list, new_int(3));
   list_add(list, new_int(2));
   list_add(list, new_int(1));
-  
+
   list_remove_at(list, 1);
 
   TEST_ASSERT_EQUAL_INT(2, list_size(list));
@@ -220,7 +221,7 @@ static void test_listRemoveAtBottom(){
   list_add(list, new_int(3));
   list_add(list, new_int(2));
   list_add(list, new_int(1));
-  
+
   list_remove_at(list, list_size(list)-1);
 
   TEST_ASSERT_EQUAL_INT(2, list_size(list));

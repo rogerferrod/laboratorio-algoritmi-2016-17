@@ -25,7 +25,6 @@ typedef struct _myArray array_o;
 typedef int (*ArrayCompare)(void*, void*);
 
 
-
 /* Return a newly allocated array */
 extern array_o* array_new(size_t capacity);
 
@@ -44,13 +43,13 @@ extern int array_empty(array_o* array);
 /* Return a pointer to the element in the specified position */
 extern void* array_at(array_o* array, size_t position);
 
-/* Adds an element at the bottom of the array  */
+/* Adds an element at the bottom of the array */
 extern void array_insert(array_o* array, void* element);
 
-/* Delete the element in the specified position  */
+/* Delete the element in the specified position */
 extern void array_delete(array_o* array, size_t position);
 
-/* Swap two element in the specified positions  */
+/* Swap two element in the specified positions */
 extern void array_swap(array_o* array, size_t position_a, size_t position_b);
 
 /* Set element in specified position */

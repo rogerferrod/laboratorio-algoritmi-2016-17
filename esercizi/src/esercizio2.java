@@ -94,7 +94,7 @@ public class esercizio2 {
 			System.out.println("\n ************************************************************************************************* \n");
 			Tree<String> BST = tree.toBinarySearchTree(comparator);
 			System.out.println(BST);
-      
+
     } catch (FileNotFoundException e) {
       e.printStackTrace();
       System.out.println("FileNotFoundException");

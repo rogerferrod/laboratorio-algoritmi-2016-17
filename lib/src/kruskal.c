@@ -71,7 +71,7 @@ graph_o* kruskal(graph_o *graph){
     while (graph_edge_iter_hasNext(graph, elem, edge_iter)) {
       graph_edge_iter_next(graph, elem, edge_iter, &edge_elem, &edge_weight);
 
-      edge *e = malloc(sizeof(edge));
+      edge *e = xmalloc(sizeof(edge));
       e->v1 = elem;
       e->v2 = edge_elem;
       e->weight = (double*)edge_weight;
@@ -89,12 +89,12 @@ graph_o* kruskal(graph_o *graph){
   TIMER_STOP(timer, "kruskal: quick_sort");
 
   TIMER_START(timer);
-  for(size_t i = 0; i<array_size(array); ++i) {   //for ∀(u, v) ∈ E nell’ordine do
+  for(size_t i = 0; i<array_size(array); ++i) {    //for ∀(u, v) ∈ E nell’ordine do
     edge e = *(edge*)array_at(array, i);
 
     set_o *setU = (set_o*)hashtable_find(set_dictionary, e.v1);
     set_o *setV = (set_o*)hashtable_find(set_dictionary, e.v2);
-    if (graph_get_key_compare(graph)(find_set(setU), find_set(setV)) != 0) {  //  if Find(u) != Find(v ) then
+    if (graph_get_key_compare(graph)(find_set(setU), find_set(setV)) != 0) {  //if Find(u) != Find(v ) then
       graph_connect(min, e.v1, e.v2, e.weight, DIRECTED);   //A ← A ∪ (u, v)
       union_set(setU, setV);    //Union(u, v)
     }

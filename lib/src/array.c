@@ -5,8 +5,8 @@
  *  Date: 11-04-2017
  *
  */
- 
- 
+
+
 /*
  * Implements an abstracted array
  *
@@ -100,7 +100,7 @@ void array_delete(array_o* array, size_t position) {
   }
   array->size--;
 
-  if (array->size <=  (array->capacity)*DECREMENT_LIMIT){
+  if (array->size <= (array->capacity)*DECREMENT_LIMIT){
     array->capacity /= REALLOC_FACTOR;
     array->array = xrealloc(array->array, array->capacity*sizeof(void*));
   }
@@ -108,14 +108,14 @@ void array_delete(array_o* array, size_t position) {
   return;
 }
 
-void array_swap(array_o* array, size_t position_a, size_t position_b){  
+void array_swap(array_o* array, size_t position_a, size_t position_b){
   assert(array != NULL);
   if(position_a >= array->size || position_b>= array->size){
     fprintf(stderr, "Array index out of bounds (0:%d)\n", (unsigned int)array->size);
     errno = ENOMEM;
     exit(EXIT_FAILURE);
   }
-  
+
   void* temp = array->array[position_a];
   array->array[position_a] = array->array[position_b];
   array->array[position_b] = temp;
@@ -129,6 +129,6 @@ void array_set(array_o* array,size_t position, void* element){
     errno = ENOMEM;
     exit(EXIT_FAILURE);
   }
-  
+
   array->array[position] = element;
 }
