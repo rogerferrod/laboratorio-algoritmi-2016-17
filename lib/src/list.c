@@ -91,20 +91,31 @@ void list_add(list_o *list, void *elem) {
   return;
 }
 
-/*potremmo fare se > meta parti dal fondo*/
 void *list_get_at(list_o *list, size_t index){
   assert(list != NULL);
-  size_t count = 0;
-  list_entry_o *node = list->head;
-
-  while(node != NULL && count < index){
-    node = node->next;
-    ++count;
-  }
-  if(node == NULL){
+  if (index >= list->size) {
     fprintf(stderr, "List index (%d) out of bounds\n", (unsigned int)index);
     errno = ENOMEM;
     exit(EXIT_FAILURE);
+  }
+
+  size_t count;
+  list_entry_o *node;
+
+  if (index <= list->size/2) {
+    count = 0;
+    node = list->head;
+    while(count < index){
+      node = node->next;
+      ++count;
+    }
+  } else {
+    count = list->size-1;
+    node = list->tail;
+    while(count > index){
+      node = node->prev;
+      --count;
+    }
   }
 
   return node->elem;
@@ -113,23 +124,35 @@ void *list_get_at(list_o *list, size_t index){
  /*potremmo fare se > meta parti dal fondo*/
 void list_insert_at(list_o *list, size_t index, void *elem){
   assert(list != NULL);
-  if (index == 0) { //inserisco come primo elemento
-    list_add(list, elem);
-    return;
-  }
-
   if(elem == NULL){
     fprintf(stderr, "Invalid parameters: elem cannot be NULL\n");
     errno = EINVAL;
     exit(EXIT_FAILURE);
   }
 
-  size_t count = 0;
-  list_entry_o *current = list->head;
+  size_t count;
+  list_entry_o *current;
 
-  while(current != NULL && count < index){
-    current = current->next;
-    ++count;
+  if (index == 0) { //inserisco come primo elemento
+    list_add(list, elem);
+    return;
+  } else if (index <= list->size/2) { //inserisco nella prima metà
+    count = 0;
+    current = list->head;
+    while(count < index){
+      current = current->next;
+      ++count;
+    }
+  } else if (index == list->size) { //inserisco dopo l'ultimo elemento
+    count = index;
+    current = NULL;
+  } else {
+    count = list->size-1;
+    current = list->tail;
+    while (count > index) {
+      current = current->prev;
+      --count;
+    }
   }
 
   if(current == NULL){
@@ -163,18 +186,29 @@ void list_insert_at(list_o *list, size_t index, void *elem){
 
 void list_remove_at(list_o *list, size_t index){
   assert(list != NULL);
-
-  size_t count = 0;
-  list_entry_o *current = list->head;
-
-  while(current != NULL && count < index){
-    current = current->next;
-    ++count;
-  }
-  if(current == NULL){
+  if(index >= list->size){
     fprintf(stderr, "List index (%d) out of bounds\n", (unsigned int)index);
     errno = ENOMEM;
     exit(EXIT_FAILURE);
+  }
+
+  size_t count;
+  list_entry_o *current;
+
+  if (index <= list->size/2) {
+    count = 0;
+    current = list->head;
+    while(count < index){
+      current = current->next;
+      ++count;
+    }
+  } else {
+    count = list->size-1;
+    current = list->tail;
+    while(count > index){
+      current = current->prev;
+      --count;
+    }
   }
 
   if (current->next == NULL) { // ultimo
@@ -200,18 +234,29 @@ void list_set_at(list_o *list, size_t index, void *elem){
     errno = EINVAL;
     exit(EXIT_FAILURE);
   }
-
-  size_t count = 0;
-  list_entry_o *current = list->head;
-
-  while(current != NULL && count < index){
-    current = current->next;
-    ++count;
-  }
-  if(current == NULL){
+  if(index >= list->size){
     fprintf(stderr, "List index (%d) out of bounds\n", (unsigned int)index);
     errno = ENOMEM;
     exit(EXIT_FAILURE);
+  }
+
+  size_t count;
+  list_entry_o *current;
+
+  if (index <= list->size/2) {
+    count = 0;
+    current = list->head;
+    while(count < index){
+      current = current->next;
+      ++count;
+    }
+  } else {
+    count = list->size-1;
+    current = list->tail;
+    while(count > index){
+      current = current->prev;
+      --count;
+    }
   }
 
   current->elem = elem;
@@ -219,16 +264,7 @@ void list_set_at(list_o *list, size_t index, void *elem){
 }
 
 int list_contains(list_o *list, void *elem, ListCompare compare){
-  assert(list != NULL);
-
-  list_entry_o *head = list->head;
-  while(head != NULL){
-    if(compare(head->elem, elem) == 0){  //usare la find(?)
-      return 1;
-    }
-    head = head->next;
-  }
-  return 0;
+  return list_find(list, elem, compare) != NULL;
 }
 
 void* list_find(list_o *list, void *elem, ListCompare compare){
