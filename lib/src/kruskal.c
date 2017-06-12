@@ -86,7 +86,7 @@ graph_o* kruskal(graph_o *graph){
   TIMER_START(timer);
   insertion_sort(array, compare_weight);    //ordina gli archi in ordine non decrescente di peso
 //  quick_sort(array, compare_weight);    //ordina gli archi in ordine non decrescente di peso
-  TIMER_STOP(timer, "kruskal: quick_sort");
+  TIMER_STOP(timer, "kruskal: insertion_sort");
 
   TIMER_START(timer);
   for(size_t i = 0; i<array_size(array); ++i) {    //for ∀(u, v) ∈ E nell’ordine do
