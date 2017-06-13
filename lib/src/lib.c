@@ -26,7 +26,7 @@ void* xmalloc(size_t size){
 void* xrealloc(void *pointer, size_t size){
   void *ptr = realloc(pointer, size);
   if(ptr == NULL){
-    fprintf(stderr, "Not enough space for malloc\n");
+    fprintf(stderr, "Not enough space for realloc\n");
     errno = ENOMEM;
     exit(EXIT_FAILURE);
   }
