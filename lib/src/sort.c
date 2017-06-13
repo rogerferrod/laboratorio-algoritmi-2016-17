@@ -7,7 +7,7 @@
  */
 
 /*
- * Implements the sorting algorithms
+ * Implements the sorting algorithms insertion sort, selection sort and quicksort
  *
  */
 
