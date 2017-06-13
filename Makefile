@@ -17,6 +17,7 @@ es1:
 	$(MAKE) -C esercizi bin/esercizio1
 	$(MAKE) -C esercizi exec_es1 SRC=${SRC} COUNT=${COUNT} ALG=${ALG} FIELD=${FIELD} ORDER=${ORDER}
 es2: SRC := data/multywaytree_1.csv
+es2: COUNT := 50
 es2:
 	$(MAKE) -C lib build_es2
 	$(MAKE) -C esercizi bin/esercizio2

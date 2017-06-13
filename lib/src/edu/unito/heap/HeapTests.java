@@ -1,10 +1,7 @@
 package edu.unito.heap;
 
 import org.junit.*;
-
-import java.util.ArrayList;
 import java.util.Comparator;
-
 
 import static org.junit.Assert.*;
 

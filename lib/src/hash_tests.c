@@ -347,7 +347,7 @@ static void test_hashtableIterator(){
 
   void *key = NULL;
   void *value = NULL;
-	
+
   size_t counter = 0;
 
   while(hashtable_iter_hasNext(table,iter)){

@@ -175,7 +175,7 @@ void hashtable_remove(hashtable_o *table, void *key){
     for(size_t i = 0; i < list_size(list); ++i){
       entry = list_get_at(list, i);
       if(table->key_compare(key, entry->key) == 0){
-      	list_remove_at(list, i);
+        list_remove_at(list, i);
         removed = 1;
         break;
       }

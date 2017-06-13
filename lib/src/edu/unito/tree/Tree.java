@@ -12,7 +12,6 @@ import java.util.Iterator;
  * @author Roger Ferrod
  * @author Luca Chironna
  */
-
 public class Tree<T> implements Iterable<T> {
   /** Encapsulate the data per this node.*/
   private T label;
@@ -115,7 +114,7 @@ public class Tree<T> implements Iterable<T> {
     if (tree == null)
       throw new IllegalArgumentException("Cannot add empty subtree");
 
-    if (tree == this) /* in realtà è più complesso di cosi ma vabbe */
+    if (tree == this) /* in realtà è più complesso di cosi ma non importa */
       throw new IllegalArgumentException("Cannot create a cycle");
 
     if (this.left == null) {

@@ -8,7 +8,7 @@ import java.util.Comparator;
  * @author Roger Ferrod
  * @author Luca Chironna
  */
-public class Heap<T> {
+class Heap<T> {
   /**
    * Check if heap is a maxHeap.
    *
@@ -18,14 +18,14 @@ public class Heap<T> {
    * @param comparator Method to compare two heap elements.
    * @return true if <code>heap</code> is a maxHeap
    */
-  public static boolean isMaxHeap(Object[] heap, Comparator<Object> comparator) {
+  static boolean isMaxHeap(Object[] heap, Comparator<Object> comparator) {
     if (heap == null) throw new NullPointerException("heap mustn't be null.");
-    if (comparator == null) throw new NullPointerException("comparator mustn't be null.");
+    if (comparator == null) throw new NullPointerException("Comparator mustn't be null.");
     int size = heap.length;
-    int child;
     if (size == 0) throw new IllegalArgumentException("Empty heap is neither max nor min");
+    int child;
 
-    for (int i=0; i<size; i++) {
+    for (int i=0; i<size; ++i) {
       child = left(i, size);
       if (child != i) {
         if (comparator.compare(heap[i], heap[child]) <= 0) {   //heap[i] <= heap[child]
@@ -51,7 +51,7 @@ public class Heap<T> {
    * @param comparator Method to compare two heap elements.
    * @return true if <code>heap</code> is a maxHeap
    */
-  public static boolean isMaxHeap(Object[] heap, Comparator<Object> comparator, int pos) {
+  static boolean isMaxHeap(Object[] heap, Comparator<Object> comparator, int pos) {
     if (heap == null) throw new NullPointerException("heap mustn't be null.");
     if (comparator == null) throw new NullPointerException("comparator mustn't be null.");
     int size = heap.length;
@@ -83,7 +83,7 @@ public class Heap<T> {
    * @param comparator Method to compare two heap elements.
    * @return true if <code>heap</code> is a minHeap.
    */
-  public static boolean isMinHeap(Object[] heap, Comparator<Object> comparator) {
+  static boolean isMinHeap(Object[] heap, Comparator<Object> comparator) {
     if (heap == null) throw new NullPointerException("heap mustn't be null.");
     if (comparator == null) throw new NullPointerException("comparator mustn't be null.");
     int size = heap.length;
@@ -116,7 +116,7 @@ public class Heap<T> {
    * @param comparator Method to compare two heap elements.
    * @return true if <code>heap</code> is a minHeap.
    */
-  public static boolean isMinHeap(Object[] heap, Comparator<Object> comparator, int pos) {
+  static boolean isMinHeap(Object[] heap, Comparator<Object> comparator, int pos) {
     if (heap == null) throw new NullPointerException("heap mustn't be null.");
     if (comparator == null) throw new NullPointerException("comparator mustn't be null.");
     int size = heap.length;
