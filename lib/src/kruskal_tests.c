@@ -91,6 +91,24 @@ static void test_kruskal_verySimpleNotDirected() {
   graph_free(graph);
 }
 
+static void test_kruskalIsDirected() {
+  graph_o *graph = graph_new(1, hashJava, compare_str);
+  graph_add(graph, "A");
+  graph_add(graph, "B");
+  graph_add(graph, "C");
+  graph_connect(graph, "A", "B", new_double(4), NO_DIRECTED);
+  graph_connect(graph, "B", "C", new_double(4), NO_DIRECTED);
+  graph_connect(graph, "A", "C", new_double(4), NO_DIRECTED);
+
+  graph_o *min = kruskal(graph);
+  TEST_ASSERT_EQUAL_INT(0, graph_is_directed(min));
+  
+  free_fixture(min);
+  graph_free(min);
+  free_fixture(graph);
+  graph_free(graph);
+}
+
 static void test_kruskal_simpleNotDirected() {
   graph_o *graph = graph_new(1, hashJava, compare_str);
   graph_add(graph, "A");
@@ -195,6 +213,7 @@ int main() {
   RUN_TEST(test_kruskal_emptyGraph);
   RUN_TEST(test_kruskal_noEdges);
   RUN_TEST(test_kruskal_verySimpleNotDirected);
+  RUN_TEST(test_kruskalIsDirected);
   RUN_TEST(test_kruskal_simpleNotDirected);
   RUN_TEST(test_kruskal_weight);
   RUN_TEST(test_kruskal_graph);
