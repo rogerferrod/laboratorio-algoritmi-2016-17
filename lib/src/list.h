@@ -8,10 +8,9 @@
 
 
 /*
- * Defines an abstracted double linked list. The elements in 
- * the list are comparable through the compare function
- * A list is a pointer to a node
- *
+ * Defines an abstracted double linked list.
+ * The elements in the list are comparable through the compare function.
+ * A list is a pointer to a node.
  */
 
 #pragma once
@@ -31,7 +30,7 @@ typedef int (*ListCompare)(void*, void*);
 /* Return a newly allocated list. */
 extern list_o* list_new();
 
-/* Deallocate a list */
+/* Deallocate a list. */
 extern void list_free(list_o *list);
 
 /* Return the size of a list. */
@@ -61,20 +60,27 @@ extern int list_contains(list_o *list, void *elem, ListCompare compare);
 /* Return the element if the list contains elem, NULL otherwise. */
 extern void* list_find(list_o *list, void *elem, ListCompare compare);
 
-//funzioni per la coda
 
+/* Return a newly allocated queue. */
 extern queue_o* queue_new();
 
+/* Deallocate a queue. */
 extern void queue_free(queue_o* queue);
 
+/* Add elem at the end of the queue. */
 extern void queue_enqueue(queue_o *queue, void* elem);
 
+/* Remove the element at the beginning of the queue. */
 extern void* queue_dequeue(queue_o *queue);
 
+/*Retrieve the element at the beginning of the queue. */
 extern void* queue_front(queue_o *queue);
 
+/*Retrieve the element at the end of the queue. */
 extern void* queue_back(queue_o *queue);
 
+/* Return the size of a queue. */
 extern size_t queue_size(queue_o *queue);
 
+/* Return 1 if the queue is empty, 0 otherwise. */
 extern int queue_is_empty(queue_o *queue);

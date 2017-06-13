@@ -8,9 +8,8 @@
 
 
 /*
- * Defines an abstracted array. The elements in 
- * the array are comparable through the compare function
- *
+ * Defines an abstracted array.
+ * The elements in the array are comparable through the compare function.
  */
 
 #pragma once
