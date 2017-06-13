@@ -55,6 +55,25 @@ exec_es5: SRC := data/italian_dist_graph.csv
 exec_es5:
 	bin/esercizio5 ${SRC} ${COUNT}
 
+
+#readme cmd
+es1: compile_es1
+es1: SRC := data/records.csv
+es1:
+	./bin/esercizio1 ${SRC} ${COUNT} ${ALG} ${FIELD} ${ORDER}
+
+es2: compile_es2
+es2: SRC := data/multywaytree_1.csv
+es2:
+	java ${JAVA_RUN_PARAMS} esercizio2 ${SRC} ${COUNT}
+
+es3: compile_es3
+es5: SRC := data/italian_dist_graph.csv
+es5:
+	bin/esercizio5 ${SRC} ${COUNT}
+
+
+
 # regola per compilare un .c in un .o
 # viene applicata ogni volta che una dipendenza richiede di compilare un file in
 #    `build` e con suffisso .o. Il simbolo % effettua pattern matching con quanto
