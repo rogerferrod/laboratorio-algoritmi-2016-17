@@ -129,11 +129,6 @@ static record *record_load(char *buffer){
   float field3;
 
   record *row = (record *) xmalloc(sizeof(record));
-  if (row == NULL) {
-    fprintf(stderr, "Not enough memory for new record\n");
-    errno = ENOMEM;
-    exit(EXIT_FAILURE);
-  }
 
   char *raw_id = strtok(buffer, ",");
   char *raw_field1 = strtok(NULL, ",");
@@ -142,11 +137,6 @@ static record *record_load(char *buffer){
 
   id = atoi(raw_id);
   field1 = xmalloc((strlen(raw_field1) + 1)*sizeof(char));  // +1 di '\0'
-  if (field1 == NULL) {
-    fprintf(stderr, "Not enough memory for new field1\n");
-    errno = ENOMEM;
-    exit(EXIT_FAILURE);
-  }
 
   strcpy(field1, raw_field1);
   field2 = atoi(raw_field2);
@@ -179,11 +169,6 @@ static array_o *array_load(char *path, int max_record_read) {
   int count;
 
   buffer = (char *) xmalloc(buff_size * (sizeof(char)));
-  if (buffer == NULL) {
-    fprintf(stderr, "Not enough space for new buffer\n");
-    errno = ENOMEM;
-    exit(EXIT_FAILURE);
-  }
 
   count = 0;
   while (count < max_record_read && fgets(buffer, buff_size, file) != NULL) {

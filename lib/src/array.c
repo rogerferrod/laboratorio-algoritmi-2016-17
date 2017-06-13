@@ -33,13 +33,9 @@ struct _myArray {
 
 array_o* array_new(size_t capacity) {
   register array_o* new_array = (array_o*) xmalloc(sizeof(array_o));
-  if (new_array != NULL){
-    new_array->array = (void**) xmalloc(sizeof(void*)*capacity);
-    if (new_array->array != NULL) {
-      new_array->size = 0;
-      new_array->capacity = capacity;
-    }
-  }
+  new_array->array = (void**) xmalloc(sizeof(void*)*capacity);
+  new_array->size = 0;
+  new_array->capacity = capacity;
   return new_array;
 }
 
