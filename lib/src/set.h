@@ -20,16 +20,16 @@
 typedef struct _mySet set_o;
 
 
-/* return new set */
+/*Returns a new set */
 extern set_o* make_set(void*);
 
-/* union between two sets */
+/*Union between two sets */
 extern void union_set(set_o*, set_o*);
 
-/* link two trees */
+/*Links two trees based on their ranks*/
 extern void link_set(set_o*, set_o*);
 
-/* return rappresentative of set */
+/*Returns the rappresentative of the given set */
 extern set_o* find_set(set_o*);
 
 /* free memory */
