@@ -19,40 +19,46 @@
 #include <stddef.h>
 
 
-/* Definition */
+/* Definition of the list's opaque type. */
 typedef struct _myList list_o;
 
+/* Definition of the queue's opaque type. */
 typedef struct _myList queue_o;
 
-/* Definition of the array's compare function */
+/* Definition of the list/queue's compare function. */
 typedef int (*ListCompare)(void*, void*);
 
-/*  */
+/* Return a newly allocated list. */
 extern list_o* list_new();
 
 /* Deallocate a list */
 extern void list_free(list_o *list);
 
+/* Return the size of a list. */
 extern size_t list_size(list_o *list);
 
+/* Return 1 if the list is empty, 0 otherwise. */
 extern int list_is_empty(list_o *list);
 
-/* Add elem at the beginning of the list */
+/* Add elem at the beginning of the list. */
 extern void list_add(list_o *list, void *elem);
 
+/* Return a pointer to the element in the specified position. */
 extern void *list_get_at(list_o *list, size_t index);
 
-/** inserisco elem in modo che quando inserito sarà in posizione index */
+/* Add elem at the index position. */
 extern void list_insert_at(list_o *list, size_t index, void *elem);
 
+/* Remove elem at the index position. */
 extern void list_remove_at(list_o *list, size_t index);
 
+/* Update the element at the index position with the new elem. */
 extern void list_set_at(list_o *list, size_t index, void *elem);
 
-extern size_t list_size(list_o *list);
-
+/* Return 1 if the list contains elem, 0 otherwise. */
 extern int list_contains(list_o *list, void *elem, ListCompare compare);
 
+/* Return the element if the list contains elem, NULL otherwise. */
 extern void* list_find(list_o *list, void *elem, ListCompare compare);
 
 //funzioni per la coda

@@ -13,15 +13,15 @@
 #include "array.h"
 
 
-/* pointer to sorting function */
+/* Pointer to sorting function. */
 typedef void (*AlgSort)(array_o* array, ArrayCompare compare);
 
 
-/* insertion sort algorithm implementation */
+/* Insertion sort algorithm implementation. */
 extern void insertion_sort(array_o* array, ArrayCompare compare);
 
-/* selection sort algorithm implementation */
+/* Selection sort algorithm implementation. */
 extern void selection_sort(array_o* array, ArrayCompare compare);
 
-/* quicksort algorithm implementation */
+/* Quick sort algorithm implementation. */
 extern void quick_sort(array_o* array, ArrayCompare compare);
