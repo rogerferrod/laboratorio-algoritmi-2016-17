@@ -2,15 +2,13 @@
  *  File: esercizio1.c
  *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna
  *
- *  Date: 18-05-2017
+ *  Date: 14-05-2017
  *
  */
 
 
 /*
  * Exercise 5 application
- * Riga nel file:
- *   citta,citta,distanza
 */
 
 #include <stdio.h>
@@ -23,7 +21,7 @@
 #include "../../lib/src/kruskal.h"
 
 #define MAX_VERTEX 1000000
-#define BUFFER_LENGTH 100  //la linea più lunga del file è di 88 caratteri
+#define BUFFER_LENGTH 100
 
 typedef struct {
   char *field1;
@@ -36,7 +34,7 @@ static size_t hashJava(void* str) {
   char *val = (char*)str;
   size_t hash = 0, offset = 0;
   for(size_t i = 0; i < strlen(str); ++i){
-    hash = ((hash << 5) - hash) + val[offset++];  //hash*31 + val[offset]
+    hash = ((hash << 5) - hash) + val[offset++];  /* hash*31 + val[offset] */
   }
   return hash;
 }
@@ -80,12 +78,7 @@ static record *record_load(char *buffer){
   double *field3;
 
   record *row = (record *) xmalloc(sizeof(record));
-  if (row == NULL) {
-    fprintf(stderr, "Not enough memory for new record\n");
-    errno = ENOMEM;
-    exit(EXIT_FAILURE);
-  }
-
+  
   char *raw_field1 = strtok(buffer, ",");
   char *raw_field2 = strtok(NULL, ",");
   char *raw_field3 = strtok(NULL, ",");
@@ -124,12 +117,7 @@ static graph_o *graph_load(char *path, int max_record_read) {
   int count;
 
   buffer = (char *) xmalloc(buff_size * (sizeof(char)));
-  if (buffer == NULL) {
-    fprintf(stderr, "Not enough space for new buffer\n");
-    errno = ENOMEM;
-    exit(EXIT_FAILURE);
-  }
-
+  
   count = 0;
   while (count < max_record_read && fgets(buffer, buff_size, file) != NULL) {
     record *row;

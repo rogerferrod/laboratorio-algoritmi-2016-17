@@ -2,7 +2,7 @@
  *  File: hash.h
  *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna
  *
- *  Date: 11-04-2017
+ *  Date: 14-06-2017
  *
  */
 

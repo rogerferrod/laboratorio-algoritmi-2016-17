@@ -2,7 +2,7 @@
  *  File: lib.c
  *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna
  *
- *  Date: 11-04-2017
+ *  Date: 14-06-2017
  *
  */
 
@@ -26,7 +26,7 @@ void* xmalloc(size_t size){
 void* xrealloc(void *pointer, size_t size){
   void *ptr = realloc(pointer, size);
   if(ptr == NULL){
-    fprintf(stderr, "Not enough space for malloc\n");
+    fprintf(stderr, "Not enough space for realloc\n");
     errno = ENOMEM;
     exit(EXIT_FAILURE);
   }

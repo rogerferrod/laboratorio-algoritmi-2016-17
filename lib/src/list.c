@@ -46,7 +46,9 @@ list_o* list_new(){
 }
 
 void list_free(list_o* list){
-  if(list == NULL) return;
+  if(list == NULL){
+    return;
+  }
 
   list_entry_o *entry = list->head;
   while(entry != NULL){
@@ -81,9 +83,9 @@ void list_add(list_o *list, void *elem) {
   entry->prev = NULL;
   entry->next = list->head;
 
-  if (list->head != NULL) { //lista non vuota
+  if (list->head != NULL) {  /* lista non vuota */
     list->head->prev = entry;
-  } else {  //list vuota: aggiorno tail
+  } else {  /* list vuota: aggiorno tail */
     list->tail = entry;
   }
   list->head = entry;
@@ -102,7 +104,7 @@ void *list_get_at(list_o *list, size_t index){
   size_t count;
   list_entry_o *node;
 
-  if (index <= list->size/2) {
+  if (index <= (list->size >> 2)) {
     count = 0;
     node = list->head;
     while(count < index){
@@ -121,7 +123,6 @@ void *list_get_at(list_o *list, size_t index){
   return node->elem;
 }
 
- /*potremmo fare se > meta parti dal fondo*/
 void list_insert_at(list_o *list, size_t index, void *elem){
   assert(list != NULL);
   if(elem == NULL){
@@ -133,17 +134,17 @@ void list_insert_at(list_o *list, size_t index, void *elem){
   size_t count;
   list_entry_o *current;
 
-  if (index == 0) { //inserisco come primo elemento
+  if (index == 0) {
     list_add(list, elem);
     return;
-  } else if (index <= list->size/2) { //inserisco nella prima metà
+  } else if (index <= (list->size >> 2)) {
     count = 0;
     current = list->head;
     while(count < index){
       current = current->next;
       ++count;
     }
-  } else if (index == list->size) { //inserisco dopo l'ultimo elemento
+  } else if (index == list->size) {
     count = index;
     current = NULL;
   } else {
@@ -160,7 +161,7 @@ void list_insert_at(list_o *list, size_t index, void *elem){
       fprintf(stderr, "List index (%d) out of bounds\n", (unsigned int) index);
       errno = ENOMEM;
       exit(EXIT_FAILURE);
-    } else {  //inserisco come ultimo elemento (dopo list->tail)
+    } else {   /* inserisco come ultimo elemento (dopo list->tail) */
       list_entry_o *node = (list_entry_o*) xmalloc(sizeof(list_entry_o));
       node->prev = list->tail;
       node->next = NULL;
@@ -171,7 +172,7 @@ void list_insert_at(list_o *list, size_t index, void *elem){
       return;
     }
   }
-  // inserisco sicuramente tra 2 elementi già esistenti
+
   list_entry_o *node = (list_entry_o*) xmalloc(sizeof(list_entry_o));
   node->prev = current->prev;
   node->next = current;
@@ -211,12 +212,12 @@ void list_remove_at(list_o *list, size_t index){
     }
   }
 
-  if (current->next == NULL) { // ultimo
+  if (current->next == NULL) {
     list->tail = current->prev;
   } else {
     current->next->prev = current->prev;
   }
-  if (current->prev == NULL) { // primo
+  if (current->prev == NULL) {
     list->head = current->next;
   } else {
     current->prev->next = current->next;
@@ -243,7 +244,7 @@ void list_set_at(list_o *list, size_t index, void *elem){
   size_t count;
   list_entry_o *current;
 
-  if (index <= list->size/2) {
+  if (index <= (list->size >> 2)) {
     count = 0;
     current = list->head;
     while(count < index){

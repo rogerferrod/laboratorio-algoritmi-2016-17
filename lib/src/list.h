@@ -2,7 +2,7 @@
  *  File: list.h
  *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna
  *
- *  Date: 05-08-2017
+ *  Date: 05-05-2017
  *
  */
 

@@ -12,8 +12,6 @@
 #include "unity.h"
 #include "list.h"
 
-/* fare la free dei new_int! */
-
 
 static int compare_int_ptr(void* elem1, void* elem2) {
   int int1 = *(int*) elem1;
@@ -151,12 +149,12 @@ static void test_listInsertAtFirst(){
 
 static void test_listInsertAtBottom(){
   list_o *list = list_new();
-  list_add(list, new_int(3));  //3
-  list_add(list, new_int(2));  //2 - 3
-  list_add(list, new_int(1));  //1 - 2 - 3
+  list_add(list, new_int(3));
+  list_add(list, new_int(2));
+  list_add(list, new_int(1));
 
-  list_insert_at(list, list_size(list)-1, new_int(5));  //1 - 2 - 5 - 3
-  list_insert_at(list, list_size(list), new_int(4));    //1 - 2 - 5 - 3 - 4
+  list_insert_at(list, list_size(list)-1, new_int(5));
+  list_insert_at(list, list_size(list), new_int(4)); 
 
   TEST_ASSERT_EQUAL_INT(1, *(int*)list_get_at(list, 0));
   TEST_ASSERT_EQUAL_INT(2, *(int*)list_get_at(list, 1));
