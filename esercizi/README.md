@@ -79,7 +79,7 @@ make es5 SRC=path COUNT=count
 ```
 make all
 ```
-Compilazionedi tutti gli esercizi con i parametri di default
+Compilazione di tutti gli esercizi con i parametri di default
 
 ```
 make compile_esX
