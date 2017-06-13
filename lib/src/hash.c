@@ -66,6 +66,7 @@ list_o* array_h_at(array_h*, size_t);
 /* Inserts element in the specified position with replacement */
 void array_h_insert_at(array_h*, size_t, list_o*);
 
+int entry_compare(void *a, void *b);
 
 
 hashtable_o* hashtable_new(size_t capacity, hash_fnc hash, KeyCompare compare) {
@@ -101,7 +102,7 @@ void hashtable_free(hashtable_o *table){
   return;
 }
 
-int cmp(void *a, void *b) {
+int entry_compare(void *a, void *b) {
   hash_entry *h1 = (hash_entry*)a;
   return h1->key_compare(h1->key, b);
 }
@@ -114,12 +115,11 @@ void* hashtable_find(hashtable_o *table, void *key){
   if(list == NULL){
     return NULL;
   }
-  /* coppia chiave-valore che soddisfa quei requisiti (specificati in action) */
-  hash_entry *elem = (hash_entry*)list_find(list, key, cmp);
+
+  hash_entry *elem = (hash_entry*)list_find(list, key, entry_compare);
   return elem != NULL? elem->value : NULL;
 }
 
-/* Insert or Replace*/
 void hashtable_put(hashtable_o *table, void *key, void *value){
   assert(table != NULL);
   assert(key != NULL);
@@ -141,11 +141,11 @@ void hashtable_put(hashtable_o *table, void *key, void *value){
       hash_entry *tmp = list_get_at(list, i);
       if (table->key_compare(key, tmp->key)==0) {
         list_set_at(list, i, entry);
-        return; //ho aggiornato la lista, posso uscire
+        return;  /* ho aggiornato la lista, posso uscire */
       }
     }
-    //non ho aggiornato la lista: inserisco
-    list_add(list, entry);
+
+    list_add(list, entry); /* non ho aggiornato la lista: inserisco */
   }
   table->size++;
   table->load_factor = (float)table->size / array_h_capacity(table->T);
@@ -167,7 +167,7 @@ void hashtable_remove(hashtable_o *table, void *key){
   }
   hash_entry *entry;
   size_t removed = 0;
-  if(list_size(list) == 1){ // se c'è solo quell'elemento
+  if(list_size(list) == 1){ /* se c'è solo quell'elemento */
     list_free(list);
     array_h_insert_at(table->T, index, NULL);
     removed = 1;
@@ -233,7 +233,7 @@ iterator *hashtable_iter_init(hashtable_o *table){
     if(list != NULL){
       entry = list_get_at(list, 0);
       assert(entry != NULL);
-      *iter = entry; /* iter punta a entry */
+      *iter = entry;
       return iter;
     }
   }
@@ -244,7 +244,6 @@ iterator *hashtable_iter_init(hashtable_o *table){
 int hashtable_iter_hasNext(hashtable_o *table, iterator *iter){
   assert(table != NULL);
   assert(iter != NULL);
-
   return *iter != NULL;
 }
 
@@ -261,8 +260,8 @@ void hashtable_iter_next(hashtable_o *table, iterator *iter, void **key, void **
   list_o *list;
   hash_entry *entry = *iter;
 
-  *key = entry->key; //e' possibile copiare valori?
-  *value = entry->value; //invece di passare un puntatore che è modificabile?
+  *key = entry->key;
+  *value = entry->value;
 
   size_t array_h_cap = array_h_capacity(table->T);
 
@@ -312,8 +311,9 @@ array_h* array_h_new(size_t capacity) {
 
   new_array->size = 0;
   new_array->capacity = capacity;
+
   for(size_t i = 0; i < capacity; ++i){
-    new_array->array[i] = NULL; // usare memset
+    new_array->array[i] = NULL;
   }
   return new_array;
 }
@@ -340,7 +340,7 @@ size_t array_h_capacity(array_h* array){
   return array->capacity;
 }
 
-list_o* array_h_at(array_h* array, size_t index) { //NB puo restituire null!
+list_o* array_h_at(array_h* array, size_t index) { 
   assert(array != NULL);
   assert(index <= array->capacity);
   return array->array[index];
