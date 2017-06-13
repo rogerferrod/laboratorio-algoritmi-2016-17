@@ -44,6 +44,18 @@ graph_o* kruskal(graph_o *graph){
 
   size_t numVertex = graph_order(graph);
   size_t numEdge = graph_size(graph);
+  if (numVertex < 1) {
+    fprintf(stderr, "Error, source graph has not enough vertices.\n");
+    return NULL;
+  } else if (numEdge == 0) {
+    fprintf(stdout, "Error, source graph has no links.\n");
+    return graph;
+  }
+
+  if (graph_is_directed(graph)) {
+    fprintf(stderr, "Error, source graph is directed.\n");
+    return NULL;
+  }
 
   TIMER_START(timer);
   graph_o * min = graph_new(numVertex, graph_get_hash_fnc(graph), graph_get_key_compare(graph));  //A ←∅
@@ -95,7 +107,9 @@ graph_o* kruskal(graph_o *graph){
     set_o *setU = (set_o*)hashtable_find(set_dictionary, e.v1);
     set_o *setV = (set_o*)hashtable_find(set_dictionary, e.v2);
     if (graph_get_key_compare(graph)(find_set(setU), find_set(setV)) != 0) {  //if Find(u) != Find(v ) then
-      graph_connect(min, e.v1, e.v2, e.weight, DIRECTED);   //A ← A ∪ (u, v)
+      double *new_weight = xmalloc(sizeof(double));
+      *new_weight = *e.weight;
+      graph_connect(min, e.v1, e.v2, new_weight, NO_DIRECTED);   //A ← A ∪ (u, v)
       union_set(setU, setV);    //Union(u, v)
     }
   }

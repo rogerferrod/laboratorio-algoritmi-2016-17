@@ -52,15 +52,24 @@ static double* new_double(double value) {
 }
 
 static void memory_free(graph_o *graph){
-//  record *elem;
-//  size_t i;
+  if (graph_is_directed(graph)) {
+    printf("directed\n");
+    graphIterator* vIterator = graph_vertex_iter_init(graph);
+    void* v1, * h;
+    while (graph_vertex_iter_hasNext(graph, vIterator)) {
+      graph_vertex_iter_next(graph, vIterator, &v1, &h);
 
-  /*for (i = 0; i < array_size(array); ++i) {
-    elem = (record *) array_at(array, i);
-    free(elem->field1);
-    free(elem);
-    }*/
-
+      graphIterator* eIter = graph_edge_iter_init(graph, v1);
+      void* v2;
+      double* w;
+      while (graph_edge_iter_hasNext(graph, v1, eIter)) {
+        graph_edge_iter_next(graph, v1, eIter, &v2, &w);
+        free(w);
+      }
+      free(eIter);
+    }
+    free(vIterator);
+  }
   graph_free(graph);
   return;
 }

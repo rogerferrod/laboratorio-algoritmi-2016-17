@@ -32,7 +32,7 @@ static double* new_double(double value) {
   return elem;
 }
 
-/*
+/**
  * Fa la free dei pesi degli archi
  */
 static void free_fixture(graph_o *graph) {
@@ -59,19 +59,93 @@ static void free_fixture(graph_o *graph) {
  * @param str char* String to be hashed
  * @return hash
  */
-static size_t djb2a(void* str) {
-  size_t hash = 5381;
-  int c;
-  char* my_str = (char*)str;
-  while((c = *my_str)==1){
-    (*my_str)++;
-    hash = ((hash << 5) + hash) ^ c; /* hash * 33 ^ c */
+static size_t hashJava(void* str) {
+  char *val = (char*)str;
+  size_t hash = 0, offset = 0;
+  for(size_t i = 0; i < strlen(str); ++i){
+    hash = ((hash << 5) - hash) + val[offset++];  //hash*31 + val[offset]
   }
   return hash;
 }
 
+static void test_kruskal_emptyGraph() {
+  graph_o *graph = graph_new(1, hashJava, compare_str);
+
+  graph_o *min = kruskal(graph);
+  TEST_ASSERT_NULL(min);
+
+  graph_free(graph);
+}
+
+static void test_kruskal_noEdges() {
+  graph_o *graph = graph_new(1, hashJava, compare_str);
+  graph_add(graph, "A");
+  graph_add(graph, "B");
+  graph_add(graph, "C");
+
+  graph_o *min = kruskal(graph);
+  TEST_ASSERT_EQUAL_PTR(graph, min);
+
+  free_fixture(graph);
+  graph_free(graph);
+}
+
+static void test_kruskal_directed() {
+  graph_o *graph = graph_new(1, hashJava, compare_str);
+  graph_add(graph, "A");
+  graph_add(graph, "B");
+  graph_add(graph, "C");
+  graph_connect(graph, "A", "B", new_double(4), DIRECTED);
+  graph_connect(graph, "B", "C", new_double(2), DIRECTED);
+  graph_connect(graph, "C", "A", new_double(3), DIRECTED);
+
+  graph_o *min = kruskal(graph);
+  TEST_ASSERT_NULL(min);
+
+  free_fixture(graph);
+  graph_free(graph);
+}
+
+static void test_kruskal_verySimpleNotDirected() {
+  graph_o *graph = graph_new(1, hashJava, compare_str);
+  graph_add(graph, "A");
+  graph_add(graph, "B");
+  graph_connect(graph, "A", "B", new_double(4), NO_DIRECTED);
+
+  graph_o *min = kruskal(graph);
+  TEST_ASSERT_EQUAL_INT(2, (int)graph_order(min));
+  TEST_ASSERT_EQUAL_INT(1, graph_contains_edge(min, "A", "B"));
+  TEST_ASSERT_EQUAL_INT(1, graph_contains_edge(min, "B", "A"));
+
+  free_fixture(min);
+  graph_free(min);
+  free_fixture(graph);
+  graph_free(graph);
+}
+
+static void test_kruskal_simpleNotDirected() {
+  graph_o *graph = graph_new(1, hashJava, compare_str);
+  graph_add(graph, "A");
+  graph_add(graph, "B");
+  graph_add(graph, "C");
+  graph_connect(graph, "A", "B", new_double(4), NO_DIRECTED);
+  graph_connect(graph, "A", "C", new_double(3), NO_DIRECTED);
+  graph_connect(graph, "B", "C", new_double(2), NO_DIRECTED);
+
+  graph_o *min = kruskal(graph);
+  TEST_ASSERT_EQUAL_INT(3, (int)graph_order(min));
+  TEST_ASSERT_EQUAL_INT(0, graph_contains_edge(min, "A", "B"));
+  TEST_ASSERT_EQUAL_INT(1, graph_contains_edge(min, "A", "C"));
+  TEST_ASSERT_EQUAL_INT(1, graph_contains_edge(min, "B", "C"));
+
+  free_fixture(min);
+  graph_free(min);
+  free_fixture(graph);
+  graph_free(graph);
+}
+
 static void test_kruskal(){
-  graph_o *graph = graph_new(5, djb2a, compare_str);
+  graph_o *graph = graph_new(5, hashJava, compare_str);
   graph_add(graph, "A");
   graph_add(graph, "B");
   graph_add(graph, "C");
@@ -96,7 +170,7 @@ static void test_kruskal(){
 
   graph_connect(graph, "F", "G", new_double(10), NO_DIRECTED);
 
-  //printf("created graph\n");
+  //printf("graph created.\n");
   printf("graph: size = %ld - order = %ld - weight = %f\n", (unsigned long)graph_size(graph), (unsigned long)graph_order(graph), graph_weight(graph));
 
 /*
@@ -155,7 +229,7 @@ static void test_kruskal(){
     printf("i: %ld\n", ++i);
   }
 */
-  TEST_ASSERT(37.0 == graph_weight(min));
+  TEST_ASSERT_MESSAGE(37.0 == graph_weight(min), "37.0 expected");
 
   free_fixture(min);
   graph_free(min);
@@ -166,6 +240,11 @@ static void test_kruskal(){
 
 int main() {
   UNITY_BEGIN();
+  RUN_TEST(test_kruskal_emptyGraph);
+  RUN_TEST(test_kruskal_noEdges);
+  RUN_TEST(test_kruskal_directed);
+  RUN_TEST(test_kruskal_verySimpleNotDirected);
+  RUN_TEST(test_kruskal_simpleNotDirected);
   RUN_TEST(test_kruskal);
   return UNITY_END();
 }
