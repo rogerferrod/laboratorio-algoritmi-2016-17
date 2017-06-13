@@ -104,7 +104,7 @@ void *list_get_at(list_o *list, size_t index){
   size_t count;
   register list_entry_o *node;
 
-  if (index <= (list->size >> 2)) {
+  if (index <= (list->size >> 1)) {
     count = 0;
     node = list->head;
     while(count < index){
@@ -137,7 +137,7 @@ void list_insert_at(list_o *list, size_t index, void *elem){
   if (index == 0) {
     list_add(list, elem);
     return;
-  } else if (index <= (list->size >> 2)) {
+  } else if (index <= (list->size >> 1)) {
     count = 0;
     current = list->head;
     while(count < index){
@@ -244,7 +244,7 @@ void list_set_at(list_o *list, size_t index, void *elem){
   size_t count;
   register list_entry_o *current;
 
-  if (index <= (list->size >> 2)) {
+  if (index <= (list->size >> 1)) {
     count = 0;
     current = list->head;
     while(count < index){
