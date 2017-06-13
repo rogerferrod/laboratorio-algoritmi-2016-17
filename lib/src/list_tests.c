@@ -190,9 +190,22 @@ static void test_listRemoveAt(){
 
   list_remove_at(list, 1);
 
-  TEST_ASSERT_EQUAL_INT(2, list_size(list));
   TEST_ASSERT_EQUAL_INT(1, *(int*)list_get_at(list, 0));
   TEST_ASSERT_EQUAL_INT(3, *(int*)list_get_at(list, 1));
+
+  free_fixture(list);
+  list_free(list);
+}
+
+static void test_listRemoveSize(){
+  list_o *list = list_new();
+  list_add(list, new_int(3));
+  list_add(list, new_int(2));
+  list_add(list, new_int(1));
+
+  list_remove_at(list, 1);
+
+  TEST_ASSERT_EQUAL_INT(2, list_size(list));
 
   free_fixture(list);
   list_free(list);
@@ -206,7 +219,6 @@ static void test_listRemoveAtFirst(){
 
   list_remove_at(list, 0);
 
-  TEST_ASSERT_EQUAL_INT(2, list_size(list));
   TEST_ASSERT_EQUAL_INT(2, *(int*)list_get_at(list, 0));
   TEST_ASSERT_EQUAL_INT(3, *(int*)list_get_at(list, 1));
 
@@ -222,7 +234,6 @@ static void test_listRemoveAtBottom(){
 
   list_remove_at(list, list_size(list)-1);
 
-  TEST_ASSERT_EQUAL_INT(2, list_size(list));
   TEST_ASSERT_EQUAL_INT(1, *(int*)list_get_at(list, 0));
   TEST_ASSERT_EQUAL_INT(2, *(int*)list_get_at(list, 1));
 
@@ -449,7 +460,6 @@ static void test_queueDequeueSize(){
   queue_enqueue(queue, new_int(3));
   queue_dequeue(queue);
   TEST_ASSERT_EQUAL_INT(2, queue_size(queue));
-  TEST_ASSERT_EQUAL_INT_MESSAGE(1,1, "Queue dequeue failed\n");
 
   queue_free(queue);
 }
@@ -462,7 +472,6 @@ static void test_queueDequeueAll(){
   queue_dequeue(queue);
   queue_dequeue(queue);
   TEST_ASSERT_EQUAL_INT(0, queue_size(queue));
-  TEST_ASSERT_EQUAL_INT_MESSAGE(1,1, "Queue dequeue all failed\n");
 
   queue_free(queue);
 }
@@ -552,6 +561,7 @@ int main() {
   RUN_TEST(test_listFindNull);
   RUN_TEST(test_listFindNotFound);
   RUN_TEST(test_listFind);
+  RUN_TEST(test_listRemoveSize);
 
   RUN_TEST(test_queueNew);
   RUN_TEST(test_queueFree);

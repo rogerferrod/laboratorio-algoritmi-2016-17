@@ -195,7 +195,6 @@ static void test_hashtableExpandMultiple(){
 
   size_t old_capacity = hashtable_capacity(table);
   hashtable_put(table, "bye", new_int(1));
-  TEST_ASSERT_EQUAL_INT(old_capacity*2, hashtable_capacity(table));
 
   hashtable_put(table, "other", new_int(1));
   hashtable_put(table, "boh", new_int(1));
@@ -229,7 +228,6 @@ static void test_hashtableIteratorNull(){
 
   iterator *iter = hashtable_iter_init(table);
 
-  TEST_ASSERT(NULL != iter);
   TEST_ASSERT_EQUAL_INT(0, hashtable_iter_hasNext(table, iter));
 
   free(iter);
@@ -250,8 +248,7 @@ static void test_hashtableIteratorNextFirst(){
   hashtable_iter_next(table, iter, &key, &value);
   TEST_ASSERT_EQUAL_INT(0, strcmp("mouse", key)); /* mouse */
   TEST_ASSERT_EQUAL_INT(6, *(int*)value); /* mouse */
-  TEST_ASSERT(NULL != *iter);
-
+  
   free(iter);
   free_fixture(table);
   hashtable_free(table);
@@ -275,8 +272,6 @@ static void test_hashtableIteratorNextMultiple(){
 
   hashtable_iter_next(table, iter, &key, &value);
   TEST_ASSERT_EQUAL_INT(4, *(int*)value); /* hi */
-
-  TEST_ASSERT(NULL == *iter);
 
   free(iter);
   free_fixture(table);

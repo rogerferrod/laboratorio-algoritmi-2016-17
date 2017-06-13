@@ -102,7 +102,6 @@ static void test_array_insert_at_end() {
   array_o* array = build_fixture();
 
   array_insert(array, new_int(20));
-  TEST_ASSERT_EQUAL_INT(5, array_size(array));
   TEST_ASSERT_EQUAL_INT(20, *(int*)array_at(array, 4));
 
   free_fixture(array);
@@ -113,7 +112,6 @@ static void test_array_delete(){
 
   array_delete(array,0);
   TEST_ASSERT_EQUAL_INT(10, *(int*)array_at(array, 0));
-  TEST_ASSERT_EQUAL_INT(3, array_size(array));
 
   free_fixture(array);
 }

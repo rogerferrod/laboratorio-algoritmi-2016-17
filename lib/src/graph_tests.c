@@ -305,7 +305,6 @@ static void test_graphVertexIterator(){
     count++;
   }
 
-  TEST_ASSERT(NULL == *vertex_iter);
   TEST_ASSERT_EQUAL_INT(graph_order(graph), count);
 
   free(vertex_iter);
@@ -350,7 +349,6 @@ static void test_graphEdgeIterator(){
     count++;
   }
 
-  TEST_ASSERT(NULL == *edge_iter);
   TEST_ASSERT_EQUAL_INT(3, count);
 
   free(edge_iter);
@@ -370,7 +368,6 @@ static void test_graphEdgeIteratorEmpty(){
     count++;
   }
 
-  TEST_ASSERT(NULL == *edge_iter);
   TEST_ASSERT_EQUAL_INT(0, count);
 
   free(edge_iter);
