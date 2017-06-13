@@ -83,18 +83,28 @@ graph_o* kruskal(graph_o *graph){
     while (graph_edge_iter_hasNext(graph, elem, edge_iter)) {
       graph_edge_iter_next(graph, elem, edge_iter, &edge_elem, &edge_weight);
 
-      edge *e = xmalloc(sizeof(edge));
-      e->v1 = elem;
-      e->v2 = edge_elem;
-      e->weight = (double*)edge_weight;
-      array_insert(array, e);
+      int contains = 0;
+      for(int i=0; contains == 0 && i<array_size(array); ++i) {
+        edge *tmp = array_at(array, i);
+        if (graph_get_key_compare(graph)(tmp->v1, edge_elem) == 0 && graph_get_key_compare(graph)(tmp->v2, elem) == 0 ) {
+          contains = 1;
+        }
+      }
+      if (contains == 0) {
+        edge* e = xmalloc(sizeof(edge));
+        e->v1 = elem;
+        e->v2 = edge_elem;
+        e->weight = (double*) edge_weight;
+        array_insert(array, e);
+      }
     }
     free(edge_iter);
   }
   free(v_iter);
   TIMER_STOP(timer, "kruskal: make_set & array_insert");
 
-  //ci sono il doppio degli archi perché per esempio c'è sia A-D che D-A
+  //ci sono il doppio degli archi perché per esempio c'è sia A-D che D-A -> ora non più, ma è lenta la creazione dell'array
+  printf("Array size: %ld\n", (unsigned long)array_size(array));
   TIMER_START(timer);
   insertion_sort(array, compare_weight);    //ordina gli archi in ordine non decrescente di peso
 //  quick_sort(array, compare_weight);    //ordina gli archi in ordine non decrescente di peso
