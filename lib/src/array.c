@@ -32,7 +32,7 @@ struct _myArray {
 
 
 array_o* array_new(size_t capacity) {
-  array_o* new_array = (array_o*) xmalloc(sizeof(array_o));
+  register array_o* new_array = (array_o*) xmalloc(sizeof(array_o));
   if (new_array != NULL){
     new_array->array = (void**) xmalloc(sizeof(void*)*capacity);
     if (new_array->array != NULL) {
@@ -94,7 +94,7 @@ void array_delete(array_o* array, size_t position) {
     exit(EXIT_FAILURE);
   }
 
-  size_t i;
+  register size_t i;
   for(i = position+1; i < array_size(array); ++i) {
     array->array[i-1] = array->array[i];
   }
@@ -116,7 +116,7 @@ void array_swap(array_o* array, size_t position_a, size_t position_b){
     exit(EXIT_FAILURE);
   }
 
-  void* temp = array->array[position_a];
+  register void* temp = array->array[position_a];
   array->array[position_a] = array->array[position_b];
   array->array[position_b] = temp;
   return;

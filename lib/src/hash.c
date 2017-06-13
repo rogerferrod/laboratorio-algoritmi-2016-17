@@ -86,7 +86,7 @@ hashtable_o* hashtable_new(size_t capacity, hash_fnc hash, KeyCompare compare) {
     exit(EXIT_FAILURE);
   }
 
-  hashtable_o *table = (hashtable_o*) xmalloc(sizeof(hashtable_o));
+  register hashtable_o *table = (hashtable_o*) xmalloc(sizeof(hashtable_o));
   table->T = array_h_new(capacity);
   table->hash = hash;
   table->size = 0;
@@ -111,12 +111,12 @@ void* hashtable_find(hashtable_o *table, void *key){
   assert(table != NULL);
   assert(key != NULL);
   size_t index = table->hash(key) % array_h_capacity(table->T);
-  list_o *list = array_h_at(table->T, index);
+  register list_o *list = array_h_at(table->T, index);
   if(list == NULL){
     return NULL;
   }
 
-  hash_entry *elem = (hash_entry*)list_find(list, key, entry_compare);
+  register hash_entry *elem = (hash_entry*)list_find(list, key, entry_compare);
   return elem != NULL? elem->value : NULL;
 }
 
@@ -125,9 +125,9 @@ void hashtable_put(hashtable_o *table, void *key, void *value){
   assert(key != NULL);
 
   size_t index = table->hash(key) % array_h_capacity(table->T);
-  list_o *list = array_h_at(table->T, index);
+  register list_o *list = array_h_at(table->T, index);
 
-  hash_entry *entry = (hash_entry*) xmalloc(sizeof(hash_entry));
+  register hash_entry *entry = (hash_entry*) xmalloc(sizeof(hash_entry));
   entry->key = key;
   entry->value = value;
   entry->key_compare = table->key_compare;
@@ -138,7 +138,7 @@ void hashtable_put(hashtable_o *table, void *key, void *value){
     array_h_insert_at(table->T, index, list);
   } else {
     for(size_t i=0; i<list_size(list); ++i) {
-      hash_entry *tmp = list_get_at(list, i);
+      register hash_entry *tmp = list_get_at(list, i);
       if (table->key_compare(key, tmp->key)==0) {
         list_set_at(list, i, entry);
         return;  /* ho aggiornato la lista, posso uscire */
@@ -159,20 +159,21 @@ void hashtable_put(hashtable_o *table, void *key, void *value){
 void hashtable_remove(hashtable_o *table, void *key){
   assert(table != NULL);
   assert(key != NULL);
+  register size_t i;
 
   size_t index = table->hash(key) % array_h_capacity(table->T);
-  list_o *list = array_h_at(table->T, index);
+  register list_o *list = array_h_at(table->T, index);
   if(list == NULL){
     return;
   }
-  hash_entry *entry;
-  size_t removed = 0;
+  register hash_entry *entry;
+  int removed = 0;
   if(list_size(list) == 1){ /* se c'è solo quell'elemento */
     list_free(list);
     array_h_insert_at(table->T, index, NULL);
     removed = 1;
   } else {
-    for(size_t i = 0; i < list_size(list); ++i){
+    for(i = 0; i < list_size(list); ++i){
       entry = list_get_at(list, i);
       if(table->key_compare(key, entry->key) == 0){
         list_remove_at(list, i);
@@ -191,17 +192,18 @@ void hashtable_remove(hashtable_o *table, void *key){
 void hashtable_expand(hashtable_o *table){
   assert(table != NULL);
 
-  hash_entry *entry;
-  list_o *list;
-  size_t capacity_old = array_h_capacity(table->T);
-  array_h *old_T = table->T;
+  register size_t i, j;
+  register hash_entry *entry;
+  register list_o *list;
+  register size_t capacity_old = array_h_capacity(table->T);
+  register array_h *old_T = table->T;
   table->T = array_h_new(capacity_old << 1);
   table->size=0;
 
-  for(size_t i = 0; i < capacity_old; ++i){
+  for(i = 0; i < capacity_old; ++i){
     list = array_h_at(old_T, i);
     if(list != NULL){
-      for(size_t j = 0; j < list_size(list); ++j){
+      for(j = 0; j < list_size(list); ++j){
         entry = list_get_at(list, j);
         hashtable_put(table, entry->key, entry->value);
       }
@@ -224,11 +226,13 @@ size_t hashtable_capacity(hashtable_o *table){
 
 iterator *hashtable_iter_init(hashtable_o *table){
   assert(table != NULL);
-  list_o *list;
-  hash_entry *entry;
+  
+  register size_t i;
+  register list_o *list;
+  register hash_entry *entry;
   iterator *iter = (iterator*) xmalloc(sizeof(iterator));
 
-  for(size_t i = 0; i < array_h_capacity(table->T); ++i){
+  for(i = 0; i < array_h_capacity(table->T); ++i){
     list = array_h_at(table->T, i);
     if(list != NULL){
       entry = list_get_at(list, 0);
@@ -250,6 +254,8 @@ int hashtable_iter_hasNext(hashtable_o *table, iterator *iter){
 void hashtable_iter_next(hashtable_o *table, iterator *iter, void **key, void **value){
   assert(table != NULL);
   assert(iter != NULL);
+  
+  register size_t i;
 
   if(*iter == NULL){
     fprintf(stderr, "No such element\n");
@@ -257,8 +263,8 @@ void hashtable_iter_next(hashtable_o *table, iterator *iter, void **key, void **
     exit(EXIT_FAILURE);
   }
 
-  list_o *list;
-  hash_entry *entry = *iter;
+  register list_o *list;
+  register hash_entry *entry = *iter;
 
   *key = entry->key;
   *value = entry->value;
@@ -268,7 +274,7 @@ void hashtable_iter_next(hashtable_o *table, iterator *iter, void **key, void **
   /* si sposta al successivo */
   size_t index = table->hash(*key) % array_h_cap;
   list = array_h_at(table->T, index);
-  for(size_t i = 0; i < list_size(list); ++i){
+  for(i = 0; i < list_size(list); ++i){
     entry = list_get_at(list, i);
     if(table->key_compare(*key, entry->key) == 0){ /* ritrovato il punto esatto */
       if(++i < list_size(list)){ /* se ha un next nella stessa lista */
@@ -280,7 +286,7 @@ void hashtable_iter_next(hashtable_o *table, iterator *iter, void **key, void **
   }
 
   /* se non e' nella lista riprovo sull'array */
-  for(size_t i = index + 1; i < array_h_cap; ++i){
+  for(i = index + 1; i < array_h_cap; ++i){
     list = array_h_at(table->T, i);
     if(list != NULL){
       entry = list_get_at(list, 0);
@@ -306,13 +312,14 @@ int hashtable_contains(hashtable_o *table,void *key){
 array_h* array_h_new(size_t capacity) {
   assert(capacity != 0);
 
-  array_h* new_array = (array_h*) xmalloc(sizeof(array_h));
+  register size_t i;
+  register array_h* new_array = (array_h*) xmalloc(sizeof(array_h));
   new_array->array = (list_o**) xmalloc(sizeof(list_o*)*capacity);
 
   new_array->size = 0;
   new_array->capacity = capacity;
 
-  for(size_t i = 0; i < capacity; ++i){
+  for(i = 0; i < capacity; ++i){
     new_array->array[i] = NULL;
   }
   return new_array;
@@ -321,7 +328,7 @@ array_h* array_h_new(size_t capacity) {
 void array_h_free(array_h* array) {
   if (array != NULL) {
     size_t capacity = array_h_capacity(array);
-    for(size_t i = 0; i < capacity; ++i){
+    for(register size_t i = 0; i < capacity; ++i){
       list_free(array->array[i]);
     }
     free(array->array);

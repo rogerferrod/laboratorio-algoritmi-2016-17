@@ -38,7 +38,7 @@ struct _myList {
 };
 
 list_o* list_new(){
-  list_o *list = (list_o*) xmalloc(sizeof(list_o));
+  register list_o *list = (list_o*) xmalloc(sizeof(list_o));
   list->head = NULL;
   list->tail = NULL;
   list->size = 0;
@@ -50,9 +50,9 @@ void list_free(list_o* list){
     return;
   }
 
-  list_entry_o *entry = list->head;
+  register list_entry_o *entry = list->head;
   while(entry != NULL){
-    list_entry_o *current = entry;
+    register list_entry_o *current = entry;
     entry = entry->next;
     free(current);
   }
@@ -78,7 +78,7 @@ void list_add(list_o *list, void *elem) {
     exit(EXIT_FAILURE);
   }
 
-  list_entry_o *entry = (list_entry_o*) xmalloc(sizeof(list_entry_o));
+  register list_entry_o *entry = (list_entry_o*) xmalloc(sizeof(list_entry_o));
   entry->elem = elem;
   entry->prev = NULL;
   entry->next = list->head;
@@ -102,7 +102,7 @@ void *list_get_at(list_o *list, size_t index){
   }
 
   size_t count;
-  list_entry_o *node;
+  register list_entry_o *node;
 
   if (index <= (list->size >> 2)) {
     count = 0;
@@ -132,7 +132,7 @@ void list_insert_at(list_o *list, size_t index, void *elem){
   }
 
   size_t count;
-  list_entry_o *current;
+  register list_entry_o *current;
 
   if (index == 0) {
     list_add(list, elem);
@@ -162,7 +162,7 @@ void list_insert_at(list_o *list, size_t index, void *elem){
       errno = ENOMEM;
       exit(EXIT_FAILURE);
     } else {   /* inserisco come ultimo elemento (dopo list->tail) */
-      list_entry_o *node = (list_entry_o*) xmalloc(sizeof(list_entry_o));
+      register list_entry_o *node = (list_entry_o*) xmalloc(sizeof(list_entry_o));
       node->prev = list->tail;
       node->next = NULL;
       node->elem = elem;
@@ -173,7 +173,7 @@ void list_insert_at(list_o *list, size_t index, void *elem){
     }
   }
 
-  list_entry_o *node = (list_entry_o*) xmalloc(sizeof(list_entry_o));
+  register list_entry_o *node = (list_entry_o*) xmalloc(sizeof(list_entry_o));
   node->prev = current->prev;
   node->next = current;
   node->elem = elem;
@@ -194,7 +194,7 @@ void list_remove_at(list_o *list, size_t index){
   }
 
   size_t count;
-  list_entry_o *current;
+  register list_entry_o *current;
 
   if (index <= list->size/2) {
     count = 0;
@@ -242,7 +242,7 @@ void list_set_at(list_o *list, size_t index, void *elem){
   }
 
   size_t count;
-  list_entry_o *current;
+  register list_entry_o *current;
 
   if (index <= (list->size >> 2)) {
     count = 0;
@@ -272,7 +272,7 @@ void* list_find(list_o *list, void *elem, ListCompare compare){
   assert(list != NULL);
   assert(compare != NULL);
 
-  list_entry_o *head = list->head;
+  register list_entry_o *head = list->head;
   while(head != NULL){
     if(compare(head->elem, elem) == 0){
       return head->elem;
@@ -294,7 +294,7 @@ void queue_free(queue_o* queue) {
 void queue_enqueue(queue_o *queue, void* elem) {
   assert(queue != NULL);
 
-  queue_entry_o *entry = (queue_entry_o*) xmalloc(sizeof(queue_entry_o));
+  register queue_entry_o *entry = (queue_entry_o*) xmalloc(sizeof(queue_entry_o));
   entry->prev = queue->tail;
   entry->next = NULL;
   entry->elem = elem;
@@ -309,7 +309,7 @@ void queue_enqueue(queue_o *queue, void* elem) {
 void* queue_dequeue(queue_o *queue) {
   assert(queue != NULL);
 
-  queue_entry_o *entry = queue->tail;
+  register queue_entry_o *entry = queue->tail;
   void *elem = entry->elem;
   queue->tail = entry->prev;
   queue->size--;

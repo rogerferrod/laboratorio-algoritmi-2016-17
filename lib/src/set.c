@@ -27,7 +27,7 @@ struct _mySet {
 };
 
 set_o* make_set(void* elem){
-  set_o *set = (set_o*) xmalloc(sizeof(set_o));
+  register set_o *set = (set_o*) xmalloc(sizeof(set_o));
   set->parent = set;
   set->rank = 0;
   set->elem = elem;

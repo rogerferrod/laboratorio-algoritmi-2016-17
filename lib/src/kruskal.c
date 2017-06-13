@@ -53,7 +53,7 @@ graph_o* kruskal(graph_o *graph){
   assert(graph != NULL);
   size_t numVertex = graph_order(graph);
   size_t numEdge = graph_size(graph);
-  
+  register size_t i;
   
   if (numVertex < 1) {
     return NULL;
@@ -67,9 +67,9 @@ graph_o* kruskal(graph_o *graph){
     exit(EXIT_FAILURE);
   }
 
-  graph_o * min = graph_new(numVertex, graph_get_hash_fnc(graph), graph_get_key_compare(graph)); 
-  hashtable_o *set_dictionary = hashtable_new(numVertex, graph_get_hash_fnc(graph), graph_get_key_compare(graph));
-  array_o* array = array_new(numEdge);
+  register graph_o * min = graph_new(numVertex, graph_get_hash_fnc(graph), graph_get_key_compare(graph)); 
+  register hashtable_o *set_dictionary = hashtable_new(numVertex, graph_get_hash_fnc(graph), graph_get_key_compare(graph));
+  register array_o* array = array_new(numEdge);
   void *elem = NULL;
   void *adj = NULL;
 
@@ -87,13 +87,13 @@ graph_o* kruskal(graph_o *graph){
 
       int contains = 0;
       for(int i=0; contains == 0 && i<array_size(array); ++i) {
-        edge *tmp = array_at(array, i);
+        register edge *tmp = array_at(array, i);
         if (graph_get_key_compare(graph)(tmp->v1, edge_elem) == 0 && graph_get_key_compare(graph)(tmp->v2, elem) == 0 ) {
           contains = 1;
         }
       }
       if (contains == 0) {
-        edge* e = xmalloc(sizeof(edge));
+        register edge* e = xmalloc(sizeof(edge));
         e->v1 = elem;
         e->v2 = edge_elem;
         e->weight = (double*) edge_weight;
@@ -106,8 +106,8 @@ graph_o* kruskal(graph_o *graph){
   
   SORT_ALG(array, compare_weight);
 
-  for(size_t i = 0; i<array_size(array); ++i) {  /* for ∀(u, v) ∈ E nell’ordine do */
-    edge e = *(edge*)array_at(array, i);
+  for(i = 0; i<array_size(array); ++i) {  /* for ∀(u, v) ∈ E nell’ordine do */
+    register edge e = *(edge*)array_at(array, i);
 
     set_o *setU = (set_o*)hashtable_find(set_dictionary, e.v1);
     set_o *setV = (set_o*)hashtable_find(set_dictionary, e.v2);
@@ -119,7 +119,7 @@ graph_o* kruskal(graph_o *graph){
     }
   }
   
-  for (size_t i=0; i<array_size(array); ++i) {
+  for (i=0; i<array_size(array); ++i) {
     free(array_at(array, i));
   }
   array_free(array);

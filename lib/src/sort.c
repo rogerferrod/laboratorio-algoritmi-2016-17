@@ -42,9 +42,9 @@ static void q_sort(array_o* array, int top, int end, ArrayCompare compare);
 
 
 void insertion_sort(array_o* array, ArrayCompare compare) {
-  size_t i;
-  size_t j;
-  size_t size;
+  register size_t i;
+  register size_t j;
+  register size_t size;
   size = array_size(array);
 
   for(i = 0; i < size; ++i ) {
@@ -58,7 +58,7 @@ void insertion_sort(array_o* array, ArrayCompare compare) {
 }
 
 void selection_sort(array_o* array, ArrayCompare compare) {
-  size_t i,j,k,n;
+  register size_t i,j,k,n;
   n = array_size(array);
 
   if(n == 0){
@@ -104,8 +104,8 @@ void q_sort(array_o* array, int begin, int end, ArrayCompare compare) {
 
 void q_partition(array_o* array, int begin, int end, int *p, int *q, ArrayCompare compare) {
   void* pivot;
-  int i,j;
-  int pivot_index;
+  register int i,j;
+  register int pivot_index;
 
   pivot_index = PIVOT_INDEX(begin,end);
 

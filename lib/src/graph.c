@@ -45,7 +45,7 @@ int get_color(hashtable_o *table, void *vertex);
 
 
 graph_o* graph_new(size_t capacity, hash_fnc hash, KeyCompare compare) {
-  graph_o *graph = xmalloc(sizeof(graph_o));
+  register graph_o *graph = xmalloc(sizeof(graph_o));
   graph->hash = hash;
   graph->compare = compare;
   graph->V = hashtable_new(capacity, graph->hash, graph->compare);
@@ -57,7 +57,7 @@ graph_o* graph_new(size_t capacity, hash_fnc hash, KeyCompare compare) {
 void graph_free(graph_o *graph){
   void* vertex;
   void *adj;
-  graphIterator *viter = graph_vertex_iter_init(graph);
+  register graphIterator *viter = graph_vertex_iter_init(graph);
   while(graph_vertex_iter_hasNext(graph, viter)){
     graph_vertex_iter_next(graph, viter, &vertex, &adj);
     hashtable_free((hashtable_o*)adj);
@@ -80,7 +80,7 @@ size_t graph_size(graph_o *graph){
 void graph_add(graph_o *graph, void *elem){
   assert(graph != NULL);
   assert(elem != NULL);
-  hashtable_o *E = hashtable_new(EDGE_CAPACITY, graph->hash, graph->compare);
+  register hashtable_o *E = hashtable_new(EDGE_CAPACITY, graph->hash, graph->compare);
   hashtable_put(graph->V, elem, E);
   return;
 }
@@ -93,7 +93,7 @@ void graph_connect(graph_o *graph, void *x, void *y, double *weight, int bitmask
     exit(EXIT_FAILURE);
   }
 
-  hashtable_o *E = (hashtable_o*)hashtable_find(graph->V, x);
+  register hashtable_o *E = (hashtable_o*)hashtable_find(graph->V, x);
   if(E == NULL){
     fprintf(stderr, "Invalid parameters: source vertex not found\n");
     errno = EINVAL;
@@ -121,13 +121,13 @@ int graph_contains_vertex(graph_o *graph, void *v){
 
 int graph_contains_edge(graph_o *graph, void *v1, void *v2){
   assert(graph != NULL);
-  hashtable_o *E = hashtable_find(graph->V, v1);
+  register hashtable_o *E = hashtable_find(graph->V, v1);
   return (E != NULL && hashtable_size(E) > 0) ? hashtable_find(E, v2) != NULL : 0;
 }
 
 size_t graph_vertex_degree(graph_o *graph, void *v) {
   assert(graph != NULL);
-  hashtable_o *E = hashtable_find(graph->V, v);
+  register hashtable_o *E = hashtable_find(graph->V, v);
   if(E == NULL){
     fprintf(stderr, "Invalid parameters: vertex not found\n");
     errno = EINVAL;
@@ -164,7 +164,7 @@ void graph_vertex_iter_next(graph_o *graph, graphIterator *iter, void **elem, vo
 
 graphIterator *graph_edge_iter_init(graph_o *graph, void *elem){
   assert(graph != NULL);
-  hashtable_o *E = hashtable_find(graph->V, elem);
+  register hashtable_o *E = hashtable_find(graph->V, elem);
   if(E == NULL){
     fprintf(stderr, "Invalid parameters: vertex not found\n");
     errno = EINVAL;
@@ -175,7 +175,7 @@ graphIterator *graph_edge_iter_init(graph_o *graph, void *elem){
 
 int graph_edge_iter_hasNext(graph_o *graph, void *elem, graphIterator *iter){
   assert(graph != NULL);
-  hashtable_o *E = hashtable_find(graph->V, elem);
+  register hashtable_o *E = hashtable_find(graph->V, elem);
   if(E == NULL){
     fprintf(stderr, "Invalid parameters: vertex not found\n");
     errno = EINVAL;
@@ -186,7 +186,7 @@ int graph_edge_iter_hasNext(graph_o *graph, void *elem, graphIterator *iter){
 
 void graph_edge_iter_next(graph_o *graph, void *elem, graphIterator *iter, void **adj_elem, double **weight){
   assert(graph != NULL);
-  hashtable_o *E = hashtable_find(graph->V, elem);
+  register hashtable_o *E = hashtable_find(graph->V, elem);
   if(E == NULL){
     fprintf(stderr, "Invalid parameters: vertex not found\n");
     errno = EINVAL;
@@ -208,7 +208,7 @@ int graph_is_directed(graph_o *graph) {
 
 double graph_weight_all(graph_o *graph) {
   assert(graph != NULL);
-  double graph_weight = 0.0;
+  register double graph_weight = 0.0;
   void *elem = NULL;
   void *adj = NULL;
   graphIterator *v_iter = graph_vertex_iter_init(graph);
@@ -245,7 +245,7 @@ double graph_weight_BFS(graph_o *graph) {
   *colors[white] = white;
 
   /* color [V:color] */
-  hashtable_o *color = hashtable_new(graph_order(graph), graph->hash, graph->compare);
+  register hashtable_o *color = hashtable_new(graph_order(graph), graph->hash, graph->compare);
 
   graphIterator *viter = graph_vertex_iter_init(graph);
   graphIterator *eiter;
@@ -253,7 +253,7 @@ double graph_weight_BFS(graph_o *graph) {
   void *adj = NULL;
   void *edge = NULL;
   double *weight = NULL;
-  queue_o *queue = queue_new();
+  register queue_o *queue = queue_new();
 
   while(graph_vertex_iter_hasNext(graph, viter)){
     graph_vertex_iter_next(graph, viter, &vertex, &adj);
@@ -266,7 +266,7 @@ double graph_weight_BFS(graph_o *graph) {
   queue_enqueue(queue, vertex);
 
   while(!queue_is_empty(queue)){
-    void *u = queue_dequeue(queue);
+    register void *u = queue_dequeue(queue);
     eiter = graph_edge_iter_init(graph, u);
     while(graph_edge_iter_hasNext(graph, u, eiter)){  /* for each adj di u : not black */
       graph_edge_iter_next(graph, u, eiter, &edge, &weight);
