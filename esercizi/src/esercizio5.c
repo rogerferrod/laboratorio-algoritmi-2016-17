@@ -181,7 +181,7 @@ int main(int argc, char *argv[]) {
   TIMER_STOP(timer, "graph weight");
   printf("graph: weight = %lf\n", g_weight);
 
-  fprintf(stdout, "kruskal...\n");
+  fprintf(stdout, "\nkruskal...\n");
   TIMER_START(timer);
   graph_o *min = kruskal(graph);
   TIMER_STOP(timer, "kruskal");
@@ -200,13 +200,8 @@ int main(int argc, char *argv[]) {
   printf("kruskal: weight = %lf\n", k_weight);
 
   /* Free graph */
-  TIMER_START(timer);
   memory_free(graph);
-  TIMER_STOP(timer, "memory free graph");
-
-  TIMER_START(timer);
   memory_free(min);
-  TIMER_STOP(timer, "memory free kruskal graph");
 
   return 0;
 }

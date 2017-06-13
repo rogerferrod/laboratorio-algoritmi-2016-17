@@ -106,6 +106,7 @@ graph_o* kruskal(graph_o *graph){
   
   SORT_ALG(array, compare_weight);
 
+
   for(i = 0; i<array_size(array); ++i) {  /* for ∀(u, v) ∈ E nell’ordine do */
     register edge e = *(edge*)array_at(array, i);
 

@@ -67,7 +67,7 @@ es2: SRC := data/multywaytree_1.csv
 es2:
 	java ${JAVA_RUN_PARAMS} esercizio2 ${SRC} ${COUNT}
 
-es3: compile_es3
+es5: compile_es5
 es5: SRC := data/italian_dist_graph.csv
 es5:
 	bin/esercizio5 ${SRC} ${COUNT}
