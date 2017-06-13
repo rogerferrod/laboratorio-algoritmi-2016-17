@@ -24,7 +24,7 @@
 
 #define MAX_ARRAY_SIZE 20000000
 #define BUFFER_LENGTH  100
-#define PRINT_RATE     0.125
+#define PRINT_RATE     0.125    //12.5%
 
 #define FIELD1 4
 #define FIELD2 5
@@ -161,7 +161,7 @@ static record *record_load(char *buffer){
 }
 
 static array_o *array_load(char *path, int max_record_read) {
-  if (max_record_read == -1) {
+  if (max_record_read < 0) {
     max_record_read = MAX_ARRAY_SIZE;
   }
 
@@ -266,7 +266,9 @@ int main(int argc, char *argv[]) {
     exit(EXIT_FAILURE);
   }
 
-  if (argc >= 3){max_record_read = atoi(argv[2]);}
+  if (argc >= 3){
+    max_record_read = atoi(argv[2]);
+  }
   if (argc >= 4) {
     if(strcmp(argv[3], "isort") == 0){algorithm = I_SORT;}
     else if(strcmp(argv[3], "ssort") == 0){algorithm = S_SORT;}

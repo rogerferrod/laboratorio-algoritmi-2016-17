@@ -1,11 +1,12 @@
-CC = gcc
+CC := gcc
 # Parametri per l'esercizio 1
-COUNT = 1000	# Parametro anche per l'esercizio 2 e il 5
+# COUNT: Parametro anche per l'esercizio 2 e il 5
+COUNT = 1000
 ALG = qsort
 FIELD = field1
 ORDER = ascending
-# Parametri per l'esercizio 2
-CSV = "data/multywaytree_1.csv"
+# SRC: Parametro anche oer il 2 e il 5
+SRC :=
 # Flags per il compilatore
 CFLAGS = -g -Wall -pedantic -Wno-padded -std=c99 -O3 -march=native
 # Lista degli header files
@@ -21,7 +22,7 @@ JAVA_RUN_PARAMS = -cp bin:../lib/bin/Tree.jar
 # Lista dei target da eseguire sempre
 all: compile_all
 
-compile: compile_es5
+compile: compile_all
 compile_all: compile_es1 compile_es2 compile_es5
 
 #compile esN and its libs
@@ -38,14 +39,21 @@ compile_es5:
 	$(MAKE) bin/esercizio5
 
 
-#exec: exec_es5
+exec: exec_all
+exec_all: exec_es1 exec_es2 exec_es5
+
 #esegue l'esercizio n
-exec_es1: #compile_es1
-	bin/esercizio1 data/records.csv ${COUNT} ${ALG} ${FIELD} ${ORDER}
-exec_es2: #compile_es2
-	java ${JAVA_RUN_PARAMS} esercizio2 ${CSV} ${COUNT}
-exec_es5: #compile_es5
-	bin/esercizio5 data/italian_dist_graph.csv ${COUNT}
+exec_es1: SRC := data/records.csv
+exec_es1:
+	./bin/esercizio1 ${SRC} ${COUNT} ${ALG} ${FIELD} ${ORDER}
+
+exec_es2: SRC := data/multywaytree_1.csv
+exec_es2:
+	java ${JAVA_RUN_PARAMS} esercizio2 ${SRC} ${COUNT}
+
+exec_es5: SRC := data/italian_dist_graph.csv
+exec_es5:
+	bin/esercizio5 ${SRC} ${COUNT}
 
 # regola per compilare un .c in un .o
 # viene applicata ogni volta che una dipendenza richiede di compilare un file in

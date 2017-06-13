@@ -1,83 +1,88 @@
 # Esercizio 1
 
-Sorting Algorithms
+Implementazione dei seguenti algoritmi di ordinamento:
+- Insertion Sort
+- Selection Sort
+- Quick Sort
 
-## Sintassi
+#### Sintassi
+```
+./esercizio1 path count alg field order
+```
+- path: percorso da cui leggere il file
+- count: numero di righe da leggere dal file
+- alg: algoritmo da usare (qsort, ssort, isort)
+- field: campo secondo cui ordinare (field1, field2, field3)
+- order: ordine di ordinamento (ascending, descending)
 
+#### Makefile
+Compilazione & Esecuzione
 ```
-esercizio1 count alg field order
+make es1 SRC=path COUNT=count ALG=alg FIELD=field ORDER=order
 ```
-count: numero di righe da leggere\
-alg: algoritmo da usare (qsort, ssort, isort)\
-field: campo secondo cui ordinare (field1, field2, field3)\
-order: ordine di ordinamento (ascending, descending)
+- path: percorso da cui leggere il file, assoluto o relativo da esercizi/ (default: data/records.csv) 
+- count: numero di righe da leggere dal file (se negativo allora tutte) (default: 1000)
+- alg: algoritmo da usare (qsort, ssort, isort) (default: qsort)
+- field: campo secondo cui ordinare (field1, field2, field3) (default: field1)
+- order: ordine di ordinamento (ascending, descending) (default: ascending)
 
-### Makefile
-
-Compilazione
-```
-make compile_es1
-```
-
-Esecuzione
-```
-make exec_es1 COUNT=count ALG=alg FIELD=field ORDER=order
-```
 
 # Esercizio 2
 
-Binary Tree
+Implementazione della struttura dati Albero n-ario (realizzato con nodi aventi  puntatori al genitore, al figlio sinistro e al fratello destro).\
+Implementazione dei seguenti algoritmi:
+- calcolo del massimo grado dei nodi dell'albero
+- verifica se l'albero è binario
+- calcolo della dimensione dell'albero
+- calcolo della profondità dell'albero
+- costruzione di un albero binario di ricerca bilanciato avente per nodi gli stessi valori dell'albero in input
 
-## Sintassi
+#### Sintassi
+```
+./esercizio2 path count
+```
+- path: percorso da cui leggere il file
+- count: numero di righe da leggere dal file
 
+#### Makefile
+Compilazione & Esecuzione
 ```
-esercizio2 csv count 
+make es2 SRC=path COUNT=count
 ```
-csv: path del csv da leggere\
-count: numero di righe da leggere
+- path: percorso da cui leggere il file, assoluto o relativo da esercizi/ (default: data/multywaytree_1.csv) 
+- count: numero di righe da leggere dal file (se negativo allora tutte) (default: 1000)
 
-### Makefile
-
-Compilazione
-```
-make compile_es2
-```
-
-Esecuzione
-```
-make exec_es2 CSV=csv COUNT=count
-```
 
 # Esercizio 5
 
-Kruskal Algorithm
+Implementazione della struttura dati Grafo diretto, ottimale per dati sparsi.\
+Implementazione di una funzione che restituisce il peso del grafo.\
+Implementazione dell’algoritmo di Kruskal.
 
-## Sintassi
+#### Sintassi
+```
+./esercizio5 path count 
+```
+- path: percorso da cui leggere il file
+- count: numero di righe da leggere dal file
 
+#### Makefile
+Compilazione & Esecuzione
 ```
-esercizio5 count 
+make es5 SRC=path COUNT=count
 ```
-count: numero di righe da leggere
+- path: percorso da cui leggere il file, assoluto o relativo da esercizi/ (default: data/italian_dist_graph.csv) 
+- count: numero di righe da leggere dal file (se negativo allora tutte) (default: 1000)
 
-### Makefile
-
-Compilazione
-```
-make compile_es5
-```
-
-Esecuzione
-```
-make exec_es5 COUNT=count
-```
 
 # Others
 ```
 make all
 ```
-Compilazione di tutti gli esercizi
+Compilazione e esecuzione di tutti gli esercizi con i parametri di default
 
-## Authors
+
+# Authors
 
 * **Riccardo Ferrero Regis** - *821770* 
 * **Roger Ferrod** - *813766* 

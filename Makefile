@@ -1,22 +1,31 @@
 #Parametri per l'esercizio 1
-COUNT = 1000		#anche per es 2 e 5
+#COUNT anche per es 2 e 5
+COUNT = 1000
 ALG = qsort
 FIELD = field1
 ORDER = ascending
 #Parametri per l'esercizio 2
-CSV = "data/multywaytree_1.csv"
+SRC :=
 
-default: es1 es2 es5
 
+default: all
+all: es1 es2 es5
+
+es1: SRC := data/records.csv
 es1:
 	$(MAKE) -C lib build_es1
-	$(MAKE) -C esercizi bin/esercizio1 exec_es1 COUNT=${COUNT} ALG=${ALG} FIELD=${FIELD} ORDER=${ORDER}
+	$(MAKE) -C esercizi bin/esercizio1
+	$(MAKE) -C esercizi exec_es1 SRC=${SRC} COUNT=${COUNT} ALG=${ALG} FIELD=${FIELD} ORDER=${ORDER}
+es2: SRC := data/multywaytree_1.csv
 es2:
 	$(MAKE) -C lib build_es2
-	$(MAKE) -C esercizi bin/esercizio2 exec_es2 CSV=${CSV} COUNT=${COUNT}
+	$(MAKE) -C esercizi bin/esercizio2
+	$(MAKE) -C esercizi exec_es2 SRC=${SRC} COUNT=${COUNT}
+es5: SRC := data/italian_dist_graph.csv
 es5:
 	$(MAKE) -C lib build_es5
-	$(MAKE) -C esercizi bin/esercizio5 exec_es5 COUNT=${COUNT}
+	$(MAKE) -C esercizi bin/esercizio5
+	$(MAKE) -C esercizi exec_es5 SRC=${SRC} COUNT=${COUNT}
 
 test_all:
 	$(MAKE) -C lib tests_all
