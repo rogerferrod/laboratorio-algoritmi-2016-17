@@ -2,7 +2,7 @@
  *  File: graph_tests.c
  *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna
  *
- *  Date: 11-04-2017
+ *  Date: 14-06-2017
  *
  */
 
@@ -17,30 +17,21 @@ static int compare_str(void *x, void *y){
   return strcmp(x, y);
 }
 
-/*
-static int* new_int(int value) {
-  int* elem = (int*) xmalloc(sizeof(int));
-  *elem = value;
-  return elem;
-}
-*/
-
 static double* new_double(double value) {
   double* elem = (double*) xmalloc(sizeof(double));
   *elem = value;
   return elem;
 }
 
-/*
- * Fa la free dei pesi degli archi
- */
 static void free_fixture(graph_o *graph) {
-  if (!graph_is_directed(graph)) return; //TODO: non posso fare la free del peso di un arco non diretto, perché in realtà facio la free anche dell'arco opposto e quando arrivo all'arco opposto si pianta tutto
+  if (!graph_is_directed(graph)){
+    return; 
+  }
+
   graphIterator *vIter = graph_vertex_iter_init(graph);
   void *k1 = NULL, *v1 = NULL;
   while(graph_vertex_iter_hasNext(graph, vIter)) {
     graph_vertex_iter_next(graph, vIter, &k1, &v1);
-
     graphIterator *eIter = graph_edge_iter_init(graph, k1);
     void *v2;
     double *w;
@@ -53,11 +44,6 @@ static void free_fixture(graph_o *graph) {
   free(vIter);
 }
 
-/**
- * Hash function
- * @param str char* String to be hashed
- * @return hash
- */
 static size_t djb2a(void* str) {
   size_t hash = 5381;
   int c;
@@ -185,8 +171,7 @@ static void test_graphConnectSimpleNoOriented(){
 static void test_graphContainsVertex(){
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
-//  TEST_ASSERT_EQUAL_INT(1, graph_contains_vertex(graph, "A"));
-  TEST_ASSERT_NOT_NULL(graph_contains_vertex(graph, "A"));
+  TEST_ASSERT_EQUAL_INT(1, graph_contains_vertex(graph, "A"));
 
   free_fixture(graph);
   graph_free(graph);
@@ -247,7 +232,6 @@ static void test_graphConnectNoOriented(){
 }
 
 static void test_graphVertexDegreeEmpty() {
-  //size_t graph_vertex_degree(graph_o *graph, void *v) {
   graph_o *graph = graph_new(5, djb2a, compare_str);
   graph_add(graph, "A");
   TEST_ASSERT_EQUAL_INT(0, graph_vertex_degree(graph, "A"));
@@ -361,7 +345,6 @@ static void test_graphEdgeIterator(){
   double *weight;
   size_t count = 0;
 
-  //prova l- hasNext su B o qualcos altro di non inizializzato
   while(graph_edge_iter_hasNext(graph, "A", edge_iter)){
     graph_edge_iter_next(graph, "A", edge_iter, &adj, &weight);
     count++;

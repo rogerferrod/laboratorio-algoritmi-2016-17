@@ -2,7 +2,7 @@
  *  File: graph.h
  *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna
  *
- *  Date: 11-04-2017
+ *  Date: 14-06-2017
  *
  */
 
@@ -48,7 +48,7 @@ extern void graph_add(graph_o *graph, void *elem);
 
 extern void graph_connect(graph_o *graph, void *x, void *y, double *weight, int bitmask);
 
-extern void* graph_contains_vertex(graph_o *graph, void *v);
+extern int graph_contains_vertex(graph_o *graph, void *v);
 
 extern int graph_contains_edge(graph_o *graph, void *v1, void *v2);
 
@@ -59,7 +59,6 @@ extern hash_fnc graph_get_hash_fnc(graph_o *graph);
 extern KeyCompare graph_get_key_compare(graph_o *graph);
 
 extern int graph_is_directed(graph_o *graph);
-
 
 /* Vertex iterator */
 extern graphIterator *graph_vertex_iter_init(graph_o *graph);

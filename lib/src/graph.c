@@ -2,7 +2,7 @@
  *  File: graph.c
  *  Author: Riccardo Ferrero Regis, Roger Ferrod, Luca Chironna
  *
- *  Date: 11-04-2017
+ *  Date: 14-06-2017
  *
  */
 
@@ -34,9 +34,13 @@ struct _myGraph {
   size_t size;
 };
 
+
 double graph_weight_all(graph_o *graph);
+
 double graph_weight_BFS(graph_o *graph);
+
 void set_color(hashtable_o *table, void *vertex, int* color);
+
 int get_color(hashtable_o *table, void *vertex);
 
 
@@ -109,11 +113,10 @@ void graph_connect(graph_o *graph, void *x, void *y, double *weight, int bitmask
   return;
 }
 
-void* graph_contains_vertex(graph_o *graph, void *v){
+int graph_contains_vertex(graph_o *graph, void *v){
   assert(graph != NULL);
   assert(v != NULL);
-  void *find = hashtable_find(graph->V, v);
-  return (find != NULL) ? v : NULL;
+  return hashtable_find(graph->V, v) != NULL;
 }
 
 int graph_contains_edge(graph_o *graph, void *v1, void *v2){
@@ -195,10 +198,7 @@ void graph_edge_iter_next(graph_o *graph, void *elem, graphIterator *iter, void 
 
 double graph_weight(graph_o *graph) {
   assert(graph != NULL);
-  if (graph->directed == DIRECTED) {
-    return graph_weight_all(graph);
-  }
-  return graph_weight_BFS(graph);
+  return(graph->directed == DIRECTED)? graph_weight_all(graph) : graph_weight_BFS(graph);
 }
 
 int graph_is_directed(graph_o *graph) {
@@ -206,7 +206,6 @@ int graph_is_directed(graph_o *graph) {
   return graph->directed == DIRECTED;
 }
 
-/** For a directed graph. Must consider all edges. */
 double graph_weight_all(graph_o *graph) {
   assert(graph != NULL);
   double graph_weight = 0.0;
@@ -215,7 +214,6 @@ double graph_weight_all(graph_o *graph) {
   graphIterator *v_iter = graph_vertex_iter_init(graph);
   while(graph_vertex_iter_hasNext(graph, v_iter)){
     graph_vertex_iter_next(graph, v_iter, &elem, &adj);
-
     void *current_edge = NULL;
     double *weight = NULL;
     graphIterator *e_iter = graph_edge_iter_init(graph, elem);
@@ -226,7 +224,6 @@ double graph_weight_all(graph_o *graph) {
     free(e_iter);
   }
   free(v_iter);
-
   return graph_weight;
 }
 
@@ -238,7 +235,6 @@ double graph_weight_BFS(graph_o *graph) {
     return 0.0;
   }
 
-  // color [V:color]
   enum status{black = 0, grey, white};
   int* colors[3];
   colors[black] = (int*)xmalloc(sizeof(int));
@@ -248,6 +244,7 @@ double graph_weight_BFS(graph_o *graph) {
   *colors[grey] = grey;
   *colors[white] = white;
 
+  /* color [V:color] */
   hashtable_o *color = hashtable_new(graph_order(graph), graph->hash, graph->compare);
 
   graphIterator *viter = graph_vertex_iter_init(graph);
@@ -264,16 +261,14 @@ double graph_weight_BFS(graph_o *graph) {
   }
 
   viter = graph_vertex_iter_init(graph);
-  graph_vertex_iter_next(graph, viter, &vertex, &adj); //il primo elemento
-
-  set_color(color, vertex, colors[grey]); //la visita parte da qua
+  graph_vertex_iter_next(graph, viter, &vertex, &adj);  /* il primo elemento */
+  set_color(color, vertex, colors[grey]); 
   queue_enqueue(queue, vertex);
 
   while(!queue_is_empty(queue)){
     void *u = queue_dequeue(queue);
-
     eiter = graph_edge_iter_init(graph, u);
-    while(graph_edge_iter_hasNext(graph, u, eiter)){ //for each adj di u : not black
+    while(graph_edge_iter_hasNext(graph, u, eiter)){  /* for each adj di u : not black */
       graph_edge_iter_next(graph, u, eiter, &edge, &weight);
       if(get_color(color, edge) != black){
         queue_enqueue(queue, edge);
