@@ -315,7 +315,6 @@ array_h* array_h_new(size_t capacity) {
   register size_t i;
   register array_h* new_array = (array_h*) xmalloc(sizeof(array_h));
   new_array->array = (list_o**) xmalloc(sizeof(list_o*)*capacity);
-
   new_array->size = 0;
   new_array->capacity = capacity;
 

@@ -8,7 +8,7 @@
 
 
 /*
- * Implements an abstracted double linked list
+ * Implements an abstracted double linked list and queue
  *
  */
 

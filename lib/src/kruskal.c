@@ -8,7 +8,7 @@
 
 
 /*
- * Implements an abstracted graph
+ * Implements the kruskal algorithm
  *
  */
 
