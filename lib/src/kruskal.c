@@ -53,13 +53,13 @@ graph_o* kruskal(graph_o *graph){
   size_t numVertex = graph_order(graph);
   size_t numEdge = graph_size(graph);
   register size_t i;
-  
+
   if (numVertex < 1) {
     return NULL;
   } else if (numEdge == 0) {
     return graph;
   }
-  
+
   if (graph_is_directed(graph)) {
     fprintf(stderr, "Source graph is directed.\n");
     errno = EINVAL;
@@ -75,7 +75,7 @@ graph_o* kruskal(graph_o *graph){
   graphIterator *v_iter = graph_vertex_iter_init(graph);
   while(graph_vertex_iter_hasNext(graph, v_iter)){     /* for ∀v ∈ V do */
     graph_vertex_iter_next(graph, v_iter, &elem, &adj);
-    hashtable_put(set_dictionary, elem, make_set(elem));
+    hashtable_put(set_dictionary, elem, make_set(elem)); /* make set */
     graph_add(min, elem);
 
     void* edge_elem = NULL;
@@ -92,9 +92,8 @@ graph_o* kruskal(graph_o *graph){
     free(edge_iter);
   }
   free(v_iter);
-  
-SORT_ALG(array, compare_weight);
 
+  SORT_ALG(array, compare_weight);
 
   for(i = 0; i<array_size(array); ++i) {  /* for ∀(u, v) ∈ E nell’ordine do */
     register edge e = *(edge*)array_at(array, i);
@@ -108,7 +107,7 @@ SORT_ALG(array, compare_weight);
       union_set(setU, setV);    /* Union(u, v) */
     }
   }
-  
+
   for (i=0; i<array_size(array); ++i) {
     free(array_at(array, i));
   }
