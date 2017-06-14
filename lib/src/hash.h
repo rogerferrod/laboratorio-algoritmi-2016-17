@@ -41,7 +41,7 @@ extern void hashtable_put(hashtable_o *table, void *key, void *value);
 /* Return the elem with the associated key if exists, NULL otherwise. */
 extern void* hashtable_find(hashtable_o *table, void *key);
 
-/* Remove the couple the the given key if exists. */
+/* Remove the couple if the given key exists. */
 extern void hashtable_remove(hashtable_o *table, void *key);
 
 /* Returns the size of the hashtable. */
