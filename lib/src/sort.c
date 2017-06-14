@@ -18,17 +18,16 @@
 #include "sort.h"
 
 
-/* Pivot choice method, can be random, median, first, last */
-enum pvt_type {random,median,first,last};
-#define PIVOT_TYPE random
+/* Pivot choice method, can be random = 0, median, first, last */
+#define PIVOT_TYPE 0
 
-#if PIVOT_TYPE == random
+#if PIVOT_TYPE == 0
   #define PIVOT_INDEX(first,last) (rand()%((last)-(first)+1)+(first))
-#elif PIVOT_TYPE == median
+#elif PIVOT_TYPE == 1
   #define PIVOT_INDEX(first,last) ((((last)-(first))/2)+(first))
-#elif PIVOT_TYPE == first
+#elif PIVOT_TYPE == 2
   #define PIVOT_INDEX(first,last) (first)
-#elif PIVOT_TYPE == last
+#elif PIVOT_TYPE == 3
   #define PIVOT_INDEX(first,last) (last)
 #else
   #define PIVOT_INDEX(first,last) (rand()%(last-first+1)+first)

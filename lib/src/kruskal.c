@@ -24,12 +24,11 @@
 #include "graph.h"
 #include "kruskal.h"
 
-enum sort_type {alg_qsort, alg_isort};
-#define SORT_TYPE alg_qsort
+#define SORT_TYPE 1
 
-#if SORT_TYPE == alg_isort
+#if SORT_TYPE == 0
   #define SORT_ALG(array,compare) (insertion_sort((array), (compare)))
-#elif SORT_TYPE == alg_qsort
+#elif SORT_TYPE == 1
   #define SORT_ALG(array,compare) (quick_sort((array), (compare)))
 #else
   #define SORT_ALG(array,compare) (quick_sort((array), (compare)))
@@ -84,27 +83,17 @@ graph_o* kruskal(graph_o *graph){
     graphIterator* edge_iter = graph_edge_iter_init(graph, elem);
     while (graph_edge_iter_hasNext(graph, elem, edge_iter)) {
       graph_edge_iter_next(graph, elem, edge_iter, &edge_elem, &edge_weight);
-
-      int contains = 0;
-      for(int i=0; contains == 0 && i<array_size(array); ++i) {
-        register edge *tmp = array_at(array, i);
-        if (graph_get_key_compare(graph)(tmp->v1, edge_elem) == 0 && graph_get_key_compare(graph)(tmp->v2, elem) == 0 ) {
-          contains = 1;
-        }
-      }
-      if (contains == 0) {
-        register edge* e = xmalloc(sizeof(edge));
-        e->v1 = elem;
-        e->v2 = edge_elem;
-        e->weight = (double*) edge_weight;
-        array_insert(array, e);
-      }
+      register edge* e = xmalloc(sizeof(edge));
+      e->v1 = elem;
+      e->v2 = edge_elem;
+      e->weight = (double*) edge_weight;
+      array_insert(array, e);
     }
     free(edge_iter);
   }
   free(v_iter);
   
-  SORT_ALG(array, compare_weight);
+SORT_ALG(array, compare_weight);
 
 
   for(i = 0; i<array_size(array); ++i) {  /* for ∀(u, v) ∈ E nell’ordine do */
