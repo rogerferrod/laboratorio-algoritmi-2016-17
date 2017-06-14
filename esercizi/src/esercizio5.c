@@ -186,6 +186,7 @@ int main(int argc, char *argv[]) {
   graph_o *min = kruskal(graph);
   TIMER_STOP(timer, "kruskal");
 
+
   fprintf(stdout, "calculation kruskal graph order & size...\n");
   TIMER_START(timer);
   size_t k_order = graph_order(min);

@@ -121,7 +121,7 @@ static void test_graphSizeNotOriented(){
   graph_add(graph, "C");
   graph_connect(graph, "A", "B", new_double(0.0), NO_DIRECTED);
   graph_connect(graph, "A", "C", new_double(0.0), NO_DIRECTED);
-  TEST_ASSERT_EQUAL_INT(4, graph_size(graph));
+  TEST_ASSERT_EQUAL_INT(2, graph_size(graph));
 
   free_fixture(graph);
   graph_free(graph);

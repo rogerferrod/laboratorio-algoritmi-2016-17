@@ -74,7 +74,7 @@ size_t graph_order(graph_o *graph){
 
 size_t graph_size(graph_o *graph){
   assert(graph != NULL);
-  return graph->size;
+  return (graph->directed == DIRECTED)? graph->size : graph->size >> 1;
 }
 
 void graph_add(graph_o *graph, void *elem){
